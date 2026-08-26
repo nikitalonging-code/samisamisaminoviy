@@ -1,0 +1,1 @@
+V30: fixed maintenance overlay default visibility. In frontend/index.html the overlay is now display:none by default and only .show displays it. Backend already reports is_admin=true and maintenance=false for the tested Telegram ID.

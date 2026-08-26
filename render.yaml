@@ -1,0 +1,82 @@
+services:
+  - type: web
+    name: nft-gift-backend
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: python -m uvicorn main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: DATABASE_URL
+        sync: false
+      - key: WORKER_SECRET
+        fromService:
+          type: web
+          name: nft-gift-worker
+          envVarKey: WORKER_SECRET
+      - key: MRKT_WORKER_URL
+        value: "https://nft-gift-worker-9krk.onrender.com"
+      - key: BOT_USERNAME
+        sync: false
+      - key: FRONTEND_PUBLIC_URL
+        fromService:
+          type: web
+          name: nft-gift-frontend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: BACKEND_URL
+        fromService:
+          type: web
+          name: nft-gift-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: MAINTENANCE_MESSAGE
+        value: "Приложение временно закрыто на технические работы."
+
+  - type: web
+    name: nft-gift-worker
+    runtime: python
+    plan: free
+    rootDir: worker
+    buildCommand: pip install -r requirements.txt
+    startCommand: python main.py
+    healthCheckPath: /
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.13.5"
+      - key: TELEGRAM_API_ID
+        sync: false
+      - key: TELEGRAM_API_HASH
+        sync: false
+      - key: TELEGRAM_SESSION
+        sync: false
+      - key: API_URL
+        fromService:
+          type: web
+          name: nft-gift-backend
+          envVarKey: RENDER_EXTERNAL_URL
+      - key: WORKER_SECRET
+        generateValue: true
+      - key: PORT
+        value: "10000"
+      - key: MRKT_TOKEN_CACHE_SECONDS
+        value: "21600"
+
+  - type: web
+    name: nft-gift-frontend
+    runtime: static
+    rootDir: frontend
+    buildCommand: python build_runtime_config.py
+    staticPublishPath: .
+    envVars:
+      - key: BACKEND_PUBLIC_URL
+        fromService:
+          type: web
+          name: nft-gift-backend
+          envVarKey: RENDER_EXTERNAL_URL
+

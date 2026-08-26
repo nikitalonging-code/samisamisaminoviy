@@ -1,0 +1,592 @@
+[
+  {
+    "name": "Artisan Brick",
+    "image_url": "https://cdn.changes.tg/gifts/models/Artisan%20Brick/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Astral Shard",
+    "image_url": "https://cdn.changes.tg/gifts/models/Astral%20Shard/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "B-Day Candle",
+    "image_url": "https://cdn.changes.tg/gifts/models/B-Day%20Candle/png/Original.png",
+    "floor": 4.38
+  },
+  {
+    "name": "Berry Box",
+    "image_url": "https://cdn.changes.tg/gifts/models/Berry%20Box/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Big Year",
+    "image_url": "https://cdn.changes.tg/gifts/models/Big%20Year/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Bling Binky",
+    "image_url": "https://cdn.changes.tg/gifts/models/Bling%20Binky/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Bonded Ring",
+    "image_url": "https://cdn.changes.tg/gifts/models/Bonded%20Ring/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Bow Tie",
+    "image_url": "https://cdn.changes.tg/gifts/models/Bow%20Tie/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Bunny Muffin",
+    "image_url": "https://cdn.changes.tg/gifts/models/Bunny%20Muffin/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Candy Cane",
+    "image_url": "https://cdn.changes.tg/gifts/models/Candy%20Cane/png/Original.png",
+    "floor": 3.2
+  },
+  {
+    "name": "Chill Flame",
+    "image_url": "https://cdn.changes.tg/gifts/models/Chill%20Flame/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Clover Pin",
+    "image_url": "https://cdn.changes.tg/gifts/models/Clover%20Pin/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Cookie Heart",
+    "image_url": "https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png",
+    "floor": 4.2
+  },
+  {
+    "name": "Crystal Ball",
+    "image_url": "https://cdn.changes.tg/gifts/models/Crystal%20Ball/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Cupid Charm",
+    "image_url": "https://cdn.changes.tg/gifts/models/Cupid%20Charm/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Desk Calendar",
+    "image_url": "https://cdn.changes.tg/gifts/models/Desk%20Calendar/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Diamond Ring",
+    "image_url": "https://cdn.changes.tg/gifts/models/Diamond%20Ring/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Durov's Cap",
+    "image_url": "https://cdn.changes.tg/gifts/models/Durov's%20Cap/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Durov's Glasses",
+    "image_url": "https://cdn.changes.tg/gifts/models/Durov's%20Glasses/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Easter Egg",
+    "image_url": "https://cdn.changes.tg/gifts/models/Easter%20Egg/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Electric Skull",
+    "image_url": "https://cdn.changes.tg/gifts/models/Electric%20Skull/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Eternal Candle",
+    "image_url": "https://cdn.changes.tg/gifts/models/Eternal%20Candle/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Eternal Rose",
+    "image_url": "https://cdn.changes.tg/gifts/models/Eternal%20Rose/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Evil Eye",
+    "image_url": "https://cdn.changes.tg/gifts/models/Evil%20Eye/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Faith Amulet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Faith%20Amulet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Fine Pen",
+    "image_url": "https://cdn.changes.tg/gifts/models/Fine%20Pen/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Flying Broom",
+    "image_url": "https://cdn.changes.tg/gifts/models/Flying%20Broom/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Fresh Socks",
+    "image_url": "https://cdn.changes.tg/gifts/models/Fresh%20Socks/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Gem Signet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Gem%20Signet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Genie Lamp",
+    "image_url": "https://cdn.changes.tg/gifts/models/Genie%20Lamp/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Ginger Cookie",
+    "image_url": "https://cdn.changes.tg/gifts/models/Ginger%20Cookie/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Hanging Star",
+    "image_url": "https://cdn.changes.tg/gifts/models/Hanging%20Star/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Happy Brownie",
+    "image_url": "https://cdn.changes.tg/gifts/models/Happy%20Brownie/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Heart Locket",
+    "image_url": "https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Heroic Helmet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Heroic%20Helmet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Hex Pot",
+    "image_url": "https://cdn.changes.tg/gifts/models/Hex%20Pot/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Holiday Drink",
+    "image_url": "https://cdn.changes.tg/gifts/models/Holiday%20Drink/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Homemade Cake",
+    "image_url": "https://cdn.changes.tg/gifts/models/Homemade%20Cake/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Hypno Lollipop",
+    "image_url": "https://cdn.changes.tg/gifts/models/Hypno%20Lollipop/png/Original.png",
+    "floor": 3.52
+  },
+  {
+    "name": "Ice Cream",
+    "image_url": "https://cdn.changes.tg/gifts/models/Ice%20Cream/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Input Key",
+    "image_url": "https://cdn.changes.tg/gifts/models/Input%20Key/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Instant Ramen",
+    "image_url": "https://cdn.changes.tg/gifts/models/Instant%20Ramen/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Ion Gem",
+    "image_url": "https://cdn.changes.tg/gifts/models/Ion%20Gem/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Ionic Dryer",
+    "image_url": "https://cdn.changes.tg/gifts/models/Ionic%20Dryer/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Jack-in-the-Box",
+    "image_url": "https://cdn.changes.tg/gifts/models/Jack-in-the-Box/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Jelly Bunny",
+    "image_url": "https://cdn.changes.tg/gifts/models/Jelly%20Bunny/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Jester Hat",
+    "image_url": "https://cdn.changes.tg/gifts/models/Jester%20Hat/png/Original.png",
+    "floor": 3.5
+  },
+  {
+    "name": "Jingle Bells",
+    "image_url": "https://cdn.changes.tg/gifts/models/Jingle%20Bells/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Jolly Chimp",
+    "image_url": "https://cdn.changes.tg/gifts/models/Jolly%20Chimp/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Joyful Bundle",
+    "image_url": "https://cdn.changes.tg/gifts/models/Joyful%20Bundle/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Khabib's Papakha",
+    "image_url": "https://cdn.changes.tg/gifts/models/Khabib's%20Papakha/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Kissed Frog",
+    "image_url": "https://cdn.changes.tg/gifts/models/Kissed%20Frog/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Liberty Figure",
+    "image_url": "https://cdn.changes.tg/gifts/models/Liberty%20Figure/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Light Sword",
+    "image_url": "https://cdn.changes.tg/gifts/models/Light%20Sword/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Lol Pop",
+    "image_url": "https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Loot Bag",
+    "image_url": "https://cdn.changes.tg/gifts/models/Loot%20Bag/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Love Candle",
+    "image_url": "https://cdn.changes.tg/gifts/models/Love%20Candle/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Love Potion",
+    "image_url": "https://cdn.changes.tg/gifts/models/Love%20Potion/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Low Rider",
+    "image_url": "https://cdn.changes.tg/gifts/models/Low%20Rider/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Lunar Snake",
+    "image_url": "https://cdn.changes.tg/gifts/models/Lunar%20Snake/png/Original.png",
+    "floor": 3.18
+  },
+  {
+    "name": "Lush Bouquet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Lush%20Bouquet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Mad Pumpkin",
+    "image_url": "https://cdn.changes.tg/gifts/models/Mad%20Pumpkin/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Magic Potion",
+    "image_url": "https://cdn.changes.tg/gifts/models/Magic%20Potion/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Mighty Arm",
+    "image_url": "https://cdn.changes.tg/gifts/models/Mighty%20Arm/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Mini Oscar",
+    "image_url": "https://cdn.changes.tg/gifts/models/Mini%20Oscar/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Money Pot",
+    "image_url": "https://cdn.changes.tg/gifts/models/Money%20Pot/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Mood Pack",
+    "image_url": "https://cdn.changes.tg/gifts/models/Mood%20Pack/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Moon Pendant",
+    "image_url": "https://cdn.changes.tg/gifts/models/Moon%20Pendant/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Mousse Cake",
+    "image_url": "https://cdn.changes.tg/gifts/models/Mousse%20Cake/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Nail Bracelet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Nail%20Bracelet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Neko Helmet",
+    "image_url": "https://cdn.changes.tg/gifts/models/Neko%20Helmet/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Party Sparkler",
+    "image_url": "https://cdn.changes.tg/gifts/models/Party%20Sparkler/png/Original.png",
+    "floor": 3.88
+  },
+  {
+    "name": "Perfume Bottle",
+    "image_url": "https://cdn.changes.tg/gifts/models/Perfume%20Bottle/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Pet Snake",
+    "image_url": "https://cdn.changes.tg/gifts/models/Pet%20Snake/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Plush Pepe",
+    "image_url": "https://cdn.changes.tg/gifts/models/Plush%20Pepe/png/Original.png",
+    "floor": 5050.0
+  },
+  {
+    "name": "Pool Float",
+    "image_url": "https://cdn.changes.tg/gifts/models/Pool%20Float/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Precious Peach",
+    "image_url": "https://cdn.changes.tg/gifts/models/Precious%20Peach/png/Original.png",
+    "floor": 245.05
+  },
+  {
+    "name": "Pretty Posy",
+    "image_url": "https://cdn.changes.tg/gifts/models/Pretty%20Posy/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Rare Bird",
+    "image_url": "https://cdn.changes.tg/gifts/models/Rare%20Bird/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Record Player",
+    "image_url": "https://cdn.changes.tg/gifts/models/Record%20Player/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Restless Jar",
+    "image_url": "https://cdn.changes.tg/gifts/models/Restless%20Jar/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Sakura Flower",
+    "image_url": "https://cdn.changes.tg/gifts/models/Sakura%20Flower/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Santa Hat",
+    "image_url": "https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Scared Cat",
+    "image_url": "https://cdn.changes.tg/gifts/models/Scared%20Cat/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Sharp Tongue",
+    "image_url": "https://cdn.changes.tg/gifts/models/Sharp%20Tongue/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Signet Ring",
+    "image_url": "https://cdn.changes.tg/gifts/models/Signet%20Ring/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Skull Flower",
+    "image_url": "https://cdn.changes.tg/gifts/models/Skull%20Flower/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Sky Stilettos",
+    "image_url": "https://cdn.changes.tg/gifts/models/Sky%20Stilettos/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Sleigh Bell",
+    "image_url": "https://cdn.changes.tg/gifts/models/Sleigh%20Bell/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Snake Box",
+    "image_url": "https://cdn.changes.tg/gifts/models/Snake%20Box/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Snoop Cigar",
+    "image_url": "https://cdn.changes.tg/gifts/models/Snoop%20Cigar/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Snoop Dogg",
+    "image_url": "https://cdn.changes.tg/gifts/models/Snoop%20Dogg/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Snow Globe",
+    "image_url": "https://cdn.changes.tg/gifts/models/Snow%20Globe/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Snow Mittens",
+    "image_url": "https://cdn.changes.tg/gifts/models/Snow%20Mittens/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Spiced Wine",
+    "image_url": "https://cdn.changes.tg/gifts/models/Spiced%20Wine/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Spring Basket",
+    "image_url": "https://cdn.changes.tg/gifts/models/Spring%20Basket/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Spy Agaric",
+    "image_url": "https://cdn.changes.tg/gifts/models/Spy%20Agaric/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Star Notepad",
+    "image_url": "https://cdn.changes.tg/gifts/models/Star%20Notepad/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Stellar Rocket",
+    "image_url": "https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Surge Board",
+    "image_url": "https://cdn.changes.tg/gifts/models/Surge%20Board/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Swag Bag",
+    "image_url": "https://cdn.changes.tg/gifts/models/Swag%20Bag/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Swiss Watch",
+    "image_url": "https://cdn.changes.tg/gifts/models/Swiss%20Watch/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Tama Gadget",
+    "image_url": "https://cdn.changes.tg/gifts/models/Tama%20Gadget/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Timeless Book",
+    "image_url": "https://cdn.changes.tg/gifts/models/Timeless%20Book/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Top Hat",
+    "image_url": "https://cdn.changes.tg/gifts/models/Top%20Hat/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Toy Bear",
+    "image_url": "https://cdn.changes.tg/gifts/models/Toy%20Bear/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Trapped Heart",
+    "image_url": "https://cdn.changes.tg/gifts/models/Trapped%20Heart/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "UFC Strike",
+    "image_url": "https://cdn.changes.tg/gifts/models/UFC%20Strike/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Valentine Box",
+    "image_url": "https://cdn.changes.tg/gifts/models/Valentine%20Box/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Vice Cream",
+    "image_url": "https://cdn.changes.tg/gifts/models/Vice%20Cream/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Victory Medal",
+    "image_url": "https://cdn.changes.tg/gifts/models/Victory%20Medal/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Vintage Cigar",
+    "image_url": "https://cdn.changes.tg/gifts/models/Vintage%20Cigar/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Voodoo Doll",
+    "image_url": "https://cdn.changes.tg/gifts/models/Voodoo%20Doll/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Westside Sign",
+    "image_url": "https://cdn.changes.tg/gifts/models/Westside%20Sign/png/Original.png",
+    "floor": 95.0
+  },
+  {
+    "name": "Whip Cupcake",
+    "image_url": "https://cdn.changes.tg/gifts/models/Whip%20Cupcake/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Winter Wreath",
+    "image_url": "https://cdn.changes.tg/gifts/models/Winter%20Wreath/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Witch Hat",
+    "image_url": "https://cdn.changes.tg/gifts/models/Witch%20Hat/png/Original.png",
+    "floor": 0
+  },
+  {
+    "name": "Xmas Stocking",
+    "image_url": "https://cdn.changes.tg/gifts/models/Xmas%20Stocking/png/Original.png",
+    "floor": 0
+  }
+]
