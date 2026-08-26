@@ -1681,53 +1681,70 @@
       if(arrow) arrow.style.removeProperty('display');
       setStatus('Шар на поле');
 
+      // Build a handful of randomized waypoints the puck skates through on its way
+      // to the winning zone, then travel that whole path as ONE continuous curve
+      // (Catmull-Rom spline) whose speed eases smoothly to zero exactly at the
+      // target. Previously this was two disconnected phases: ~8s of fast random
+      // wall-bouncing, then a hard cut into a separate 7s glide toward the target.
+      // At the seam the puck's velocity dropped to zero instantly and then jumped
+      // toward a brand-new destination - that's the "stops strangely and flies off
+      // somewhere unclear" bug. A single eased curve has no such seam: it only ever
+      // slows down, and it always arrives precisely in the winning zone.
+      const clamp=(v)=>Math.max(6,Math.min(94,v));
+      const hops=3;
+      const waypoints=[{x:spawnX,y:spawnY}];
+      for(let i=1;i<=hops;i++){
+        const bias=i/(hops+1); // later waypoints drift progressively closer to the target
+        const rx=clamp(8+seedValue(seedId+':hopx'+i)*84);
+        const ry=clamp(8+seedValue(seedId+':hopy'+i)*84);
+        waypoints.push({
+          x:clamp(rx*(1-bias*0.55)+target.x*(bias*0.55)),
+          y:clamp(ry*(1-bias*0.55)+target.y*(bias*0.55))
+        });
+      }
+      waypoints.push({x:target.x,y:target.y});
+
+      function catmullRom(p0,p1,p2,p3,t){
+        const t2=t*t,t3=t2*t;
+        return {
+          x:0.5*((2*p1.x)+(-p0.x+p2.x)*t+(2*p0.x-5*p1.x+4*p2.x-p3.x)*t2+(-p0.x+3*p1.x-3*p2.x+p3.x)*t3),
+          y:0.5*((2*p1.y)+(-p0.y+p2.y)*t+(2*p0.y-5*p1.y+4*p2.y-p3.y)*t2+(-p0.y+3*p1.y-3*p2.y+p3.y)*t3)
+        };
+      }
+      function pathAt(u){
+        const n=waypoints.length-1;
+        const scaled=Math.max(0,Math.min(1,u))*n;
+        let i=Math.floor(scaled); if(i>=n)i=n-1;
+        const t=scaled-i;
+        const p0=waypoints[Math.max(0,i-1)], p1=waypoints[i], p2=waypoints[i+1], p3=waypoints[Math.min(n,i+2)];
+        return catmullRom(p0,p1,p2,p3,t);
+      }
+      function easeOutCubic(x){ return 1-Math.pow(1-x,3); }
+
       // Direction selection first; movement starts only after the arrow finishes.
       setTimeout(()=>{
         puck.classList.remove('choosing','aiming');
         if(arrow) arrow.style.setProperty('display','none','important');
         puck.classList.add('rushing','in-play');
 
-        let x=spawnX, y=spawnY;
-        let vx=Math.cos(flightAngle)*780, vy=Math.sin(flightAngle)*780;
-        let last=performance.now();
-        const startTime=last;
-        const cruiseDuration=8.0;
-        const decelDuration=7.0;
-        const totalDuration=cruiseDuration+decelDuration;
-        let cruiseEndX=x, cruiseEndY=y;
+        const flightSeconds=3.6;
+        const startTime=performance.now();
 
         function tick(now){
-          const elapsed=(now-startTime)/1000;
-          const dt=Math.min(.020,Math.max(.001,(now-last)/1000));
-          last=now;
+          const raw=Math.min(1,(now-startTime)/1000/flightSeconds);
+          const u=easeOutCubic(raw);
+          const p=pathAt(u);
+          puck.style.left=p.x.toFixed(4)+'%';
+          puck.style.top=p.y.toFixed(4)+'%';
 
-          if(elapsed < cruiseDuration){
-            x += vx*dt; y += vy*dt;
-            if(x<=0){x=0;vx=Math.abs(vx)*0.88;} else if(x>=100){x=100;vx=-Math.abs(vx)*0.88;}
-            if(y<=0){y=0;vy=Math.abs(vy)*0.88;} else if(y>=100){y=100;vy=-Math.abs(vy)*0.88;}
-            const friction=Math.exp(-0.045*dt);
-            vx*=friction; vy*=friction;
-            cruiseEndX=x; cruiseEndY=y;
-          }else{
-            // Smooth, bounce-free landing. Velocity tends continuously to zero.
-            const raw=Math.max(0,Math.min(1,(elapsed-cruiseDuration)/decelDuration));
-            const u=raw*raw*raw*(raw*(raw*6-15)+10);
-            x=cruiseEndX+(target.x-cruiseEndX)*u;
-            y=cruiseEndY+(target.y-cruiseEndY)*u;
-          }
-
-          puck.style.left=x.toFixed(4)+'%';
-          puck.style.top=y.toFixed(4)+'%';
-
-          if(elapsed < totalDuration){
+          if(raw < 1){
             animationRAF=requestAnimationFrame(tick);
             return;
           }
 
-          // Do not assign a second position here. The last eased frame is already the final point.
           animationRAF=0;
-          puck.style.left=x.toFixed(4)+'%';
-          puck.style.top=y.toFixed(4)+'%';
+          puck.style.left=target.x.toFixed(4)+'%';
+          puck.style.top=target.y.toFixed(4)+'%';
           puck.classList.remove('rushing','aiming','choosing','in-play');
           puck.classList.add('winner-puck');
           if(arrow) arrow.style.setProperty('display','none','important');
@@ -1739,7 +1756,7 @@
           setTimeout(()=>winner.classList.remove('show'),4200);
         }
         animationRAF=requestAnimationFrame(tick);
-      },1400);
+      },1200);
     }
 
     function startCountdown(startAt){
@@ -1834,6 +1851,26 @@
     const rocketPrizeName  = document.getElementById('rocketPrizeName');
     const rocketPrizeValue = document.getElementById('rocketPrizeValue');
     const rocketPrizeKind  = document.getElementById('rocketPrizeKind');
+
+    // These were missing entirely, which made every call into startWaitingPhase()
+    // throw a ReferenceError and silently die (it's invoked inside try/catch elsewhere),
+    // so the countdown ring never started and stayed frozen on its static "5".
+    const emojiWrap         = document.getElementById('rocketEmojiWrap');
+    const rocketPngIcon     = document.getElementById('rocketPngIcon');
+    const rocketBoom        = document.getElementById('rocketBoom');
+    const countdownRing     = document.getElementById('countdownRing');
+    const countdownNum      = document.getElementById('countdownNum');
+    const ringProgressEl    = document.getElementById('ringProgress');
+    const rocketScreen      = document.getElementById('rocketScreen');
+    const backBtn           = document.getElementById('rocketBackBtn');
+    const openBtn           = document.getElementById('openRocketBtn'); // no such button exists today; kept as a safe no-op via ?.
+    const RING_CIRCUMFERENCE = 2 * Math.PI * 76;
+    function setRingProgress(fraction){
+      if(!ringProgressEl) return;
+      const f = Math.max(0, Math.min(1, fraction));
+      ringProgressEl.style.strokeDasharray = String(RING_CIRCUMFERENCE);
+      ringProgressEl.style.strokeDashoffset = String(RING_CIRCUMFERENCE * (1 - f));
+    }
 
     const betModal          = document.getElementById('betModal');
     const modalTabBalance   = document.getElementById('modalTabBalance');
@@ -2895,6 +2932,12 @@
     }
 
     let lastCaseWinner=null;
+    // Bumped on every case-open click. Lets us tell a fresh spin apart from a
+    // stale one still finishing in the background, so a delayed charge failure
+    // or a delayed result timer from an OLD click can never overwrite what the
+    // reel is currently showing (that mismatch - reel lands on X, popup says Y -
+    // was caused by two overlapping spins racing each other).
+    let caseSpinToken=0;
     function showResult(winner){
       lastCaseWinner=winner;
       resultImage.style.display='none'; resultImage.removeAttribute('src');
@@ -2911,6 +2954,7 @@
     }
 
     caseOpenBtn.addEventListener('click', async ()=>{
+      if(caseOpenBtn.disabled) return; // extra guard: never allow a second spin to overlap the first
       const casePrice=Number(caseOpenBtn.dataset.casePrice||1);
       const caseLoss=caseOpenBtn.dataset.caseLoss ? Number(caseOpenBtn.dataset.caseLoss) : 82;
       const promo=caseOpenBtn.dataset.casePromo==='1';
@@ -2920,6 +2964,10 @@
       if(bal<casePrice){caseInsufficient.textContent=`Недостаточно TON. Нужно минимум ${casePrice} TON.`;return;}
       caseInsufficient.textContent='';
       caseOpenBtn.disabled=true;
+      // This spin's own id. Any background callback (charge failure, result timer)
+      // checks this before touching the UI, so a slow/failed request from an older
+      // spin can never clobber what a newer spin is showing.
+      const mySpin=++caseSpinToken;
       // Reserve locally and start the animation instantly; the real charge is confirmed in background.
       setBalance(bal-casePrice);
       let winner=weightedPrize(casePrice,caseLoss);
@@ -2931,15 +2979,20 @@
       const API2=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
       fetch(API2+'/api/wallet/charge',{method:'POST',headers:{'X-Telegram-User-Id':String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999'),'Content-Type':'application/json'},body:JSON.stringify({amount:casePrice,reason:caseOpenBtn.dataset.caseType||'Case'}),cache:'no-store'})
         .then(async rr=>{if(!rr.ok)throw new Error((await rr.text())||'Не удалось списать TON');return rr.json();})
-        .then(dd=>setBalance(Number(dd.balance??(bal-casePrice))))
-        .catch(e=>{setBalance(bal);reelWrap.classList.remove('active');caseInsufficient.textContent=e.message||'Не удалось списать TON';caseOpenBtn.disabled=false;});
+        .then(dd=>{if(mySpin===caseSpinToken)setBalance(Number(dd.balance??(bal-casePrice)));})
+        .catch(e=>{
+          if(mySpin!==caseSpinToken)return; // a newer spin is already in flight - let it finish undisturbed
+          setBalance(bal);reelWrap.classList.remove('active');caseInsufficient.textContent=e.message||'Не удалось списать TON';caseOpenBtn.disabled=false;
+        });
       setTimeout(async()=>{
+        if(mySpin!==caseSpinToken)return; // stale spin - a newer click already replaced the reel/result
         resultNote.textContent='';
         if(winner.type==='ton'&&winner.value>0){
-          try{const rr=await fetch(API2+'/api/wallet/credit',{method:'POST',headers:{'X-Telegram-User-Id':String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999'),'Content-Type':'application/json'},body:JSON.stringify({amount:winner.value,reason:'Case win'}),cache:'no-store'});if(rr.ok){const dd=await rr.json();setBalance(Number(dd.balance||0));}}catch(_){}
+          try{const rr=await fetch(API2+'/api/wallet/credit',{method:'POST',headers:{'X-Telegram-User-Id':String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999'),'Content-Type':'application/json'},body:JSON.stringify({amount:winner.value,reason:'Case win'}),cache:'no-store'});if(rr.ok){const dd=await rr.json();if(mySpin===caseSpinToken)setBalance(Number(dd.balance||0));}}catch(_){}
           window.__logActivity?.('case_drop',0,{name:winner.name,value:winner.value,kind:'ton',action_text:'выиграл в кейсе'});
         }
         if(winner.type==='nft'){window.__logActivity?.('case_drop',0,{name:winner.name,image_url:winner.img,value:Number(winner.floor||0),kind:'nft',action_text:'вытащил NFT из кейса'});}
+        if(mySpin!==caseSpinToken)return;
         showResult(winner);caseOpenBtn.disabled=false;
       },1700);
     });
