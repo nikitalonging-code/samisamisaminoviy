@@ -1,32 +1,36 @@
-# NFT Gift MVP v8
+# NFT Gift MVP backend
 
-Чистая версия для Render: frontend / backend / worker в корне.
+Минимальный backend для связки Mini App ↔ Telegram worker.
 
-## Render secrets
+## Запуск
 
-Backend:
-- `DATABASE_URL` — существующая PostgreSQL база
-- `BOT_USERNAME` — username Telegram-бота без `@`
-- `BOT_TOKEN` — токен Telegram-бота
-- `ADMIN_IDS` — Telegram ID админов через запятую
-- `WORKER_SECRET` — берётся из worker
-- `MRKT_WORKER_URL` — URL worker
+```bash
+python -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+export WORKER_SECRET=dev-secret
+uvicorn main:app --reload --port 8080
+```
 
-Worker:
-- `TELEGRAM_API_ID`
-- `TELEGRAM_API_HASH`
-- `TELEGRAM_SESSION`
-- `WORKER_SECRET`
+В MVP авторизация Mini App упрощена до заголовка `X-Telegram-User-Id`.
+В продакшене его нужно заменить на серверную проверку Telegram Mini App `initData`.
 
-## Что есть
+MRKT больше не требует ручной ежедневной ротации токена: backend обращается к Telegram user-session worker, который сам открывает MRKT Mini App, получает свежий `tgWebAppData`, обменивает его на MRKT token и кэширует токен на несколько часов. `MRKT_AUTH_TOKEN` оставлен только как аварийный fallback.
 
-- Live-лента сверху интерфейса с реальными событиями Crash / Cases.
-- Telegram NFT-подарки используются как визуалы режимов и кейсов.
-- Ice Arena доступна из PvP, а не из Play Hub; два отдельных игрока занимают два поля.
-- Реферальная ссылка через `startapp=ref_<code>` и Telegram share chooser.
-- Реферальная премия 10% от депозитов приглашённого.
-- Задания и рейтинг по обороту TON.
-- Отправить подарок открывает `@chibiop`.
-- Админ-панель только для `ADMIN_IDS`: статистика, баланс, NFT, рассылка, бан/разбан, режим закрытого приложения.
-- Закрытый режим показывает обычным пользователям бесконечный экран загрузки; админов пропускает.
-- Avatar fallback через Telegram Bot API, если прямой `photo_url` не загрузился.
+## API
+
+- `GET /health`
+- `GET /api/me`
+- `GET /api/inventory`
+- `POST /api/withdrawals`
+- `GET /api/withdrawals`
+- `POST /api/internal/gifts` — внутренний endpoint для worker.
+
+## Что намеренно не входит
+
+1. Реальная автоматизация Portals — только интерфейс адаптера/очереди.
+2. Реальная обработка Telegram session — вынесена в отдельный worker.
+3. Продовая авторизация/Rate limit/anti-fraud.
+
+
+Gift catalog: `gift_catalog.json` is seeded into PostgreSQL table `gift_catalog` on backend startup; source contains 118 collections from the supplied frontend.
