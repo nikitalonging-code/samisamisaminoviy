@@ -14,7 +14,6 @@ API_URL = os.getenv('API_URL', '')
 WORKER_SECRET = os.getenv('WORKER_SECRET', '')
 PORT = int(os.getenv('PORT', '10000'))
 
-# ==================== ОТДЕЛ: HTTP API / HEALTH ====================
 app = FastAPI()
 client = None
 mrkt_token = ''
@@ -23,7 +22,6 @@ mrkt_token_lock = asyncio.Lock()
 MRKT_TOKEN_CACHE_SECONDS = int(os.getenv('MRKT_TOKEN_CACHE_SECONDS', '21600'))
 
 
-# ==================== ОТДЕЛ: ПЕРИОДИЧЕСКОЕ ОБНОВЛЕНИЕ ТРАНЗАКЦИЙ ====================
 async def _mint_mrkt_token():
     """Open MRKT's Telegram Mini App with the worker's user session and exchange
     the signed tgWebAppData for a short-lived MRKT API token.

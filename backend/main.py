@@ -31,7 +31,6 @@ app.add_middleware(CORSMiddleware, allow_origins=['*'], allow_credentials=True, 
 _DB_READY = False
 _DB_INIT_LOCK = threading.Lock()
 
-# ==================== ОТДЕЛ: БАЗА ДАННЫХ И ИНИЦИАЛИЗАЦИЯ ====================
 def _raw_db():
     if not DATABASE_URL:
         raise RuntimeError('DATABASE_URL is not configured')
@@ -228,7 +227,6 @@ def init_db():
                 (name, image_url, floor, now, now),
             )
 
-# ==================== ОТДЕЛ: ВЫВОД NFT ====================
 class WithdrawalIn(BaseModel):
     inventory_id: str
 
@@ -252,7 +250,6 @@ class GiftIn(BaseModel):
 
 
 
-# ==================== ОТДЕЛ: АВТОРИЗАЦИЯ TELEGRAM И АДМИН-ПРОВЕРКИ ====================
 def telegram_webapp_user(init_data: str):
     """Validate Telegram WebApp initData and return the embedded user dict."""
     if not init_data or not BOT_TOKEN:
@@ -293,7 +290,6 @@ def require_admin(x_telegram_user_id: str | None):
     return tg_id
 
 
-# ==================== ОТДЕЛ: TELEGRAM BOT / WEBHOOK / УВЕДОМЛЕНИЯ ====================
 def telegram_api(method: str, payload: dict):
     if not BOT_TOKEN:
         raise RuntimeError('BOT_TOKEN is not configured')
@@ -356,7 +352,6 @@ def current_user(x_telegram_user_id: str | None):
 def home():
     return FileResponse(FRONTEND)
 
-# ==================== ОТДЕЛ: ICE ARENA / PVP ====================
 class ArenaJoinIn(BaseModel):
     amount: float
 
@@ -474,7 +469,6 @@ def arena_resolve(x_telegram_user_id: str | None = Header(default=None)):
     return arena_current(x_telegram_user_id)
 
 
-# ==================== ОТДЕЛ: HEALTH / READY / PING ====================
 @app.get('/health')
 def health():
     # Render health check must be dependency-free and return immediately.
@@ -490,7 +484,6 @@ def ready():
     except Exception as exc:
         return {'ok': False, 'db': False, 'error': str(exc)}
 
-# ==================== ОТДЕЛ: ПРОФИЛЬ, БАЛАНС И ИНВЕНТАРЬ ====================
 class ProfileIn(BaseModel):
     username: str = ''
     first_name: str = ''
@@ -580,7 +573,6 @@ def create_withdrawal(payload: WithdrawalIn, x_telegram_user_id: str | None = He
 
 
 
-# ==================== ОТДЕЛ: АКТИВНОСТЬ, РЕФЕРАЛЫ И ЛИВ-ЛЕНТА ====================
 class ActivityIn(BaseModel):
     type: str
     amount: float = 0
@@ -707,7 +699,6 @@ async def background_bootstrap():
                     print('Telegram webhook setup failed:', exc)
     asyncio.create_task(_bootstrap())
 
-# ==================== ОТДЕЛ: ПРОФИЛЬ, RATING, TASKS, LIVE, CONFIG ====================
 @app.get('/api/rating')
 def rating(x_telegram_user_id: str | None = Header(default=None)):
     u=current_user(x_telegram_user_id)
@@ -799,7 +790,6 @@ def avatar(telegram_user_id: int):
         raise HTTPException(404, str(exc))
 
 
-# ==================== ОТДЕЛ: КЕЙСЫ И ПРОМОКОДЫ ====================
 class PromoOpenIn(BaseModel):
     code: str
 
@@ -903,7 +893,6 @@ def admin_overview(x_telegram_user_id: str | None = Header(default=None)):
         top=con.execute('SELECT u.username,u.first_name,u.avatar_url,COALESCE(s.total_volume,0) AS volume FROM users u LEFT JOIN user_stats s ON s.user_id=u.id ORDER BY COALESCE(s.total_volume,0) DESC LIMIT 20').fetchall()
     return {'admin_tg_id':admin_tg_id,'users':int(totals['users'] or 0),'balance':float(totals['balance'] or 0),'active_24h':int(active),'banned':int(banned),'volume':float(volume or 0),'top':[dict(x) for x in top]}
 
-# ==================== ОТДЕЛ: АДМИН-ПАНЕЛЬ ====================
 class AdminUserIn(BaseModel):
     username: str
 
@@ -990,7 +979,6 @@ def admin_users(x_telegram_user_id: str | None = Header(default=None)):
         rows=con.execute("SELECT u.id,u.telegram_user_id,u.username,u.first_name,u.last_name,u.avatar_url,u.balance,u.referral_count,u.referral_earnings,u.is_banned,COALESCE(s.total_volume,0) AS volume,COALESCE(s.arena_wins,0) AS wins FROM users u LEFT JOIN user_stats s ON s.user_id=u.id ORDER BY u.created_at DESC LIMIT 200").fetchall()
     return {'items':[dict(r) for r in rows]}
 
-# ==================== ОТДЕЛ: MRKT / РЫНОК NFT ====================
 def get_mrkt_token(force=False):
     # Preferred path: ask the already-authenticated Telegram user-session worker to
     # mint a fresh MRKT token. This removes the need to rotate MRKT_AUTH_TOKEN by hand.
@@ -1116,7 +1104,6 @@ def ensure_v9_tables(con):
     )""")
     con.execute("CREATE INDEX IF NOT EXISTS idx_crash_bets_round_created ON crash_bets(round_id,created_at DESC)")
 
-# ==================== ОТДЕЛ: TON CONNECT / ДЕПОЗИТЫ ====================
 class DepositIntentIn(BaseModel):
     wallet_address: str
     amount: float
