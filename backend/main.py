@@ -720,7 +720,9 @@ def tasks(x_telegram_user_id: str | None = Header(default=None)):
 @app.get('/api/live')
 def live(x_telegram_user_id: str | None = Header(default=None)):
     current_user(x_telegram_user_id)
-    with db() as con: rows=con.execute('SELECT * FROM live_events ORDER BY created_at DESC LIMIT 30').fetchall()
+    with db() as con:
+        rows=con.execute('SELECT id,name,image_url,value,kind,action_text,created_at FROM live_events ORDER BY created_at DESC LIMIT 30').fetchall()
+    # Public LIVE feed is reward-only: never expose usernames, profile pictures or Telegram identity.
     return {'items':[dict(r) for r in rows]}
 
 
@@ -834,8 +836,7 @@ def open_promo_case(payload: PromoOpenIn, x_telegram_user_id: str | None = Heade
         reward = draw_promo_reward()
         now = int(time.time())
         if reward['kind'] == 'ton':
-            new_balance = float(u['balance'] or 0) + float(reward['value'])
-            con.execute('UPDATE users SET balance=%s WHERE id=%s', (new_balance, u['id']))
+            new_balance = float(u['balance'] or 0)
         else:
             item_id = uuid.uuid4().hex
             con.execute(
@@ -1238,14 +1239,9 @@ def v9_wallet_charge(payload: V9WalletAmount, x_telegram_user_id: str | None = H
 
 @app.post('/api/wallet/credit')
 def v9_wallet_credit(payload: V9WalletAmount, x_telegram_user_id: str | None = Header(default=None)):
-    u = current_user(x_telegram_user_id)
-    amount = round(float(payload.amount), 6)
-    if amount <= 0:
-        raise HTTPException(400, 'Invalid amount')
-    with db() as con:
-        con.execute('UPDATE users SET balance=balance+%s WHERE id=%s', (amount, u['id']))
-        balance = float(con.execute('SELECT balance FROM users WHERE id=%s', (u['id'],)).fetchone()['balance'])
-    return {'ok': True, 'balance': balance}
+    # Balance is increased only by a confirmed deposit or an explicit admin credit.
+    current_user(x_telegram_user_id)
+    raise HTTPException(403, 'GRAM balance can be increased only by deposit confirmation or admin credit')
 
 def v9_crash_multiplier(elapsed: float) -> float:
     return max(1.0, math.exp(0.17 * max(0.0, elapsed)))
