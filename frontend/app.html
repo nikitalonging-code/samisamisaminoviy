@@ -805,6 +805,22 @@
   .ice-puck.before-start{opacity:0!important;pointer-events:none;}
   .ice-puck.choosing{opacity:1!important;}
 
+
+  #topLiveFeed[hidden]{display:none!important;}
+  .exact-live-slot{padding:0!important;background:#09090a!important;}
+  .exact-live-slot .top-live{margin:0!important;padding:5px 0!important;border:0!important;background:#09090a!important;overflow:hidden!important;}
+  .exact-live-slot .top-live-track{display:flex!important;gap:8px!important;padding:0 8px!important;overflow-x:auto!important;scrollbar-width:none!important;}
+  .exact-live-slot .top-live-track::-webkit-scrollbar{display:none!important;}
+  .exact-live-slot .top-live-item{min-width:0!important;width:150px!important;max-width:150px!important;height:48px!important;padding:5px!important;border:1px solid rgba(255,53,64,.24)!important;border-radius:12px!important;background:linear-gradient(180deg,#171113,#111114)!important;display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important;overflow:hidden!important;}
+  .exact-live-slot .top-live-item img,.exact-live-slot .top-live-ton{width:38px!important;height:38px!important;border-radius:9px!important;flex:0 0 auto!important;object-fit:contain!important;background:#0b0c0f!important;}
+  .exact-live-slot .top-live-item>div{min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important;}
+  .exact-live-slot .top-live-item b{display:block!important;color:#fff!important;font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  .exact-live-slot .top-live-item span{display:block!important;color:#ff5962!important;font-size:9px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
+  .exact-live-slot .top-live-ton{background:url('assets/gram_icon.png') center/contain no-repeat!important;color:transparent!important;font-size:0!important;}
+  @media (max-width:390px){
+    .exact-live-slot .top-live-item{width:142px!important;max-width:142px!important;}
+    .exact-profile-avatar{border-width:1px!important;}
+  }
 </style>
 <!-- Refined visual system: quiet Telegram-inspired surfaces and native gift imagery. -->
 <style>
@@ -1142,15 +1158,15 @@ body{background:#050506!important;color:#fff!important;}
 .phone{background:#09090a!important;overflow-x:hidden!important;}
 .exact-home{padding-bottom:88px;}
 .exact-balance-wrap{position:relative;height:72px;margin:0 -2px;overflow:hidden;background:#090a0c;}
-.exact-balance-bg{position:absolute;inset:0;width:100%;height:72px;object-fit:cover;display:block;}
+.exact-balance-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;image-rendering:auto;}
 .exact-profile-hotspot,.exact-topup-hotspot{position:absolute;top:0;height:72px;border:0;background:transparent;cursor:pointer;}
 .exact-profile-hotspot{left:0;width:215px;}.exact-topup-hotspot{right:0;width:165px;}
-.exact-profile-avatar{position:absolute;left:30px;top:11px;width:54px;height:54px;border-radius:50%;overflow:hidden;background:#222;color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;z-index:2;border:1px solid rgba(255,255,255,.08);}
+.exact-profile-avatar{position:absolute;left:6.28%;top:15.28%;width:11.30%;aspect-ratio:1/1;height:auto;border-radius:50%;overflow:hidden;background:#222;color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;z-index:2;border:1px solid rgba(255,255,255,.08);}
 .exact-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.exact-balance-value{position:absolute;left:89px;top:31px;display:flex;align-items:center;gap:3px;z-index:2;font-weight:800;font-size:15px;color:#fff;}
+.exact-balance-value{position:absolute;left:18.62%;top:43.06%;display:flex;align-items:center;gap:3px;z-index:2;font-weight:800;font-size:clamp(12px,3.08vw,15px);color:#fff;}
 .exact-balance-value img{width:19px;height:19px;object-fit:contain;display:block;}
-.exact-icon-strip{height:74px;overflow:hidden;background:#0d0f11;}
-.exact-icon-strip img{width:100%;height:74px;object-fit:cover;display:block;}
+.exact-icon-strip{height:auto;aspect-ratio:478/74;overflow:hidden;background:#0d0f11;}
+.exact-icon-strip img{width:100%;height:100%;object-fit:fill;display:block;image-rendering:auto;}
 .exact-live-slot{padding:0 0 6px;background:#0b0c0e;}
 .exact-live-slot .top-live{margin:0!important;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);background:#0b0c0e!important;padding:7px 0!important;}
 .exact-live-slot .top-live-track{padding:0 7px!important;}
@@ -1234,7 +1250,7 @@ body{background:#050506!important;color:#fff!important;}
 
   /* Exact home: black header, horizontal LIVE ribbon directly below it, then the four supplied banners. */
   .exact-home{padding-bottom:82px!important;background:#09090a!important;}
-  .exact-balance-wrap{height:72px!important;background:#09090a!important;}
+  .exact-balance-wrap{height:auto!important;aspect-ratio:478/72!important;background:#09090a!important;}
   .exact-live-slot{padding:0 0 7px!important;background:#09090a!important;}
   .exact-live-slot .top-live{margin:0!important;padding:7px 0!important;background:rgba(12,12,13,.96)!important;border-top:1px solid rgba(255,255,255,.06)!important;border-bottom:1px solid rgba(215,25,32,.22)!important;}
   .exact-live-slot .top-live-track{gap:7px!important;padding:0 7px!important;}
@@ -3212,7 +3228,29 @@ body{background:#050506!important;color:#fff!important;}
   const collectionGrid=document.getElementById('collectionGrid');let catalog=[],special=[],filter='all';async function loadCollections(){if(!API)return;collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--sub);padding:25px">Загрузка NFT…</div>';try{const [a,b]=await Promise.all([fetch(API+'/api/catalog',{headers}),fetch(API+'/api/rare-gift-floors?backdrop=all&limit=300',{headers})]);const ad=await a.json(),bd=await b.json();catalog=ad.items||[];special=bd.items||[];renderCollections();}catch(_){collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#ff7474;padding:25px">Не удалось загрузить каталог</div>';}}function renderCollections(){const q=(document.getElementById('collectionSearch').value||'').toLowerCase().trim();const all=[...catalog,...special],seen=new Set();const list=all.filter(x=>{const k=(x.name||'')+'|'+(x.backdrop||'');if(seen.has(k))return false;seen.add(k);if(filter==='black'&&String(x.backdrop).toLowerCase()!=='black')return false;if(filter==='onyx'&&String(x.backdrop).toLowerCase()!=='onyx black')return false;return String(x.name||'').toLowerCase().includes(q);}).slice(0,300);document.getElementById('collectionsCount').textContent=list.length;collectionGrid.innerHTML='';list.forEach(g=>{const c=document.createElement('div');c.className='collection-card';const img=g.image_url||g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;c.innerHTML=`<img src="${img}" alt="" onerror="this.style.display='none'"><div class="collection-name">${g.name}</div><div class="collection-meta">${Number(g.floor||0)>0?Number(g.floor).toFixed(2)+' GRAM':'Floor —'}</div>${g.backdrop?`<span class="collection-badge">${g.backdrop}</span>`:''}`;collectionGrid.appendChild(c);});}document.getElementById('openCollectionsBtn')?.addEventListener('click',()=>{collections.classList.add('active');loadCollections();});document.getElementById('collectionsBackBtn')?.addEventListener('click',()=>collections.classList.remove('active'));document.getElementById('collectionSearch')?.addEventListener('input',renderCollections);document.querySelectorAll('.collection-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.collection-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;renderCollections();}));
   async function loadRating(){const box=document.getElementById('ratingList');if(!box)return;try{const r=await fetch(API+'/api/rating',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach((p,i)=>{const row=document.createElement('div');row.className='rating-row'+(String(p.user_id)===String(d.you_user_id)?' me':'');const av=p.avatar_url?`<img src="${p.avatar_url}" alt="">`:`<div class="mini-avatar">${(p.first_name||p.username||'?').slice(0,1).toUpperCase()}</div>`;row.innerHTML=`<div>${i+1}</div><div class="rating-user">${av}<span>${p.username?'@'+p.username:(p.first_name||'Пользователь')}</span></div><div class="rating-volume">${Number(p.volume||0).toFixed(2)} GRAM</div>`;box.appendChild(row);});}catch(_){}}loadRating();setInterval(loadRating,15000);
   async function loadTasks(){const box=document.getElementById('tasksList');if(!box)return;try{const r=await fetch(API+'/api/tasks',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach(t=>{const el=document.createElement('div');el.className='task-real';el.innerHTML=`<div class="task-real-head"><div class="task-real-icon">${t.icon}</div><div><h4>${t.title}</h4><p>${t.description}</p></div></div><div class="task-real-foot"><span>${t.progress_label}</span><span class="reward">+${Number(t.reward||0).toFixed(2)} GRAM</span></div>`;box.appendChild(el);});}catch(_){}}loadTasks();setInterval(loadTasks,15000);
-  async function loadLive(){const box=document.getElementById('topLiveTrack');if(!box)return;try{const r=await fetch(API+'/api/live',{headers,cache:'no-store'});if(!r.ok)return;const d=await r.json();const items=d.items||[];box.innerHTML='';(items.length?items:[{kind:'gram',name:'Ожидаем дропы',value:0,action_text:'GRAM и NFT появятся здесь'}]).slice(0,14).forEach(e=>{const row=document.createElement('div');row.className='top-live-item';const kind=String(e.kind||'').toLowerCase();const isGram=kind==='ton'||kind==='gram';let icon=isGram?'<span class="top-live-ton" aria-hidden="true"></span>':(e.image_url?`<img src="${e.image_url}" alt="" onerror="this.style.visibility='hidden'">`:'<span class="top-live-avatar" aria-hidden="true">◆</span>');const title=isGram?(Number(e.value||0)>0?Number(e.value).toFixed(2)+' GRAM':'GRAM'):(e.name||'NFT');const sub=isGram?'Получен дроп': 'NFT дроп';row.innerHTML=`${icon}<div><b>${title}</b><span>${sub}</span></div>`;box.appendChild(row);});}catch(_){}}loadLive();setInterval(loadLive,5000);
+  async function loadLive(){
+    const box=document.getElementById('topLiveTrack');
+    const feed=document.getElementById('topLiveFeed');
+    if(!box||!feed)return;
+    try{
+      const r=await fetch(API+'/api/live',{headers,cache:'no-store'});
+      if(!r.ok){feed.hidden=true;return;}
+      const d=await r.json();
+      const items=(d.items||[]).filter(e=>{const kind=String(e?.kind||'').toLowerCase();return (kind==='ton'||kind==='gram')||!!e?.image_url;}).slice(0,14);
+      box.innerHTML='';
+      if(!items.length){feed.hidden=true;return;}
+      items.forEach(e=>{
+        const row=document.createElement('div'); row.className='top-live-item';
+        const kind=String(e?.kind||'').toLowerCase(); const isGram=kind==='ton'||kind==='gram';
+        const icon=isGram?'<span class="top-live-ton" aria-hidden="true"></span>':`<img src="${String(e.image_url||'').replace(/"/g,'&quot;')}" alt="NFT" loading="lazy" onerror="this.closest('.top-live-item')?.remove();">`;
+        const title=isGram?'GRAM':String(e.name||'NFT');
+        const value=Number(e.value||0)>0?(isGram?`+${Number(e.value).toFixed(3)} GRAM`:`≈ ${Number(e.value).toFixed(3)} GRAM`):'NFT';
+        row.innerHTML=`${icon}<div><b>${title}</b><span>${value}</span></div>`; box.appendChild(row);
+      });
+      feed.hidden=box.children.length===0;
+    }catch(_){feed.hidden=true;}
+  }
+  loadLive();setInterval(loadLive,5000);
   document.getElementById('sendGiftProfileBtn')?.addEventListener('click',()=>{const u='https://t.me/chibiop';try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,'_blank');}catch(_){window.open(u,'_blank');}});
 
   const caseConfig={promo:{name:'Promo Case',price:0,art:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png',loss:0,promo:true},summer:{name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82}};document.querySelectorAll('.case-card').forEach(card=>card.addEventListener('click',()=>{const cfg=caseConfig[card.dataset.case||'summer'];if(cfg)window.__openCaseConfig?.(cfg);}));window.__openCaseConfig=(cfg)=>{const s=document.getElementById('caseScreen');if(!s)return;s.classList.add('active');const title=s.querySelector('.case-top-title');if(title)title.innerHTML=`<button class="case-back" id="caseBackBtnDyn">←</button> ${cfg.name}`;const hero=s.querySelector('.case-hero-art');if(hero)hero.src=cfg.art;const n=s.querySelector('.case-hero-name');if(n)n.textContent=cfg.name;const p=s.querySelector('.case-price');if(p)p.textContent=cfg.promo?'0 GRAM':cfg.price+' GRAM';const sub=s.querySelector('.case-hero-sub');if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':`Открытие ${cfg.price} GRAM`;const btn=document.getElementById('caseOpenBtn');if(btn){btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' GRAM';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=cfg.price;btn.dataset.caseLoss=cfg.loss;btn.dataset.casePromo=cfg.promo?'1':'';}document.getElementById('caseBackBtnDyn')?.addEventListener('click',()=>s.classList.remove('active'),{once:true});};
@@ -3222,6 +3260,7 @@ body{background:#050506!important;color:#fff!important;}
 
 <script>
 (function(){
+  try{localStorage.removeItem('caseBalance');}catch(_){}
   const topup=document.getElementById('topupBtn');
   const modal=document.getElementById('tonModal');
   const close=document.getElementById('tonClose');
