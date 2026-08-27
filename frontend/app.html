@@ -1175,6 +1175,78 @@ body{background:#050506!important;color:#fff!important;}
 .rocket-screen,.case-screen,.upgrade-screen,.ice-screen,.playhub-screen,.admin-screen,.profile-screen{background:#09090a!important;}
 .case-open-btn,.case-card-btn,.bet-btn,.ice-join,.ice-bet-confirm,.ton-connect-action,.ton-send-action,.admin-btn,.send-btn,.invite-btn,.go-btn,.upgrade-btn,.confirm-bet-btn,.result-continue{background:linear-gradient(135deg,#d71920,#ff3b48)!important;color:#fff!important;}
 </style>
+
+<style id="v47-exact-design-fix">
+  :root{
+    --bg:#09090a!important;--card:#151315!important;--card2:#1c1719!important;
+    --purple:#d71920!important;--purple2:#ff5a62!important;--blue:#d71920!important;
+    --green:#ff3d47!important;--gold:#ff9fa4!important;--text:#f7f7f7!important;
+    --sub:#a7a0a2!important;--border:#32171a!important;
+  }
+  body,.phone{background:#09090a!important;}
+  .phone{max-width:478px!important;width:100%!important;}
+  .content{padding-bottom:82px!important;}
+
+  /* The supplied navigation image is the visual source of truth. Five click zones match it exactly. */
+  .bottomnav{
+    position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:0!important;
+    width:min(100%,478px)!important;height:68px!important;padding:0!important;
+    border:0!important;border-radius:0!important;overflow:hidden!important;
+    background:rgba(9,9,10,.72) url('assets/home_bottom_nav.png') center/100% 68px no-repeat!important;
+    backdrop-filter:blur(14px) saturate(115%)!important;-webkit-backdrop-filter:blur(14px) saturate(115%)!important;
+    box-shadow:0 -8px 22px rgba(0,0,0,.42)!important;z-index:500!important;
+    display:flex!important;
+  }
+  .bottomnav .navitem{height:68px!important;min-width:0!important;flex:1 1 20%!important;position:relative!important;z-index:2!important;background:transparent!important;border:0!important;color:transparent!important;font-size:0!important;padding:0!important;cursor:pointer!important;}
+  .bottomnav .navicon-wrap,.bottomnav .count{visibility:hidden!important;pointer-events:none!important;}
+
+  /* Exact home: black header, horizontal LIVE ribbon directly below it, then the four supplied banners. */
+  .exact-home{padding-bottom:82px!important;background:#09090a!important;}
+  .exact-balance-wrap{height:72px!important;background:#09090a!important;}
+  .exact-live-slot{padding:0 0 7px!important;background:#09090a!important;}
+  .exact-live-slot .top-live{margin:0!important;padding:7px 0!important;background:rgba(12,12,13,.96)!important;border-top:1px solid rgba(255,255,255,.06)!important;border-bottom:1px solid rgba(215,25,32,.22)!important;}
+  .exact-live-slot .top-live-track{gap:7px!important;padding:0 7px!important;}
+  .exact-live-slot .top-live-item{min-width:185px!important;padding:6px 9px!important;background:#151112!important;border:1px solid rgba(215,25,32,.28)!important;border-radius:12px!important;}
+  .top-live-item b{color:#fff!important;}
+  .top-live-item span{color:#b9b0b2!important;}
+  .top-live-ton,.ton-icon,.case-ton-icon,.result-ton-icon,.reel-ton-wrap .case-ton-icon{
+    background-image:url('assets/gram_icon.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:contain!important;
+    background-color:transparent!important;color:transparent!important;font-size:0!important;box-shadow:none!important;
+  }
+  .ton-icon{width:18px!important;height:18px!important;}
+  .top-live-ton{width:28px!important;height:28px!important;border-radius:50%!important;}
+  .case-ton-icon{width:42px!important;height:42px!important;border-radius:50%!important;}
+
+  .exact-home-banners{gap:10px!important;padding:0 6px!important;}
+  .exact-banner{border-radius:22px!important;box-shadow:0 8px 20px rgba(0,0,0,.34)!important;}
+  .exact-banner:active{transform:scale(.992)!important;}
+
+  /* Red/black visual system on every non-home screen; functionality is untouched. */
+  .rocket-screen,.case-screen,.upgrade-screen,.ice-screen,.playhub-screen,.admin-screen,.profile-screen{background:#09090a!important;color:#f7f7f7!important;}
+  .topup-btn,.primary,.invite-btn,.go-btn,.send-btn,.upgrade-btn,.case-open-btn,.case-card-btn,.bet-btn,.confirm-bet-btn,.result-continue,.admin-btn,.ton-connect-action,.ton-send-action,.ice-join,.ice-start,.ice-bet-confirm{
+    background:linear-gradient(135deg,#c80f16,#ff3944)!important;color:#fff!important;border-color:transparent!important;
+    box-shadow:0 8px 22px rgba(215,25,32,.20)!important;
+  }
+  .cashout-btn{background:linear-gradient(135deg,#b30f16,#e63a43)!important;color:#fff!important;}
+  .navitem.active .navicon-wrap{background:rgba(215,25,32,.22)!important;color:#ff5a62!important;}
+  .gift-card,.inventory-item,.possible-card,.empty-card,.invite-card,.rating-card,.task-card,.tickets-card,.pool-card,.row-card,.bet-row,.admin-block,.case-card,.ice-controls{
+    background:#151315!important;border-color:#32171a!important;
+  }
+  .section-title,.rating-title,.playhub-heading strong,.ice-title strong,.case-top-title,.profile-name{color:#fff!important;}
+  .playhub-hero,.playhub-game-card,.upgrade-screen .upgrade-hero{background:linear-gradient(145deg,#22090b,#100b0c)!important;border-color:#4a171b!important;}
+  .playhub-game-card.rocket-game-card{background:linear-gradient(145deg,#2a0b0e,#130b0c)!important;}
+
+  /* Ice controls keep the arena readable but use the same red/black shell and accents. */
+  .ice-arena{background:radial-gradient(circle at 50% 50%,rgba(215,25,32,.18),transparent 36%),linear-gradient(145deg,#260d10,#110b0c)!important;}
+  .ice-stakes button.active{border-color:rgba(255,65,75,.65)!important;background:#4a1218!important;color:#fff!important;}
+  .ice-stake-input:focus{border-color:#ff3944!important;}
+  .ice-join,.ice-start{color:#fff!important;}
+  .ice-winner small{color:#ffb4b8!important;}
+  .ice-player i{background:#d71920!important;}
+
+  /* No blue TON/GRAM badge remains anywhere in the UI. */
+  .ton-icon:before,.case-ton-icon:before{display:none!important;content:none!important;}
+</style>
 </head>
 <body>
 <div class="phone">
@@ -1264,13 +1336,12 @@ body{background:#050506!important;color:#fff!important;}
     <div class="tabpane" id="tab-rewards"><div class="section-title">🎯 Задания</div><div class="rating-sub" style="margin-top:-4px">Задания считаются по реальным действиям и обороту в приложении. Таймеров пока нет.</div><div id="tasksList"></div></div>
   </div>
 
-  <div class="bottomnav">
-    <button class="navitem" data-tab="inventory"><div class="navicon-wrap">📦</div>Инвентарь</button>
-    <button class="navitem" data-tab="invite"><div class="navicon-wrap">👥</div>Пригласить</button>
-    <button class="navitem" data-tab="main"><div class="navicon-wrap">🏠</div>Главная</button>
-    <button class="navitem" data-tab="pvp"><div class="navicon-wrap">⚔️</div>PVP</button>
-    <button class="navitem" data-tab="rating"><div class="navicon-wrap">🏆</div>Рейтинг</button>
-    <button class="navitem" data-tab="rewards"><span class="count">8</span><div class="navicon-wrap">🎁</div>Награды</button>
+  <div class="bottomnav" aria-label="Основная навигация">
+    <button class="navitem" data-tab="inventory" aria-label="Инвентарь"><div class="navicon-wrap">📦</div>Инвентарь</button>
+    <button class="navitem" data-tab="invite" aria-label="Реферальная программа"><div class="navicon-wrap">👥</div>Реф</button>
+    <button class="navitem active" data-tab="main" aria-label="Главная"><div class="navicon-wrap">🏠</div>Главная</button>
+    <button class="navitem" data-tab="rating" aria-label="Рейтинг"><div class="navicon-wrap">🏆</div>Рейтинг</button>
+    <button class="navitem" data-tab="rewards" aria-label="Задания"><span class="count">8</span><div class="navicon-wrap">🎯</div>Задания</button>
   </div>
 
   <!-- ROCKET GAME SCREEN -->
@@ -3731,9 +3802,39 @@ body{background:#050506!important;color:#fff!important;}
   // Cases banner opens the real case screen, never scrolls to hidden cards.
   byId('homeCasesBanner')?.addEventListener('click',function(e){
     e.preventDefault(); e.stopImmediatePropagation();
-    window.__openCaseConfig?.({name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82});
+    window.__openCaseHard?.('summer');
   }, true);
   setInterval(syncAvatar,1500);
+})();
+</script>
+
+<script id="v47-navigation-bridge">
+(function(){
+  const $=s=>document.querySelector(s);
+  const activateTab=(name)=>{
+    document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('active',n.dataset.tab===name));
+    document.querySelectorAll('.tabpane').forEach(p=>p.classList.remove('active'));
+    const pane=$('#tab-'+name); if(pane) pane.classList.add('active');
+  };
+  document.addEventListener('click',function(e){
+    const nav=e.target?.closest?.('.bottomnav .navitem');
+    if(nav){ e.preventDefault(); e.stopImmediatePropagation(); activateTab(nav.dataset.tab); return; }
+    const b=e.target?.closest?.('#homeRocketBanner,#homeCasesBanner,#homePlayHubBanner,#homeIceBanner');
+    if(!b)return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    if(b.id==='homeRocketBanner'){ window.__openRocketHard?.(); return; }
+    if(b.id==='homeCasesBanner'){ window.__openCaseHard?.('summer'); return; }
+    if(b.id==='homePlayHubBanner'){ const x=$('#playHubScreen'); if(x){x.classList.add('active');x.style.display='flex';x.style.zIndex='9000';} return; }
+    if(b.id==='homeIceBanner'){ const x=$('#iceScreen'); if(x){x.classList.add('active');x.style.display='flex';x.style.zIndex='9000';} return; }
+  },true);
+  // Ensure the exact home is the initial tab and keep the Gram avatar synchronized.
+  activateTab('main');
+  const syncGramAvatars=()=>{
+    const src=$('#topAvatar img')?.src || $('#profileAvatar')?.src || '';
+    if(!src)return;
+    document.querySelectorAll('#exactHomeAvatar').forEach(x=>{x.innerHTML='<img alt="" src="'+src.replace(/"/g,'&quot;')+'">';});
+  };
+  syncGramAvatars(); setInterval(syncGramAvatars,1500);
 })();
 </script>
 </body>
