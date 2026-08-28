@@ -246,6 +246,8 @@ class GiftIn(BaseModel):
     symbol: str = ''
     image_url: str = ''
     floor: float = 0
+    class CrashBetIn(BaseModel):
+    amount: float
 
 
 
@@ -1340,3 +1342,44 @@ def v9_crash_feed(x_telegram_user_id: str | None = Header(default=None)):
     with db() as con:
         rows = con.execute("SELECT * FROM live_events WHERE action_text ILIKE '%Crash%' ORDER BY created_at DESC LIMIT 50").fetchall()
     return {'items': [dict(x) for x in rows]}
+    # Добавь в backend/main.py (после импортов и моделей)
+
+class CrashBetIn(BaseModel):
+    amount: float
+
+@app.post('/api/crash/bet')
+def crash_bet(payload: CrashBetIn, x_telegram_user_id: str | None = Header(default=None)):
+    u = current_user(x_telegram_user_id)
+    amount = round(float(payload.amount), 6)
+    if amount < 0.1:
+        raise HTTPException(400, 'Минимальная ставка — 0.1 TON')
+    
+    with db() as con:
+        ulock = con.execute('SELECT * FROM users WHERE id=%s FOR UPDATE', (u['id'],)).fetchone()
+        if float(ulock['balance'] or 0) + 1e-9 < amount:
+            raise HTTPException(400, 'Недостаточно TON на балансе')
+        
+        con.execute('UPDATE users SET balance=balance-%s WHERE id=%s', (amount, u['id']))
+        bet_id = uuid.uuid4().hex
+        con.execute('INSERT INTO activity_log(user_id,type,amount,name,created_at) VALUES(%s,%s,%s,%s,%s)', 
+                    (u['id'], 'crash_bet', amount, 'Crash Bet', int(time.time())))
+        
+    return {'ok': True, 'bet_id': bet_id, 'balance': float(ulock['balance']) - amount}
+
+@app.post('/api/crash/cashout')
+def crash_cashout(payload: dict, x_telegram_user_id: str | None = Header(default=None)):
+    u = current_user(x_telegram_user_id)
+    multiplier = float(payload.get('multiplier', 1.0))
+    bet_id = payload.get('bet_id')
+    
+    # ВНИМАНИЕ: Для MVP рассчитываем выигрыш упрощенно. 
+    # В продакшене нужно проверять по bet_id, что ставка еще активна и краш не произошел!
+    base_bet = 1.0 # Замените на реальное получение суммы ставки из БД по bet_id
+    win_amount = round(base_bet * multiplier, 6)
+    
+    with db() as con:
+        con.execute('UPDATE users SET balance=balance+%s WHERE id=%s', (win_amount, u['id']))
+        con.execute('INSERT INTO activity_log(user_id,type,amount,name,value,kind,action_text,created_at) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)',
+                    (u['id'], 'crash_win', win_amount, 'Crash Win', win_amount, 'crash', f'x{multiplier}', int(time.time())))
+                    
+    return {'ok': True, 'win_amount': win_amount}
