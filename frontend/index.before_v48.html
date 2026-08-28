@@ -1191,10 +1191,31 @@
           <span class="home-banner-sub">ИГРЫ И РЕЖИМЫ</span>
           <img src="https://cdn.changes.tg/gifts/models/Plush%20Pepe/png/Original.png" alt="TILT PLAY">
         </button>
+        <button class="home-banner ice-home" id="homeIceBanner" type="button">
+          <span class="home-banner-tag">❄️ PVP</span>
+          <span class="home-banner-title">ICE ARENA</span>
+          <span class="home-banner-sub">СТАВКИ · ШАР · PVP</span>
+          <span class="ice-avatar-frame"><img src="assets/ice_arena_avatar.png" alt="Игрок Ice Arena"></span>
+          <span class="ice-crystal crystal-a">◆</span><span class="ice-crystal crystal-b">✦</span>
+        </button>
       </div>
 
-      <!-- CASES HUB opens from the upper CASES banner -->
+      <div class="cases-block" id="casesHomeSection">
+        <div class="cases-head">
+          <div class="cases-title">🎁 Кейсы</div>
+          <div class="cases-hint">2 кейса</div>
+        </div>
+        <div class="cases-row">
+          <div class="case-card promo-case-card" data-case="promo"><div class="case-art promo-art"><img class="case-art-img" src="https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png" alt="Promo Case"></div><div class="case-name">Promo Case</div><div class="case-open-price">0 GRAM · по промокоду</div><button class="case-card-btn" type="button">Открыть</button></div>
+          <div class="case-card" id="openCaseCard" data-case="summer">
+            <div class="case-art"><img class="case-art-img" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Summer Case"></div>
+            <div class="case-name">Summer Case</div>
+            <div class="case-open-price">1 GRAM за открытие</div>
+            <button class="case-card-btn" type="button">Открыть</button>
+          </div>
+        </div>
       </div>
+    </div>
 
     <!-- INVENTORY TAB -->
     <div class="tabpane" id="tab-inventory">
@@ -1324,35 +1345,6 @@
     <img id="nftRewardToastImg" alt="">
     <div class="nft-reward-toast-title" id="nftRewardToastTitle">NFT добавлен в инвентарь</div>
     <div class="nft-reward-toast-sub" id="nftRewardToastSub"></div>
-  </div>
-
-
-  <div class="cases-hub-screen" id="casesHubScreen" aria-hidden="true">
-    <div class="cases-hub-topbar">
-      <button class="cases-hub-back" id="casesHubBack" type="button" aria-label="Назад">←</button>
-      <div class="cases-hub-title">CASES<span>Все кейсы</span></div>
-      <div class="cases-hub-balance"><span class="ton-icon gram-coin" aria-hidden="true"><svg viewBox="0 0 32 32"><circle cx="16" cy="16" r="13" fill="#071017" stroke="#fff" stroke-opacity=".16"/><circle cx="16" cy="16" r="11" fill="url(#gramHub)"/><path d="M9 9h14L16 23 9 9Zm3.5 0L16 17l3.5-8M16 17v6" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/><defs><linearGradient id="gramHub" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#dff7ff"/><stop offset=".35" stop-color="#55bdf4"/><stop offset="1" stop-color="#1261a0"/></linearGradient></defs></svg></span><span id="casesHubBalance">0.000</span></div>
-    </div>
-    <div class="cases-hub-tabs">
-      <button type="button" class="cases-tab active" data-filter="all">Все</button>
-      <button type="button" class="cases-tab" data-filter="basic">Обычные</button>
-      <button type="button" class="cases-tab" data-filter="promo">Промо</button>
-      <button type="button" class="cases-tab" data-filter="rare">Редкие</button>
-    </div>
-    <div class="cases-hub-grid" id="casesHubGrid">
-      <button class="hub-case-card" data-kind="basic" data-case="summer" type="button">
-        <div class="hub-case-image blue"><div class="case-orb">◆</div></div>
-        <div class="hub-case-copy"><b>BASIC CASE</b><span>Рулетка с плавным замедлением</span><strong>1 GRAM</strong></div><span class="hub-arrow">›</span>
-      </button>
-      <button class="hub-case-card" data-kind="promo" data-case="promo" type="button">
-        <div class="hub-case-image red"><div class="case-orb">✹</div></div>
-        <div class="hub-case-copy"><b>PROMO CASE</b><span>Взрыв и разлёт предметов</span><strong>Промокод</strong></div><span class="hub-arrow">›</span>
-      </button>
-      <button class="hub-case-card" data-kind="rare" data-case="rare" type="button">
-        <div class="hub-case-image purple"><div class="case-orb">◆</div></div>
-        <div class="hub-case-copy"><b>RARE CASE</b><span>Плавное нарастание света</span><strong>3 GRAM</strong></div><span class="hub-arrow">›</span>
-      </button>
-    </div>
   </div>
 
   <!-- CASE SCREEN -->
@@ -4020,96 +4012,6 @@
   // Promo open stays unchanged; prevent the direct case handler from stealing promo clicks.
 })();
 </script>
-
-<style id="v49-repair-styles">
-/* Only isolated v49 additions; original layout/handlers remain untouched. */
-.cases-hub-screen{position:fixed;inset:0;z-index:50000;background:radial-gradient(circle at 50% 0%,rgba(255,35,46,.12),transparent 34%),#070709;display:none;flex-direction:column;overflow:auto;padding:14px 14px 90px;box-sizing:border-box}
-.cases-hub-screen.active{display:flex}
-.cases-hub-topbar{display:flex;align-items:center;gap:10px;padding:4px 0 14px}.cases-hub-back{width:38px;height:38px;border:1px solid rgba(255,255,255,.11);border-radius:12px;background:#131316;color:#fff;font-size:25px;cursor:pointer}.cases-hub-title{font-weight:900;font-size:20px;line-height:1}.cases-hub-title span{display:block;margin-top:4px;color:#8f9298;font-size:10px;font-weight:600}.cases-hub-balance{margin-left:auto;display:flex;align-items:center;gap:6px;padding:7px 10px;border:1px solid rgba(255,55,65,.35);border-radius:999px;color:#fff;font-weight:900;background:#101012}.cases-hub-balance .gram-coin{display:inline-flex;width:24px;height:24px}.cases-hub-balance .gram-coin svg{width:24px;height:24px}
-.cases-hub-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px}.cases-tab{padding:10px 6px;border:1px solid rgba(255,255,255,.08);border-radius:11px;background:#111114;color:#92959b;font:700 11px inherit;cursor:pointer}.cases-tab.active{color:#fff;border-color:rgba(255,48,58,.55);background:linear-gradient(180deg,rgba(221,24,34,.34),rgba(108,9,16,.18));box-shadow:0 0 18px rgba(220,23,32,.13)}
-.cases-hub-grid{display:grid;gap:10px}.hub-case-card{display:grid;grid-template-columns:88px minmax(0,1fr) 22px;gap:12px;align-items:center;text-align:left;padding:10px;border:1px solid rgba(255,255,255,.08);border-radius:18px;background:linear-gradient(145deg,#141417,#0d0d10);color:#fff;cursor:pointer;box-shadow:inset 0 1px 0 rgba(255,255,255,.04)}.hub-case-card:active{transform:scale(.99)}.hub-case-image{width:88px;height:88px;border-radius:15px;display:grid;place-items:center;overflow:hidden;box-shadow:inset 0 0 0 1px rgba(255,255,255,.08),0 9px 22px rgba(0,0,0,.32)}.hub-case-image.blue{background:radial-gradient(circle at 50% 40%,#275d9b,#101721 70%)}.hub-case-image.red{background:radial-gradient(circle at 50% 40%,#a91e27,#1a090b 70%)}.hub-case-image.purple{background:radial-gradient(circle at 50% 40%,#77358f,#150b1c 70%)}.case-orb{width:44px;height:44px;border-radius:13px;display:grid;place-items:center;color:#fff;background:linear-gradient(145deg,rgba(255,255,255,.28),rgba(255,255,255,.04));box-shadow:0 0 26px rgba(255,255,255,.16),inset 0 1px 0 rgba(255,255,255,.28);font-size:21px}.hub-case-copy{min-width:0}.hub-case-copy b{display:block;font-size:14px;font-weight:900}.hub-case-copy span{display:block;margin-top:4px;color:#91959c;font-size:10px;line-height:1.3}.hub-case-copy strong{display:block;margin-top:8px;color:#ff5660;font-size:12px}.hub-arrow{font-size:28px;color:#777b83}
-/* Keep the exact supplied Stellar Rocket banner asset. */
-.home-banner.paketka-banner{padding:0!important;min-height:0!important;height:auto!important;background:#170507!important;border:0!important;overflow:hidden!important;border-radius:20px!important;display:block!important}.home-banner.paketka-banner:before{display:none!important}.paketka-banner-img{position:relative!important;inset:auto!important;width:100%!important;height:auto!important;display:block!important;object-fit:cover!important;filter:none!important}
-/* Live is drop-only, but make empty/error states obvious. */
-.top-live-empty{color:#757980;font-size:9px;padding:6px 3px;white-space:nowrap}.top-live-item.drop-new{animation:liveIn49 .26s ease-out both}@keyframes liveIn49{from{opacity:0;transform:translateY(5px) scale(.94)}to{opacity:1;transform:none}}
-</style>
-
-
-<script id="v49-repair-runtime">
-(function(){
-  'use strict';
-  const $=id=>document.getElementById(id);
-  const api=()=>String(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
-  const uid=()=>String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999');
-  const headers=()=>({'X-Telegram-User-Id':uid(),'Content-Type':'application/json'});
-
-  /* ---------- CASES HUB ---------- */
-  const hub=$('casesHubScreen'), homeCases=$('homeCasesBanner'), hubBack=$('casesHubBack');
-  function openHub(){if(!hub)return;hub.classList.add('active');hub.setAttribute('aria-hidden','false');syncHubBalance();}
-  function closeHub(){if(!hub)return;hub.classList.remove('active');hub.setAttribute('aria-hidden','true');}
-  homeCases?.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();openHub();},true);
-  hubBack?.addEventListener('click',function(e){e.preventDefault();e.stopPropagation();closeHub();},true);
-  document.querySelectorAll('.cases-tab').forEach(tab=>tab.addEventListener('click',()=>{
-    document.querySelectorAll('.cases-tab').forEach(x=>x.classList.toggle('active',x===tab));
-    const f=tab.dataset.filter;
-    document.querySelectorAll('.hub-case-card').forEach(c=>c.style.display=(f==='all'||c.dataset.kind===f)?'grid':'none');
-  }));
-  function syncHubBalance(){const n=Number(window.__serverBalance??parseFloat(localStorage.getItem('caseBalance')||'0'));if(Number.isFinite(n)&&$('casesHubBalance'))$('casesHubBalance').textContent=n.toFixed(3);}
-  document.querySelectorAll('.hub-case-card').forEach(card=>card.addEventListener('click',()=>{
-    closeHub();
-    const type=card.dataset.case;
-    // Reuse the original, already-working case controller.
-    const original=$('openCaseCard');
-    if(type==='summer'&&original){original.click();return;}
-    const promo=document.querySelector('.promo-case-card');
-    if(type==='promo'&&promo){promo.click();return;}
-    if(type==='rare'){
-      if(typeof window.__openCaseConfig==='function'){window.__openCaseConfig({name:'Rare Case',price:3,loss:78,promo:false,art:document.querySelector('.case-hero-art')?.src||''});return;}
-    }
-  }));
-
-  /* ---------- LIVE: server polling + immediate local insertion ---------- */
-  const track=$('topLiveTrack');
-  function gramSvg(){return '<svg viewBox="0 0 32 36" aria-hidden="true"><path d="M3 6.5h26L16 29.5 3 6.5Zm5.5 0L16 20l7.5-13.5"/><path d="M16 20v9.5"/></svg>';}
-  function appendLive(drop,prepend=true){
-    if(!track||!drop)return;
-    const isNft=String(drop.kind||'').toLowerCase()==='nft'||!!drop.image_url;
-    const el=document.createElement('div'); el.className='top-live-item '+(isNft?'drop-nft':'drop-gram')+' drop-new'; el.setAttribute('aria-label',isNft?'NFT drop':'GRAM drop');
-    if(isNft&&drop.image_url){const img=document.createElement('img');img.alt='';img.src=drop.image_url;img.onerror=()=>{el.innerHTML='<span class="top-live-ton">'+gramSvg()+'</span>';};el.appendChild(img);} else el.innerHTML='<span class="top-live-ton">'+gramSvg()+'</span>';
-    if(prepend) track.prepend(el); else track.appendChild(el);
-    while(track.children.length>14)track.lastElementChild.remove();
-  }
-  function renderLive(items){
-    if(!track)return;
-    track.innerHTML='';
-    (Array.isArray(items)?items:[]).filter(e=>e&&((e.image_url)||(String(e.kind||'').toLowerCase()==='nft')||String(e.kind||'').toLowerCase()==='ton'||e.name)).slice(0,14).forEach(e=>appendLive(e,false));
-    if(!track.children.length){const e=document.createElement('div');e.className='top-live-empty';e.textContent='Ждём новый дроп';track.appendChild(e);}
-  }
-  async function pullLive(){
-    if(!track||!api())return;
-    try{const r=await fetch(api()+'/api/live',{headers:{'X-Telegram-User-Id':uid()},cache:'no-store'});if(!r.ok)return;const d=await r.json();renderLive(d.items||[]);}catch(_){/* keep last visible state */}
-  }
-  // Existing activity logger remains authoritative for backend persistence; we add an immediate visual path for case drops.
-  const origLog=window.__logActivity;
-  if(typeof origLog==='function'){
-    window.__logActivity=async function(type,amount,meta){
-      const result=origLog(type,amount,meta);
-      if(type==='case_drop'){
-        const m=meta||{};appendLive({kind:m.kind||'ton',image_url:m.image_url||'',name:m.name||'',value:m.value||0},true);
-      }
-      return result;
-    };
-  }
-  pullLive(); setInterval(pullLive,4000);
-
-  // Make the exact reference banner stick even if another older runtime tries to swap it.
-  const pb=$('homeRocketBanner')?.querySelector('.paketka-banner-img');
-  if(pb){pb.src='assets/paketka_banner.png';}
-  const obs=pb?new MutationObserver(()=>{if(pb.getAttribute('src')!=='assets/paketka_banner.png')pb.src='assets/paketka_banner.png';}):null;
-  obs?.observe(pb,{attributes:true,attributeFilter:['src']});
-})();
-</script>
-
 </body>
 </html>
 

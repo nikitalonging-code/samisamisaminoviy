@@ -720,7 +720,17 @@ def tasks(x_telegram_user_id: str | None = Header(default=None)):
 @app.get('/api/live')
 def live(x_telegram_user_id: str | None = Header(default=None)):
     current_user(x_telegram_user_id)
-    with db() as con: rows=con.execute('SELECT * FROM live_events ORDER BY created_at DESC LIMIT 30').fetchall()
+    with db() as con:
+        rows=con.execute("""
+            SELECT id,user_id,username,name,image_url,value,kind,action_text,created_at
+            FROM live_events
+            UNION ALL
+            SELECT (1000000000000 + a.id) AS id,a.user_id,u.username,a.name,a.image_url,a.value,a.kind,a.action_text,a.created_at
+            FROM activity_log a JOIN users u ON u.id=a.user_id
+            WHERE a.type='case_drop'
+              AND NOT EXISTS (SELECT 1 FROM live_events l WHERE l.user_id=a.user_id AND l.created_at=a.created_at AND l.name=a.name AND l.kind=a.kind)
+            ORDER BY created_at DESC LIMIT 30
+        """).fetchall()
     return {'items':[dict(r) for r in rows]}
 
 
