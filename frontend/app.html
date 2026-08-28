@@ -781,7 +781,7 @@
 .profile-admin-btn{display:none;width:100%;margin-top:12px;border:0;border-radius:12px;padding:12px;background:linear-gradient(135deg,#6f5be7,#a36cf2);color:#fff;font:900 12px inherit}.profile-admin-btn.show{display:block}
 
 
-  /* ===== GRAM Connect deposit ===== */
+  /* ===== TON Connect deposit ===== */
   .ton-modal{position:fixed;inset:0;z-index:240;background:rgba(0,0,0,.68);display:none;align-items:flex-end;justify-content:center;backdrop-filter:blur(5px);}
   .ton-modal.show{display:flex;}
   .ton-sheet{width:100%;max-width:390px;background:#16181d;border:1px solid rgba(255,255,255,.08);border-radius:24px 24px 0 0;padding:16px 16px 22px;box-shadow:0 -18px 50px rgba(0,0,0,.45);}
@@ -805,22 +805,6 @@
   .ice-puck.before-start{opacity:0!important;pointer-events:none;}
   .ice-puck.choosing{opacity:1!important;}
 
-
-  #topLiveFeed[hidden]{display:none!important;}
-  .exact-live-slot{padding:0!important;background:#09090a!important;}
-  .exact-live-slot .top-live{margin:0!important;padding:5px 0!important;border:0!important;background:#09090a!important;overflow:hidden!important;}
-  .exact-live-slot .top-live-track{display:flex!important;gap:8px!important;padding:0 8px!important;overflow-x:auto!important;scrollbar-width:none!important;}
-  .exact-live-slot .top-live-track::-webkit-scrollbar{display:none!important;}
-  .exact-live-slot .top-live-item{min-width:0!important;width:150px!important;max-width:150px!important;height:48px!important;padding:5px!important;border:1px solid rgba(255,53,64,.24)!important;border-radius:12px!important;background:linear-gradient(180deg,#171113,#111114)!important;display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important;overflow:hidden!important;}
-  .exact-live-slot .top-live-item img,.exact-live-slot .top-live-ton{width:38px!important;height:38px!important;border-radius:9px!important;flex:0 0 auto!important;object-fit:contain!important;background:#0b0c0f!important;}
-  .exact-live-slot .top-live-item>div{min-width:0!important;display:flex!important;flex-direction:column!important;gap:2px!important;}
-  .exact-live-slot .top-live-item b{display:block!important;color:#fff!important;font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-  .exact-live-slot .top-live-item span{display:block!important;color:#ff5962!important;font-size:9px!important;line-height:1.1!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-  .exact-live-slot .top-live-ton{background:url('assets/gram_icon.png') center/contain no-repeat!important;color:transparent!important;font-size:0!important;}
-  @media (max-width:390px){
-    .exact-live-slot .top-live-item{width:142px!important;max-width:142px!important;}
-    .exact-profile-avatar{border-width:1px!important;}
-  }
 </style>
 <!-- Refined visual system: quiet Telegram-inspired surfaces and native gift imagery. -->
 <style>
@@ -1151,164 +1135,39 @@
   .pvp-entry-art img{object-fit:cover!important;border-radius:14px!important;}
 </style>
 
-
-<style id="exact-home-v46">
-:root{--bg:#09090a;--card:#121214;--red:#e11421;--red2:#ff2e3a;}
-body{background:#050506!important;color:#fff!important;}
-.phone{background:#09090a!important;overflow-x:hidden!important;}
-.exact-home{padding-bottom:88px;}
-.exact-balance-wrap{position:relative;height:72px;margin:0 -2px;overflow:hidden;background:#090a0c;}
-.exact-balance-bg{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;display:block;image-rendering:auto;}
-.exact-profile-hotspot,.exact-topup-hotspot{position:absolute;top:0;height:72px;border:0;background:transparent;cursor:pointer;}
-.exact-profile-hotspot{left:0;width:215px;}.exact-topup-hotspot{right:0;width:165px;}
-.exact-profile-avatar{position:absolute;left:6.28%;top:15.28%;width:11.30%;aspect-ratio:1/1;height:auto;border-radius:50%;overflow:hidden;background:#222;color:#fff;display:grid;place-items:center;font-weight:800;font-size:20px;z-index:2;border:1px solid rgba(255,255,255,.08);}
-.exact-profile-avatar img{width:100%;height:100%;object-fit:cover;display:block;}
-.exact-balance-value{position:absolute;left:18.62%;top:43.06%;display:flex;align-items:center;gap:3px;z-index:2;font-weight:800;font-size:clamp(12px,3.08vw,15px);color:#fff;}
-.exact-balance-value img{width:19px;height:19px;object-fit:contain;display:block;}
-.exact-icon-strip{height:auto;aspect-ratio:478/74;overflow:hidden;background:#0d0f11;}
-.exact-icon-strip img{width:100%;height:100%;object-fit:fill;display:block;image-rendering:auto;}
-.exact-live-slot{padding:0 0 6px;background:#0b0c0e;}
-.exact-live-slot .top-live{margin:0!important;border-top:1px solid rgba(255,255,255,.05);border-bottom:1px solid rgba(255,255,255,.05);background:#0b0c0e!important;padding:7px 0!important;}
-.exact-live-slot .top-live-track{padding:0 7px!important;}
-.exact-live-slot .top-live-item{border-color:rgba(215,25,32,.20)!important;background:#141417!important;}
-.exact-home-banners{display:flex;flex-direction:column;gap:10px;padding:0 6px;}
-.exact-banner{padding:0;border:0;background:transparent;display:block;width:100%;cursor:pointer;border-radius:22px;overflow:hidden;box-shadow:0 7px 18px rgba(0,0,0,.28);}
-.exact-banner img{width:100%;height:auto;display:block;border-radius:22px;}
-.exact-ice-banner img{aspect-ratio:1280/666;object-fit:cover;}
-/* Use the user-provided GRAM logo everywhere the old GRAM icon appears. */
-.ton-icon,.top-live-ton,.case-ton-icon,.result-ton-icon,.reel-ton-wrap .case-ton-icon,.playhub-balance .ton-icon,.rk-balance-pill .ton-icon,.case-balance .ton-icon,.upgrade-balance .ton-icon{font-size:0!important;background:url('assets/gram_icon.png') center/contain no-repeat!important;color:transparent!important;display:inline-block!important;}
-.ton-icon{width:18px!important;height:18px!important;}
-.top-live-ton{width:28px!important;height:28px!important;border-radius:50%!important;background-color:#1da1f2!important;background-size:18px!important;}
-.case-ton-icon{width:42px!important;height:42px!important;border-radius:50%!important;background-color:#1da1f2!important;background-size:25px!important;}
-.result-ton-icon,.reel-ton-wrap .case-ton-icon{background-color:#1da1f2!important;}
-.bottomnav{position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:0!important;width:min(100%,478px)!important;height:68px!important;padding:0!important;border:0!important;background:#0b0c0e url('assets/home_bottom_nav.png') center/100% 68px no-repeat!important;z-index:500!important;box-shadow:0 -6px 18px rgba(0,0,0,.35)!important;}
-.bottomnav .navitem{height:68px!important;flex:1!important;position:relative!important;z-index:2!important;background:transparent!important;border:0!important;color:transparent!important;font-size:0!important;}
-.bottomnav .navicon-wrap,.bottomnav .count{visibility:hidden!important;}
-/* transparent click zones keep the provided bottom navigation image functional */
-.bottomnav .navitem{cursor:pointer!important;}
-.home-banners{display:none!important;}
-/* Keep red theme on secondary screens. */
-.rocket-screen,.case-screen,.upgrade-screen,.ice-screen,.playhub-screen,.admin-screen,.profile-screen{background:#09090a!important;}
-.case-open-btn,.case-card-btn,.bet-btn,.ice-join,.ice-bet-confirm,.ton-connect-action,.ton-send-action,.admin-btn,.send-btn,.invite-btn,.go-btn,.upgrade-btn,.confirm-bet-btn,.result-continue{background:linear-gradient(135deg,#d71920,#ff3b48)!important;color:#fff!important;}
-</style>
-
-<style id="v48-live-balance-only">
-  /* STEP 1 ONLY: balance/avatar/LIVE/top-up. Do not alter game screens. */
-  .exact-balance-wrap{height:82px!important;margin:0!important;background:#09090a!important;}
-  .exact-balance-bg{height:82px!important;object-fit:cover!important;}
-  .exact-profile-avatar{left:28px!important;top:11px!important;width:60px!important;height:60px!important;border:2px solid rgba(215,25,32,.55)!important;box-shadow:0 0 0 1px rgba(255,255,255,.06),0 7px 18px rgba(0,0,0,.32)!important;}
-  .exact-balance-value{left:93px!important;top:34px!important;font-size:16px!important;font-weight:900!important;gap:4px!important;}
-  .exact-balance-value img{width:20px!important;height:20px!important;}
-  .exact-topup-hotspot{display:block!important;right:10px!important;width:174px!important;height:70px!important;z-index:7!important;}
-  .exact-topup-button{position:absolute!important;right:10px!important;top:9px!important;width:164px!important;height:54px!important;border:0!important;border-radius:16px!important;display:flex!important;align-items:center!important;justify-content:center!important;gap:9px!important;background:linear-gradient(135deg,#c70f17 0%,#ef202b 55%,#aa090f 100%)!important;color:#fff!important;font:900 15px/1 inherit!important;box-shadow:0 8px 20px rgba(215,25,32,.24),inset 0 1px 0 rgba(255,255,255,.12)!important;z-index:6!important;cursor:pointer!important;letter-spacing:.1px!important;}
-  .exact-topup-button::after{content:'';position:absolute;inset:1px;border-radius:15px;border:1px solid rgba(255,255,255,.12);pointer-events:none;}
-  .topup-wallet-icon{width:21px;height:21px;display:grid;place-items:center;font-size:19px;line-height:1;color:#fff;}
-  .exact-live-slot{padding:5px 0 7px!important;background:#09090a!important;}
-  .exact-live-slot .top-live{margin:0!important;padding:0!important;border:1px solid rgba(215,25,32,.20)!important;border-radius:15px!important;background:linear-gradient(180deg,rgba(20,15,17,.98),rgba(11,11,12,.98))!important;overflow:hidden!important;}
-  .top-live-head{height:27px!important;display:flex!important;align-items:center!important;justify-content:space-between!important;padding:0 10px!important;border-bottom:1px solid rgba(255,255,255,.055)!important;font-size:9px!important;font-weight:900!important;letter-spacing:.45px!important;color:#ff4b55!important;text-transform:uppercase!important;}
-  .top-live-head>span{display:flex!important;align-items:center!important;gap:5px!important;}
-  .top-live-head small{font-size:8px!important;font-weight:700!important;letter-spacing:0!important;color:#8e898b!important;text-transform:none!important;}
-  .live-status-dot{display:inline-block!important;width:6px!important;height:6px!important;border-radius:50%!important;background:#ff2632!important;box-shadow:0 0 0 3px rgba(255,38,50,.10),0 0 8px rgba(255,38,50,.65)!important;}
-  .exact-live-slot .top-live-track{display:flex!important;gap:7px!important;overflow-x:auto!important;padding:7px!important;scrollbar-width:none!important;}
-  .exact-live-slot .top-live-track::-webkit-scrollbar{display:none!important;}
-  .exact-live-slot .top-live-item{min-width:150px!important;max-width:190px!important;min-height:43px!important;padding:6px 8px!important;border:1px solid rgba(255,255,255,.06)!important;border-radius:11px!important;background:#151113!important;display:flex!important;align-items:center!important;gap:8px!important;flex:0 0 auto!important;}
-  .exact-live-slot .top-live-item img,.exact-live-slot .top-live-avatar,.exact-live-slot .top-live-ton{width:30px!important;height:30px!important;border-radius:9px!important;flex:0 0 auto!important;}
-  .exact-live-slot .top-live-item img{object-fit:contain!important;background:#0c0d10!important;}
-  .exact-live-slot .top-live-avatar{display:grid!important;place-items:center!important;background:#0c0d10!important;font-size:0!important;}
-  .exact-live-slot .top-live-item>div{min-width:0!important;}
-  .exact-live-slot .top-live-item b{display:block!important;color:#fff!important;font-size:10px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-  .exact-live-slot .top-live-item span{display:block!important;margin-top:2px!important;color:#a9a1a3!important;font-size:9px!important;white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important;}
-  .exact-live-slot .top-live-ton{background:url('assets/gram_icon.png') center/contain no-repeat!important;color:transparent!important;font-size:0!important;border-radius:50%!important;box-shadow:none!important;}
-  /* Remove the duplicated vertical LIVE label embedded in the supplied icon strip. */
-  .exact-icon-strip{position:relative!important;}
-  .exact-icon-strip::before{content:'';position:absolute!important;left:0!important;top:0!important;bottom:0!important;width:27px!important;background:#0d0f11!important;z-index:2!important;}
-  .exact-topup-hotspot + .exact-topup-button{pointer-events:none!important;}
-</style>
-<style id="v47-exact-design-fix">
-  :root{
-    --bg:#09090a!important;--card:#151315!important;--card2:#1c1719!important;
-    --purple:#d71920!important;--purple2:#ff5a62!important;--blue:#d71920!important;
-    --green:#ff3d47!important;--gold:#ff9fa4!important;--text:#f7f7f7!important;
-    --sub:#a7a0a2!important;--border:#32171a!important;
-  }
-  body,.phone{background:#09090a!important;}
-  .phone{max-width:478px!important;width:100%!important;}
-  .content{padding-bottom:82px!important;}
-
-  /* The supplied navigation image is the visual source of truth. Five click zones match it exactly. */
-  .bottomnav{
-    position:fixed!important;left:50%!important;transform:translateX(-50%)!important;bottom:0!important;
-    width:min(100%,478px)!important;height:68px!important;padding:0!important;
-    border:0!important;border-radius:0!important;overflow:hidden!important;
-    background:rgba(9,9,10,.72) url('assets/home_bottom_nav.png') center/100% 68px no-repeat!important;
-    backdrop-filter:blur(14px) saturate(115%)!important;-webkit-backdrop-filter:blur(14px) saturate(115%)!important;
-    box-shadow:0 -8px 22px rgba(0,0,0,.42)!important;z-index:500!important;
-    display:flex!important;
-  }
-  .bottomnav .navitem{height:68px!important;min-width:0!important;flex:1 1 20%!important;position:relative!important;z-index:2!important;background:transparent!important;border:0!important;color:transparent!important;font-size:0!important;padding:0!important;cursor:pointer!important;}
-  .bottomnav .navicon-wrap,.bottomnav .count{visibility:hidden!important;pointer-events:none!important;}
-
-  /* Exact home: black header, horizontal LIVE ribbon directly below it, then the four supplied banners. */
-  .exact-home{padding-bottom:82px!important;background:#09090a!important;}
-  .exact-balance-wrap{height:auto!important;aspect-ratio:478/72!important;background:#09090a!important;}
-  .exact-live-slot{padding:0 0 7px!important;background:#09090a!important;}
-  .exact-live-slot .top-live{margin:0!important;padding:7px 0!important;background:rgba(12,12,13,.96)!important;border-top:1px solid rgba(255,255,255,.06)!important;border-bottom:1px solid rgba(215,25,32,.22)!important;}
-  .exact-live-slot .top-live-track{gap:7px!important;padding:0 7px!important;}
-  .exact-live-slot .top-live-item{min-width:185px!important;padding:6px 9px!important;background:#151112!important;border:1px solid rgba(215,25,32,.28)!important;border-radius:12px!important;}
-  .top-live-item b{color:#fff!important;}
-  .top-live-item span{color:#b9b0b2!important;}
-  .top-live-ton,.ton-icon,.case-ton-icon,.result-ton-icon,.reel-ton-wrap .case-ton-icon{
-    background-image:url('assets/gram_icon.png')!important;background-position:center!important;background-repeat:no-repeat!important;background-size:contain!important;
-    background-color:transparent!important;color:transparent!important;font-size:0!important;box-shadow:none!important;
-  }
-  .ton-icon{width:18px!important;height:18px!important;}
-  .top-live-ton{width:28px!important;height:28px!important;border-radius:50%!important;}
-  .case-ton-icon{width:42px!important;height:42px!important;border-radius:50%!important;}
-
-  .exact-home-banners{gap:10px!important;padding:0 6px!important;}
-  .exact-banner{border-radius:22px!important;box-shadow:0 8px 20px rgba(0,0,0,.34)!important;}
-  .exact-banner:active{transform:scale(.992)!important;}
-
-  /* Red/black visual system on every non-home screen; functionality is untouched. */
-  .rocket-screen,.case-screen,.upgrade-screen,.ice-screen,.playhub-screen,.admin-screen,.profile-screen{background:#09090a!important;color:#f7f7f7!important;}
-  .topup-btn,.primary,.invite-btn,.go-btn,.send-btn,.upgrade-btn,.case-open-btn,.case-card-btn,.bet-btn,.confirm-bet-btn,.result-continue,.admin-btn,.ton-connect-action,.ton-send-action,.ice-join,.ice-start,.ice-bet-confirm{
-    background:linear-gradient(135deg,#c80f16,#ff3944)!important;color:#fff!important;border-color:transparent!important;
-    box-shadow:0 8px 22px rgba(215,25,32,.20)!important;
-  }
-  .cashout-btn{background:linear-gradient(135deg,#b30f16,#e63a43)!important;color:#fff!important;}
-  .navitem.active .navicon-wrap{background:rgba(215,25,32,.22)!important;color:#ff5a62!important;}
-  .gift-card,.inventory-item,.possible-card,.empty-card,.invite-card,.rating-card,.task-card,.tickets-card,.pool-card,.row-card,.bet-row,.admin-block,.case-card,.ice-controls{
-    background:#151315!important;border-color:#32171a!important;
-  }
-  .section-title,.rating-title,.playhub-heading strong,.ice-title strong,.case-top-title,.profile-name{color:#fff!important;}
-  .playhub-hero,.playhub-game-card,.upgrade-screen .upgrade-hero{background:linear-gradient(145deg,#22090b,#100b0c)!important;border-color:#4a171b!important;}
-  .playhub-game-card.rocket-game-card{background:linear-gradient(145deg,#2a0b0e,#130b0c)!important;}
-
-  /* Ice controls keep the arena readable but use the same red/black shell and accents. */
-  .ice-arena{background:radial-gradient(circle at 50% 50%,rgba(215,25,32,.18),transparent 36%),linear-gradient(145deg,#260d10,#110b0c)!important;}
-  .ice-stakes button.active{border-color:rgba(255,65,75,.65)!important;background:#4a1218!important;color:#fff!important;}
-  .ice-stake-input:focus{border-color:#ff3944!important;}
-  .ice-join,.ice-start{color:#fff!important;}
-  .ice-winner small{color:#ffb4b8!important;}
-  .ice-player i{background:#d71920!important;}
-
-  /* No blue TON/GRAM badge remains anywhere in the UI. */
-  .ton-icon:before,.case-ton-icon:before{display:none!important;content:none!important;}
-</style>
 </head>
 <body>
 <div class="phone">
 
+  <div class="topbar">
+    <button class="avatar-wrap profile-trigger" id="openProfileBtn" type="button" aria-label="Открыть профиль">
+      <div class="avatar" id="topAvatar">C<span class="badge">🛡️</span></div>
+      <div>
+        <div class="balance-label">Ваш баланс</div>
+        <div class="balance-row">
+          <span class="ton-icon">▽</span>
+          <span class="balance-val">0.000</span>
+        </div>
+      </div>
+    </button>
+    <button class="topup-btn" id="topupBtn" type="button">💳 Пополнить</button>
+  </div>
+
+  <div class="top-live" id="topLiveFeed">
+    <div class="top-live-track" id="topLiveTrack"><div class="top-live-item"><span class="top-live-ton">▽</span><div><b>LIVE</b><span>Лента загружается…</span></div></div></div>
+  </div>
+
+
   <div class="ton-modal" id="tonModal">
     <div class="ton-sheet">
       <div class="ton-head">Пополнить GRAM <button class="ton-close" id="tonClose" type="button">×</button></div>
-      <div class="ton-sub">Подключи GRAM-кошелёк и отправь GRAM на депозитный адрес приложения.</div>
+      <div class="ton-sub">Подключи GRAM-кошелёк и отправь TON на депозитный адрес приложения.</div>
       <input class="ton-input" id="tonAmount" type="number" min="0.01" step="0.01" value="1.00" inputmode="decimal">
       <div class="ton-quick"><button type="button" data-ton-quick="0.1">0.1</button><button type="button" data-ton-quick="1">1</button><button type="button" data-ton-quick="5">5</button><button type="button" data-ton-quick="10">10</button></div>
       <div class="ton-wallet-status" id="tonWalletStatus">Кошелёк не подключён.</div>
-      <button class="ton-connect-action" id="tonConnectAction" type="button">Подключить GRAM-кошелёк</button>
+      <button class="ton-connect-action" id="tonConnectAction" type="button">Подключить TON-кошелёк</button>
       <button class="ton-send-action" id="tonSendAction" type="button" disabled>Пополнить на указанную сумму</button>
-      <div class="ton-note">Перевод выполняется через GRAM Connect. Адрес для депозита задаётся на backend через GRAM_DEPOSIT_WALLET. Зачисление баланса требует подтверждения транзакции на backend.</div>
+      <div class="ton-note">Перевод выполняется через TON Connect. Адрес для депозита задаётся на backend через TON_DEPOSIT_WALLET. Зачисление баланса требует подтверждения транзакции на backend.</div>
     </div>
   </div>
 
@@ -1316,38 +1175,47 @@ body{background:#050506!important;color:#fff!important;}
 
     <!-- MAIN TAB -->
     <div class="tabpane active" id="tab-main">
-      <div class="exact-home" id="exactHome">
-        <div class="exact-balance-wrap">
-          <img class="exact-balance-bg" src="assets/home_balance_clean.png" alt="">
-          <button class="exact-profile-hotspot" id="openProfileBtnExact" type="button" aria-label="Открыть профиль"></button>
-          <div class="exact-profile-avatar" id="exactHomeAvatar"><span>C</span></div>
-          <div class="exact-balance-value"><img src="assets/gram_icon.png" alt=""><span class="balance-val">0.000</span></div>
-          <button class="exact-topup-hotspot" id="topupBtnExact" type="button" aria-label="Пополнить"></button>
-          <button class="exact-topup-button" id="topupBtnExactVisual" type="button" aria-label="Пополнить"><span class="topup-wallet-icon" aria-hidden="true">▣</span><span>Пополнить</span></button>
-        </div>
-
-        <div class="exact-live-slot">
-          <div class="top-live" id="topLiveFeed">
-            <div class="top-live-head"><span><i class="live-status-dot"></i>LIVE</span><small>Последние дропы</small></div>
-            <div class="top-live-track" id="topLiveTrack"><div class="top-live-item"><span class="top-live-ton">▽</span><div><b>Ожидаем дропы</b><span>GRAM и NFT появятся здесь</span></div></div></div>
-          </div>
-        </div>
-
-        <div class="exact-icon-strip"><img src="assets/home_icon_row.png" alt=""></div>
-
-        <div class="exact-home-banners">
-          <button class="exact-banner" id="homeRocketBanner" type="button"><img src="assets/home_rocket_banner.png" alt="РАКЕТКА"></button>
-          <button class="exact-banner" id="homeCasesBanner" type="button"><img src="assets/home_cases_banner.png" alt="CASES"></button>
-          <button class="exact-banner" id="homePlayHubBanner" type="button"><img src="assets/home_playhub_banner.png" alt="TILT PLAY"></button>
-          <button class="exact-banner exact-ice-banner" id="homeIceBanner" type="button"><img src="assets/home_ice_banner.png" alt="ICE ARENA"></button>
-        </div>
+      <div class="home-banners">
+        <button class="home-banner rocket-home" id="homeRocketBanner" type="button">
+          <span class="home-banner-tag">🚀 ХИТ</span>
+          <span class="home-banner-title">РАКЕТКА</span>
+          <span class="home-banner-sub">CRASH · LIVE СТАВКИ</span>
+          <img src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Ракетка">
+        </button>
+        <button class="home-banner cases-home" id="homeCasesBanner" type="button">
+          <span class="home-banner-tag">🎁 НОВОЕ</span>
+          <span class="home-banner-title">CASES</span>
+          <span class="home-banner-sub">РАЗНЫЕ ДРОПЫ · 2 КЕЙСА</span>
+          <img src="https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png" alt="Cases">
+        </button>
+        <button class="home-banner playhub-home" id="homePlayHubBanner" type="button">
+          <span class="home-banner-tag">🎮 ХИТ</span>
+          <span class="home-banner-title">TILT PLAY</span>
+          <span class="home-banner-sub">ИГРЫ И РЕЖИМЫ</span>
+          <img src="https://cdn.changes.tg/gifts/models/Plush%20Pepe/png/Original.png" alt="TILT PLAY">
+        </button>
+        <button class="home-banner ice-home" id="homeIceBanner" type="button">
+          <span class="home-banner-tag">❄️ PVP</span>
+          <span class="home-banner-title">ICE ARENA</span>
+          <span class="home-banner-sub">СТАВКИ · ШАР · PVP</span>
+          <span class="ice-avatar-frame"><img src="assets/ice_arena_avatar.png" alt="Игрок Ice Arena"></span>
+          <span class="ice-crystal crystal-a">◆</span><span class="ice-crystal crystal-b">✦</span>
+        </button>
       </div>
 
-      <div class="cases-block" id="casesHomeSection" style="display:none!important">
-        <div class="cases-head"><div class="cases-title">🎁 Кейсы</div><div class="cases-hint">2 кейса</div></div>
+      <div class="cases-block" id="casesHomeSection">
+        <div class="cases-head">
+          <div class="cases-title">🎁 Кейсы</div>
+          <div class="cases-hint">2 кейса</div>
+        </div>
         <div class="cases-row">
           <div class="case-card promo-case-card" data-case="promo"><div class="case-art promo-art"><img class="case-art-img" src="https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png" alt="Promo Case"></div><div class="case-name">Promo Case</div><div class="case-open-price">0 GRAM · по промокоду</div><button class="case-card-btn" type="button">Открыть</button></div>
-          <div class="case-card" id="openCaseCard" data-case="summer"><div class="case-art"><img class="case-art-img" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Summer Case"></div><div class="case-name">Summer Case</div><div class="case-open-price">1 GRAM за открытие</div><button class="case-card-btn" type="button">Открыть</button></div>
+          <div class="case-card" id="openCaseCard" data-case="summer">
+            <div class="case-art"><img class="case-art-img" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Summer Case"></div>
+            <div class="case-name">Summer Case</div>
+            <div class="case-open-price">1 GRAM за открытие</div>
+            <button class="case-card-btn" type="button">Открыть</button>
+          </div>
         </div>
       </div>
     </div>
@@ -1379,18 +1247,38 @@ body{background:#050506!important;color:#fff!important;}
     </div>
 
     <!-- RATING TAB -->
-    <div class="tabpane" id="tab-rating"><div class="rating-card compact"><div class="rating-head"><div class="trophy-icon">🏆</div><div class="rating-title">Рейтинг</div></div><div class="rating-sub">Место определяется по реальному обороту в GRAM. Новый рейтинг начат с нуля.</div></div><div class="rating-thead"><div>#</div><div>Пользователь</div><div style="text-align:right">Оборот</div></div><div id="ratingList"></div></div>
+    <div class="tabpane" id="tab-rating"><div class="rating-card compact"><div class="rating-head"><div class="trophy-icon">🏆</div><div class="rating-title">Рейтинг</div></div><div class="rating-sub">Место определяется по реальному обороту в TON. Новый рейтинг начат с нуля.</div></div><div class="rating-thead"><div>#</div><div>Пользователь</div><div style="text-align:right">Оборот</div></div><div id="ratingList"></div></div>
 
     <!-- REWARDS TAB -->
     <div class="tabpane" id="tab-rewards"><div class="section-title">🎯 Задания</div><div class="rating-sub" style="margin-top:-4px">Задания считаются по реальным действиям и обороту в приложении. Таймеров пока нет.</div><div id="tasksList"></div></div>
   </div>
 
-  <div class="bottomnav" aria-label="Основная навигация">
-    <button class="navitem" data-tab="inventory" aria-label="Инвентарь"><div class="navicon-wrap">📦</div>Инвентарь</button>
-    <button class="navitem" data-tab="invite" aria-label="Реферальная программа"><div class="navicon-wrap">👥</div>Реф</button>
-    <button class="navitem active" data-tab="main" aria-label="Главная"><div class="navicon-wrap">🏠</div>Главная</button>
-    <button class="navitem" data-tab="rating" aria-label="Рейтинг"><div class="navicon-wrap">🏆</div>Рейтинг</button>
-    <button class="navitem" data-tab="rewards" aria-label="Задания"><span class="count">8</span><div class="navicon-wrap">🎯</div>Задания</button>
+  <div class="bottomnav" role="navigation" aria-label="Основная навигация">
+    <button class="navitem" data-tab="inventory" aria-label="Инвентарь">
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M4 8.5 6.3 5h11.4L20 8.5v10A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-10Z"/><path d="M4 9h16M9 5l1.5 4M15 5l-1.5 4M12 9v11"/></svg></span>
+      <span class="navlabel">Инвентарь</span>
+    </button>
+    <button class="navitem" data-tab="invite" aria-label="Рефералы">
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3.5 19.5c.5-3.1 2.4-5 5.5-5s5 1.9 5.5 5M16 5.5a3 3 0 0 1 0 5.8M16.5 14.8c2.2.4 3.5 1.9 4 4.2"/></svg></span>
+      <span class="navlabel">Реф</span>
+    </button>
+    <button class="navitem" data-tab="main" aria-label="Главная">
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 10.5 8-6 8 6v8A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-8Z"/><path d="M9.5 20v-5.5h5V20"/></svg></span>
+      <span class="navlabel">Главная</span>
+    </button>
+    <button class="navitem" data-tab="pvp" aria-label="PVP">
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14.5 4.5 5 5M19.5 4.5l-5 5M7 14l3 3M10 17l-3 3M6 18l-2-2 8-8 2 2-8 8ZM14 6l2-2 4 4-2 2-4-4Z"/></svg></span>
+      <span class="navlabel">PVP</span>
+    </button>
+    <button class="navitem" data-tab="rating" aria-label="Рейтинг">
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10v3c0 3.7-2.1 6-5 6s-5-2.3-5-6V4Z"/><path d="M7 6H4v1c0 3 1.7 5 4.2 5M17 6h3v1c0 3-1.7 5-4.2 5M12 13v4M8.5 20h7M10 17h4"/></svg></span>
+      <span class="navlabel">Рейтинг</span>
+    </button>
+    <button class="navitem" data-tab="rewards" aria-label="Задания">
+      <span class="count">8</span>
+      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="5" y="3.5" width="14" height="17" rx="2"/><path d="M9 3.5h6M8.5 9.5l1.5 1.5 3-3M8.5 14l1.5 1.5 3-3M8.5 18h5"/></svg></span>
+      <span class="navlabel">Задания</span>
+    </button>
   </div>
 
   <!-- ROCKET GAME SCREEN -->
@@ -1627,15 +1515,15 @@ body{background:#050506!important;color:#fff!important;}
       <div class="ice-legend" id="iceLegend"></div>
       <p class="ice-hint">Каждый игрок может поставить от 0.1 GRAM. После второй ставки запускается 20-секундный таймер; до его окончания можно присоединяться к текущему PvP-раунду.</p>
     </div>
-    <div class="ice-bet-modal" id="iceBetModal"><div class="ice-bet-sheet"><div class="ice-bet-head">Новая ставка <button class="ice-bet-close" id="iceBetClose" aria-label="Закрыть">×</button></div><label class="ice-bet-field">Ставка, GRAM<input id="iceBetAmount" type="number" min="0.1" step="0.1" value="0.10" inputmode="decimal"></label><div class="ice-stakes"><button type="button" data-modal-stake="0.1">0.1</button><button type="button" data-modal-stake="1">1</button><button type="button" data-modal-stake="10">10</button><button type="button" data-modal-stake="max">MAX</button></div><button class="ice-bet-confirm" id="iceBetConfirm">Поставить</button></div></div>
+    <div class="ice-bet-modal" id="iceBetModal"><div class="ice-bet-sheet"><div class="ice-bet-head">Новая ставка <button class="ice-bet-close" id="iceBetClose" aria-label="Закрыть">×</button></div><label class="ice-bet-field">Ставка, TON<input id="iceBetAmount" type="number" min="0.1" step="0.1" value="0.10" inputmode="decimal"></label><div class="ice-stakes"><button type="button" data-modal-stake="0.1">0.1</button><button type="button" data-modal-stake="1">1</button><button type="button" data-modal-stake="10">10</button><button type="button" data-modal-stake="max">MAX</button></div><button class="ice-bet-confirm" id="iceBetConfirm">Поставить</button></div></div>
   </div>
 
   <div class="admin-screen" id="adminScreen">
     <div class="app-screen-top"><button class="playhub-back" id="adminBackBtn">←</button><strong>Админ-панель</strong><span class="global-avatar" id="adminTopAvatar"></span></div>
     <div class="admin-body">
       <div class="admin-block"><h3>Статистика</h3><div class="admin-stat"><div><span>Пользователи</span><b id="adminUsers">0</b></div><div><span>Баланс</span><b id="adminBalance">0 GRAM</b></div><div><span>Оборот</span><b id="adminVolume">0 GRAM</b></div><div><span>Забанено</span><b id="adminBanned">0</b></div></div></div>
-      <div class="admin-block"><h3>Баланс пользователю</h3><input class="admin-field" id="adminBalanceUser" placeholder="username"><input class="admin-field" id="adminBalanceAmount" type="number" step="0.001" placeholder="+ / - GRAM"><button class="admin-btn" id="adminBalanceBtn">Выдать / списать</button></div>
-      <div class="admin-block"><h3>Выдать NFT</h3><input class="admin-field" id="adminGiftUser" placeholder="username"><input class="admin-field" id="adminGiftName" placeholder="Название NFT"><input class="admin-field" id="adminGiftFloor" type="number" step="0.01" placeholder="Floor GRAM"><input class="admin-field" id="adminGiftImage" placeholder="Image URL (необязательно)"><div class="admin-actions"><button class="admin-btn" id="adminGiftBtn">Выдать NFT</button><button class="admin-btn secondary" id="adminRefreshBtn">Обновить</button></div></div>
+      <div class="admin-block"><h3>Баланс пользователю</h3><input class="admin-field" id="adminBalanceUser" placeholder="username"><input class="admin-field" id="adminBalanceAmount" type="number" step="0.001" placeholder="+ / - TON"><button class="admin-btn" id="adminBalanceBtn">Выдать / списать</button></div>
+      <div class="admin-block"><h3>Выдать NFT</h3><input class="admin-field" id="adminGiftUser" placeholder="username"><input class="admin-field" id="adminGiftName" placeholder="Название NFT"><input class="admin-field" id="adminGiftFloor" type="number" step="0.01" placeholder="Floor TON"><input class="admin-field" id="adminGiftImage" placeholder="Image URL (необязательно)"><div class="admin-actions"><button class="admin-btn" id="adminGiftBtn">Выдать NFT</button><button class="admin-btn secondary" id="adminRefreshBtn">Обновить</button></div></div>
       <div class="admin-block"><h3>Пользователь</h3><input class="admin-field" id="adminUserName" placeholder="username"><div class="admin-actions"><button class="admin-btn admin-danger" id="adminBanBtn">Забанить</button><button class="admin-btn secondary" id="adminUnbanBtn">Разбанить</button></div></div>
       <div class="admin-block"><h3>Рассылка</h3><textarea class="admin-field" id="adminBroadcastText" rows="4" placeholder="Текст сообщения в бот"></textarea><button class="admin-btn" id="adminBroadcastBtn">Отправить всем</button></div>
       <div class="admin-block"><h3>Промокоды</h3><input class="admin-field" id="adminPromoCode" placeholder="PROMO2026"><input class="admin-field" id="adminPromoUses" type="number" min="0" step="1" placeholder="Лимит использований · 0 = без лимита"><div class="admin-actions"><button class="admin-btn" id="adminPromoCreateBtn">Создать промокод</button><button class="admin-btn secondary" id="adminPromoRefreshBtn">Обновить</button></div><div id="adminPromoList" style="display:flex;flex-direction:column;gap:6px;margin-top:8px"></div></div></div>
@@ -1809,7 +1697,7 @@ body{background:#050506!important;color:#fff!important;}
     function syncStake(v){
       let n=Number(v); if(!Number.isFinite(n)||n<0.1)n=0.1; selected=n;
       if(stakeInput)stakeInput.value=String(n);
-      if(stakeValue)stakeValue.textContent=fmt(n)+' GRAM';
+      if(stakeValue)stakeValue.textContent=fmt(n)+' TON';
       document.querySelectorAll('.ice-controls .ice-stakes button').forEach(x=>x.classList.toggle('active',x.dataset.stake!=='max'&&Number(x.dataset.stake)===n));
     }
     syncStake(.1);
@@ -1972,7 +1860,7 @@ body{background:#050506!important;color:#fff!important;}
 
     function render(data){
       latestData=data; const m=data?.match||null, ps=Array.isArray(data?.players)?data.players:[];
-      if(pool)pool.textContent=fmt(m?.pool)+' GRAM'; if(count)count.textContent=String(ps.length); renderZones(ps);
+      if(pool)pool.textContent=fmt(m?.pool)+' TON'; if(count)count.textContent=String(ps.length); renderZones(ps);
       if(!m){setStatus('Набор игроков');if(join)join.disabled=false;clearPuck();return;}
       const you=ps.some(p=>String(p.user_id)===String(data.you_user_id));
       if(m.status==='waiting'){setStatus(ps.length?'Ждём следующую ставку':'Набор игроков');if(join)join.disabled=you;clearPuck();}
@@ -1990,7 +1878,7 @@ body{background:#050506!important;color:#fff!important;}
       if(!Number.isFinite(before)||before+1e-9<amount){
         // One quick background refresh fixes stale local state without blocking the tap.
         loadBalance();
-        if(error)error.textContent='Недостаточно GRAM';
+        if(error)error.textContent='Недостаточно TON';
         return;
       }
       // Optimistic UI: close immediately so the user never waits for Render cold-start latency.
@@ -2055,7 +1943,7 @@ body{background:#050506!important;color:#fff!important;}
     const quickMax          = document.getElementById('quickMax');
     const modalGiftCards    = document.querySelectorAll('.modal-gift-card');
 
-    let userBalance = 0.000;
+    let userBalance = parseFloat(localStorage.getItem('caseBalance') || '0.000'); if(!Number.isFinite(userBalance)) userBalance = 0.000;
     let phase = 'waiting'; // waiting | flying | crashed
     let countdown = 5;
     let countdownTimer = null;
@@ -2139,7 +2027,7 @@ body{background:#050506!important;color:#fff!important;}
     }
 
     // IMPORTANT: a gift may only be offered when its real market floor is >= the player's
-    // current payout. This prevents an underpayment such as 500 GRAM -> a 398 GRAM Cap.
+    // current payout. This prevents an underpayment such as 500 TON -> a 398 TON Cap.
     let rareBackgroundCandidates = [...specialMarketFallbacks];
     const rareFeedUrl = window.NFT_RARE_FEED_URL || '/api/rare-gift-floors';
     const mrktApiUrl = 'https://api.tgmrkt.io/api/v1/gifts/saling';
@@ -2230,7 +2118,7 @@ body{background:#050506!important;color:#fff!important;}
       rocketPrizeImg.src=prize.img||'';
       rocketPrizeImg.style.display=prize.img?'block':'none';
       rocketPrizeName.textContent=prize.name;
-      rocketPrizeValue.textContent=(Number(prize.floor)||prize.payout).toFixed(2)+' GRAM';
+      rocketPrizeValue.textContent=(Number(prize.floor)||prize.payout).toFixed(2)+' TON';
       rocketPrizeKind.textContent=prize.backdrop||'NFT';
       rocketPrizePanel.classList.toggle('black',prize.kind==='black');
       rocketPrizePanel.classList.toggle('onyx',prize.kind==='onyx');
@@ -2277,7 +2165,7 @@ body{background:#050506!important;color:#fff!important;}
         const card=document.createElement('div'); card.className='inventory-item';
         const img=document.createElement('img'); img.src=item.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(item.name)}/png/Original.png`; img.alt=item.name;
         const name=document.createElement('div'); name.className='inventory-name'; name.textContent=item.name;
-        const meta=document.createElement('div'); meta.className='inventory-meta'; meta.textContent=(floor&&Number.isFinite(floor)?`Floor ${floor.toFixed(2)} GRAM`:'Floor обновляется…')+(item.backdrop?` · ${item.backdrop}`:'');
+        const meta=document.createElement('div'); meta.className='inventory-meta'; meta.textContent=(floor&&Number.isFinite(floor)?`Floor ${floor.toFixed(2)} TON`:'Floor обновляется…')+(item.backdrop?` · ${item.backdrop}`:'');
         const actions=document.createElement('div'); actions.className='inventory-actions';
         const sell=document.createElement('button'); sell.className='inventory-action sell'; sell.textContent='Продать'; sell.disabled=!(floor&&floor>0);
         const upgrade=document.createElement('button'); upgrade.className='inventory-action'; upgrade.textContent='Улучшить';
@@ -2296,7 +2184,7 @@ body{background:#050506!important;color:#fff!important;}
       inventoryEmpty.style.display=inventory.length?'none':'block';
     }
     function openSellConfirm(item,floor){
-      pendingSellId=item.id; sellConfirmDesc.textContent=`Продать ${item.name} по текущему floor ${floor.toFixed(2)} GRAM? После подтверждения NFT будет удалён из инвентаря, а сумма зачислится на баланс.`; sellConfirm.classList.add('active');
+      pendingSellId=item.id; sellConfirmDesc.textContent=`Продать ${item.name} по текущему floor ${floor.toFixed(2)} TON? После подтверждения NFT будет удалён из инвентаря, а сумма зачислится на баланс.`; sellConfirm.classList.add('active');
     }
     sellCancel.addEventListener('click',()=>{pendingSellId=null;sellConfirm.classList.remove('active');});
     sellConfirmBtn.addEventListener('click',()=>{
@@ -2312,7 +2200,7 @@ body{background:#050506!important;color:#fff!important;}
     function showNftRewardToast(item,source){
       nftRewardToastImg.src=item.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(item.name)}/png/Original.png`;
       nftRewardToastTitle.textContent='NFT добавлен в инвентарь';
-      nftRewardToastSub.textContent=`${item.name}${item.floor?` · floor ${Number(item.floor).toFixed(2)} GRAM`:''}`;
+      nftRewardToastSub.textContent=`${item.name}${item.floor?` · floor ${Number(item.floor).toFixed(2)} TON`:''}`;
       nftRewardToast.classList.add('active');
       setTimeout(()=>{nftRewardToast.classList.remove('active'); activateInventoryTab();},1300);
     }
@@ -2387,7 +2275,7 @@ body{background:#050506!important;color:#fff!important;}
       upgradeSourcePick.innerHTML=`<img src="${item.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(item.name)}/png/Original.png`}" alt="">`;
       upgradeSourcePick.classList.add('selected');
       upgradeSourceName.textContent=item.name;
-      upgradeSourceFloor.textContent=`${(marketFloorFor(item.name, item.backdrop)??Number(item.floor)).toFixed(2)} GRAM${item.backdrop?' · '+item.backdrop:''}`;
+      upgradeSourceFloor.textContent=`${(marketFloorFor(item.name, item.backdrop)??Number(item.floor)).toFixed(2)} TON${item.backdrop?' · '+item.backdrop:''}`;
       upgradeTarget=null;
       upgradeTargetPick.innerHTML='<span class="upgrade-plus">+</span>'; upgradeTargetPick.classList.remove('selected');
       upgradeTargetName.textContent=''; upgradeTargetFloor.textContent='';
@@ -2424,11 +2312,11 @@ body{background:#050506!important;color:#fff!important;}
       targets.forEach(g=>{
         const card=document.createElement('div'); card.className='upgrade-target-card';
         const img=g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;
-        card.innerHTML=`<img src="${img}" alt=""><div class="upgrade-target-name">${g.name}</div><div class="upgrade-target-meta">${Number(g.floor).toFixed(2)} GRAM${g.backdrop?' · '+g.backdrop:''}</div>`;
+        card.innerHTML=`<img src="${img}" alt=""><div class="upgrade-target-name">${g.name}</div><div class="upgrade-target-meta">${Number(g.floor).toFixed(2)} TON${g.backdrop?' · '+g.backdrop:''}</div>`;
         card.addEventListener('click',()=>{
           upgradeTarget={...g};
           upgradeTargetPick.innerHTML=`<img src="${img}" alt="">`; upgradeTargetPick.classList.add('selected');
-          upgradeTargetName.textContent=g.name; upgradeTargetFloor.textContent=`${Number(g.floor).toFixed(2)} GRAM${g.backdrop?' · '+g.backdrop:''}`;
+          upgradeTargetName.textContent=g.name; upgradeTargetFloor.textContent=`${Number(g.floor).toFixed(2)} TON${g.backdrop?' · '+g.backdrop:''}`;
           upgradeTargetSheet.classList.remove('active');
           updateUpgradeWheel();
         });
@@ -2446,7 +2334,7 @@ body{background:#050506!important;color:#fff!important;}
         const card=document.createElement('div'); card.className='upgrade-target-card';
         const img=item.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(item.name)}/png/Original.png`;
         const floor=(marketFloorFor(item.name, item.backdrop)??Number(item.floor))||0;
-        card.innerHTML=`<img src="${img}" alt=""><div class="upgrade-target-name">${item.name}</div><div class="upgrade-target-meta">${floor.toFixed(2)} GRAM${item.backdrop?' · '+item.backdrop:''}</div>`;
+        card.innerHTML=`<img src="${img}" alt=""><div class="upgrade-target-name">${item.name}</div><div class="upgrade-target-meta">${floor.toFixed(2)} TON${item.backdrop?' · '+item.backdrop:''}</div>`;
         card.addEventListener('click',()=>{ setUpgradeSource(item); upgradeSourceSheet.classList.remove('active'); });
         upgradeSourceGrid.appendChild(card);
       });
@@ -2476,7 +2364,7 @@ body{background:#050506!important;color:#fff!important;}
           const newItem=addInventoryGift(upgradeTarget);
           upgradeResultImg.src=newItem.img||upgradeTarget.img||'';
           upgradeResultTitle.textContent='Улучшение успешно!';
-          upgradeResultSub.textContent=`${upgradeSource.name} → ${upgradeTarget.name} · ${Number(upgradeTarget.floor).toFixed(2)} GRAM`;
+          upgradeResultSub.textContent=`${upgradeSource.name} → ${upgradeTarget.name} · ${Number(upgradeTarget.floor).toFixed(2)} TON`;
         }else{
           upgradeResultImg.src=upgradeSource.img||'';
           upgradeResultTitle.textContent='NFT сгорел';
@@ -2525,7 +2413,7 @@ body{background:#050506!important;color:#fff!important;}
         rocketPrizeImg.src=prize.img || '';
         rocketPrizeImg.style.display=prize.img ? 'block' : 'none';
         rocketPrizeName.textContent=prize.name;
-        rocketPrizeValue.textContent=(Number(prize.floor!=null?prize.floor:prize.value)).toFixed(2)+' GRAM';
+        rocketPrizeValue.textContent=(Number(prize.floor!=null?prize.floor:prize.value)).toFixed(2)+' TON';
         rocketPrizeKind.textContent=prize.backdrop ? prize.backdrop : (prize.estimated ? 'MARKET · EST.' : 'NFT');
         rocketPrizePanel.classList.toggle('black', prize.kind==='black');
         rocketPrizePanel.classList.toggle('onyx', prize.kind==='onyx');
@@ -2616,13 +2504,13 @@ body{background:#050506!important;color:#fff!important;}
         }else if(b.cashed && b.gift && b.img){
           right = `<img class="bet-gift-result" src="${b.img}" alt="" title="${b.prizeName||'NFT'}">`;
         }else if(Number.isFinite(Number(b.win))){
-          right = `<span class="ton-icon">▽</span>${fmt(Number(b.win))} GRAM`;
+          right = `<span class="ton-icon">▽</span>${fmt(Number(b.win))} TON`;
         }else{
           right = status;
         }
         const stakeLine = b.queued
-          ? `<span class="ton-icon">▽</span>${fmt(Number(b.stake))}${b.type==='gift'?' GRAM value':' GRAM'}${b.prizeName ? ' · '+b.prizeName : ''}`
-          : `<span class="ton-icon">▽</span>${fmt(Number(b.stake))}${b.type==='gift'?' GRAM value':' GRAM'} ×${fmt(Number(b.mult))}${b.prizeName ? ' · '+b.prizeName : ''}`;
+          ? `<span class="ton-icon">▽</span>${fmt(Number(b.stake))}${b.type==='gift'?' TON value':' TON'}${b.prizeName ? ' · '+b.prizeName : ''}`
+          : `<span class="ton-icon">▽</span>${fmt(Number(b.stake))}${b.type==='gift'?' TON value':' TON'} ×${fmt(Number(b.mult))}${b.prizeName ? ' · '+b.prizeName : ''}`;
         row.innerHTML = `
           ${avatar}
           <div style="min-width:0;">
@@ -2674,7 +2562,7 @@ body{background:#050506!important;color:#fff!important;}
         currentBetCashedOut = false;
         betBtn.disabled = true;
         betBtn.classList.add('placed');
-        betBtn.textContent = currentBet.type === 'gift' ? ('✅ Ставка: 🎁 ' + currentBet.name) : ('✅ Ставка: ' + fmt(currentBet.amount) + ' GRAM');
+        betBtn.textContent = currentBet.type === 'gift' ? ('✅ Ставка: 🎁 ' + currentBet.name) : ('✅ Ставка: ' + fmt(currentBet.amount) + ' TON');
         if(currentBet.type === 'balance'){
           bets = [{name:'Вы', avatar:'C', stake:currentBet.amount, mult:1.00, win:null, you:true, current:true, type:'balance', cashed:false, lost:false}];
         } else {
@@ -2796,7 +2684,7 @@ body{background:#050506!important;color:#fff!important;}
       const mult=Math.max(1.01,parseFloat(multEl.textContent.replace('x',''))||1.01);
       currentBetCashedOut=true;currentBetCashoutMult=mult;cashoutBtn.disabled=true;
       if(currentBet.type==='balance'){
-        try{const rr=await fetch(V9_API+'/api/crash/cashout',{method:'POST',headers:V9_HEADERS});if(!rr.ok)throw new Error((await rr.text())||'Слишком поздно');const dd=await rr.json();userBalance=Number(dd.balance||userBalance);localStorage.setItem('caseBalance',String(userBalance));document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));const row=bets.find(x=>x.current);if(row){row.win=Number(dd.payout||0);row.cashed=true;row.mult=Number(dd.multiplier||mult);}cashoutBtn.textContent='✅ Забрано '+fmt(Number(dd.payout||0))+' GRAM';renderBets();syncCrashRound();return;}catch(e){currentBetCashedOut=false;cashoutBtn.disabled=false;alert(e.message||'Слишком поздно');return;}
+        try{const rr=await fetch(V9_API+'/api/crash/cashout',{method:'POST',headers:V9_HEADERS});if(!rr.ok)throw new Error((await rr.text())||'Слишком поздно');const dd=await rr.json();userBalance=Number(dd.balance||userBalance);localStorage.setItem('caseBalance',String(userBalance));document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));const row=bets.find(x=>x.current);if(row){row.win=Number(dd.payout||0);row.cashed=true;row.mult=Number(dd.multiplier||mult);}cashoutBtn.textContent='✅ Забрано '+fmt(Number(dd.payout||0))+' TON';renderBets();syncCrashRound();return;}catch(e){currentBetCashedOut=false;cashoutBtn.disabled=false;alert(e.message||'Слишком поздно');return;}
       }
       const prize=resolvePrizeForBet(mult);if(!prize){currentBetCashedOut=false;cashoutBtn.disabled=false;return;}
       const row=bets.find(x=>x.current);inventory=inventory.filter(x=>x.id!==currentBet.inventoryId);saveInventory();nftInventory.set(currentBet.name,false);if(row){row.cashed=true;row.mult=mult;row.prizeName=prize.name||currentBet.name;row.type='gift';row.gift=true;row.img=prize.img||currentBet.img;}cashoutBtn.textContent='✅ Забрано: '+(prize.name||currentBet.name);const invItem=addInventoryGift(prize);setTimeout(()=>showNftRewardToast(invItem,'rocket'),350);renderBets();
@@ -2846,7 +2734,7 @@ body{background:#050506!important;color:#fff!important;}
         card.dataset.id=item.id; card.dataset.name=item.name;
         const img=item.img || `https://cdn.changes.tg/gifts/models/${encodeURIComponent(item.name)}/png/Original.png`;
         const floor=marketFloorFor(item.name, item.backdrop) ?? Number(item.floor);
-        card.innerHTML=`<img class="bet-gift-thumb" style="width:56px;height:56px;margin:0 auto 7px;display:block;" src="${img}" alt=""><div class="gift-name">${item.name}</div><div class="gift-id">${Number(floor)>0?fmt(Number(floor))+' GRAM':''}${item.backdrop?' · '+item.backdrop:''}</div>`;
+        card.innerHTML=`<img class="bet-gift-thumb" style="width:56px;height:56px;margin:0 auto 7px;display:block;" src="${img}" alt=""><div class="gift-name">${item.name}</div><div class="gift-id">${Number(floor)>0?fmt(Number(floor))+' TON':''}${item.backdrop?' · '+item.backdrop:''}</div>`;
         card.addEventListener('click',()=>{
           grid.querySelectorAll('.modal-gift-card').forEach(c=>c.classList.remove('selected'));
           card.classList.add('selected');
@@ -2932,12 +2820,12 @@ body{background:#050506!important;color:#fff!important;}
         if(queuing){
           queuedBet = betObj;
           bets = bets.concat([{name:(V9_TG?.initDataUnsafe?.user?.username?'@'+V9_TG.initDataUnsafe.user.username:(V9_TG?.initDataUnsafe?.user?.first_name||'Вы')), avatar:(V9_TG?.initDataUnsafe?.user?.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:V9_TG?.initDataUnsafe?.user?.photo_url||'', stake:amount, mult:1.00, win:null, you:true, queued:true, type:'balance'}]);
-          betBtn.textContent = '🕐 На след. раунд: ' + fmt(amount) + ' GRAM';
+          betBtn.textContent = '🕐 На след. раунд: ' + fmt(amount) + ' TON';
         } else {
           currentBet = betObj;
           currentBetCashedOut = false;
           bets = [{name:(V9_TG?.initDataUnsafe?.user?.username?'@'+V9_TG.initDataUnsafe.user.username:(V9_TG?.initDataUnsafe?.user?.first_name||'Вы')), avatar:(V9_TG?.initDataUnsafe?.user?.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:V9_TG?.initDataUnsafe?.user?.photo_url||'', stake:amount, mult:1.00, win:null, you:true, current:true, type:'balance', cashed:false, lost:false}];
-          betBtn.textContent = '✅ Ставка: ' + fmt(amount) + ' GRAM';
+          betBtn.textContent = '✅ Ставка: ' + fmt(amount) + ' TON';
         }
       } else {
         if(!selectedGift || !selectedGift.id) return;
@@ -3019,11 +2907,11 @@ body{background:#050506!important;color:#fff!important;}
       {type:'nft',name:'Skull Flower',floor:10.00,img:getPrizeImg('Skull Flower')}
     ];
     const cashPrizes = [
-      {type:'ton',name:'0 GRAM',value:0},
-      {type:'ton',name:'0.3 GRAM',value:0.3},
-      {type:'ton',name:'0.5 GRAM',value:0.5},
-      {type:'ton',name:'1.5 GRAM',value:1.5},
-      {type:'ton',name:'2 GRAM',value:2}
+      {type:'ton',name:'0 TON',value:0},
+      {type:'ton',name:'0.3 TON',value:0.3},
+      {type:'ton',name:'0.5 TON',value:0.5},
+      {type:'ton',name:'1.5 TON',value:1.5},
+      {type:'ton',name:'2 TON',value:2}
     ];
     const possiblePrizes = [...cashPrizes,...nftPrizes];
 
@@ -3042,7 +2930,7 @@ body{background:#050506!important;color:#fff!important;}
 
     async function refreshCaseBalance(){try{const APIc=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,''); const uid=String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||''); const r=await fetch(APIc+'/api/me',{headers:{'X-Telegram-User-Id':uid},cache:'no-store'}); if(r.ok){const d=await r.json(); window.__serverBalance=Number(d.balance||0); setBalance(window.__serverBalance); return window.__serverBalance;}}catch(_){} return currentBalance();}
 
-    function prizeLabel(p){ return p.type === 'nft' ? `${p.name}\n${p.floor.toFixed(2)} GRAM` : p.name; }
+    function prizeLabel(p){ return p.type === 'nft' ? `${p.name}\n${p.floor.toFixed(2)} TON` : p.name; }
     function renderPossible(){
       possibleGrid.innerHTML='';
       possiblePrizes.forEach(p=>{
@@ -3108,11 +2996,11 @@ body{background:#050506!important;color:#fff!important;}
       resultNote.textContent='';
       if(winner.type==='nft'){
         resultImage.src=winner.img; resultImage.style.display='block';
-        resultPrize.textContent=winner.floor.toFixed(2)+' GRAM';
+        resultPrize.textContent=winner.floor.toFixed(2)+' TON';
         resultNote.textContent=`NFT: ${winner.name}`;
       }else{
         resultPrize.textContent=winner.name;
-        resultNote.textContent=winner.value>0 ? `Сумма ${winner.value.toFixed(2)} GRAM зачислена на баланс.` : 'В этот раз приз не выпал.';
+        resultNote.textContent=winner.value>0 ? `Сумма ${winner.value.toFixed(2)} TON зачислена на баланс.` : 'В этот раз приз не выпал.';
       }
       result.classList.add('active');
     }
@@ -3124,7 +3012,7 @@ body{background:#050506!important;color:#fff!important;}
       if(promo){ document.getElementById('promoCodeModal')?.classList.add('active'); document.getElementById('promoCodeInput')?.focus(); return; }
       const bal=currentBalance();
       setBalance(bal);
-      if(bal<casePrice){caseInsufficient.textContent=`Недостаточно GRAM. Нужно минимум ${casePrice} GRAM.`;return;}
+      if(bal<casePrice){caseInsufficient.textContent=`Недостаточно TON. Нужно минимум ${casePrice} TON.`;return;}
       caseInsufficient.textContent='';
       caseOpenBtn.disabled=true;
       // Reserve locally and start the animation instantly; the real charge is confirmed in background.
@@ -3137,9 +3025,9 @@ body{background:#050506!important;color:#fff!important;}
       const itemWidth=108+10; const targetX=-(winIndex*itemWidth); reel.style.transition='transform 1.65s cubic-bezier(.12,.78,.18,1)'; reel.style.transform=`translateX(${targetX}px)`;
       const API2=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
       fetch(API2+'/api/wallet/charge',{method:'POST',headers:{'X-Telegram-User-Id':String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999'),'Content-Type':'application/json'},body:JSON.stringify({amount:casePrice,reason:caseOpenBtn.dataset.caseType||'Case'}),cache:'no-store'})
-        .then(async rr=>{if(!rr.ok)throw new Error((await rr.text())||'Не удалось списать GRAM');return rr.json();})
+        .then(async rr=>{if(!rr.ok)throw new Error((await rr.text())||'Не удалось списать TON');return rr.json();})
         .then(dd=>setBalance(Number(dd.balance??(bal-casePrice))))
-        .catch(e=>{setBalance(bal);reelWrap.classList.remove('active');caseInsufficient.textContent=e.message||'Не удалось списать GRAM';caseOpenBtn.disabled=false;});
+        .catch(e=>{setBalance(bal);reelWrap.classList.remove('active');caseInsufficient.textContent=e.message||'Не удалось списать TON';caseOpenBtn.disabled=false;});
       setTimeout(async()=>{
         resultNote.textContent='';
         if(winner.type==='ton'&&winner.value>0){
@@ -3187,10 +3075,10 @@ body{background:#050506!important;color:#fff!important;}
         const rw=d.reward||{};
         if(rw.kind==='ton'){
           lastCaseWinner={type:'ton',name:rw.name,value:Number(rw.value||0)};
-          resultImage.style.display='none';resultImage.removeAttribute('src');resultPrize.textContent=rw.name;resultNote.textContent='GRAM-дроп добавлен в LIVE.';result.classList.add('active');
+          resultImage.style.display='none';resultImage.removeAttribute('src');resultPrize.textContent=rw.name;resultNote.textContent='Приз по промокоду зачислен на баланс.';result.classList.add('active');
         }else{
           const winner={type:'nft',name:rw.name,floor:Number(rw.value||0),img:rw.image_url||getPromoImg(rw.name)};
-          lastCaseWinner=winner;resultImage.src=winner.img;resultImage.style.display='block';resultPrize.textContent=winner.floor.toFixed(2)+' GRAM';resultNote.textContent=`NFT: ${winner.name}`;result.classList.add('active');
+          lastCaseWinner=winner;resultImage.src=winner.img;resultImage.style.display='block';resultPrize.textContent=winner.floor.toFixed(2)+' TON';resultNote.textContent=`NFT: ${winner.name}`;result.classList.add('active');
         }
         caseScreen.classList.add('active');
         input.value='';
@@ -3220,47 +3108,24 @@ body{background:#050506!important;color:#fff!important;}
   preloadTelegramAvatar();
   async function loadProfile(){try{if(tgUser){await fetch(API+'/api/profile',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({username:tgUser.username||'',first_name:tgUser.first_name||'',last_name:tgUser.last_name||'',avatar_url:tgUser.photo_url||'',referral_code:getReferralParam()})});}const r=await fetch(API+'/api/me',{headers});if(!r.ok)return;const d=await r.json();const name=[d.first_name,d.last_name].filter(Boolean).join(' ')||d.username||'Пользователь';document.getElementById('profileName').textContent=name;document.getElementById('profileUsername').textContent=d.username?'@'+d.username:'@username';document.getElementById('profileBalance').textContent=Number(d.balance||0).toFixed(3);document.querySelectorAll('.balance-val').forEach(x=>x.textContent=Number(d.balance||0).toFixed(3));document.getElementById('statBets').textContent=d.stats?.arena_bets||0;document.getElementById('statWins').textContent=d.stats?.arena_wins||0;document.getElementById('statVolume').textContent=Number(d.stats?.total_volume||0).toFixed(2);document.getElementById('statProfit').textContent=Number(d.stats?.arena_profit||0).toFixed(2);const bets=Number(d.stats?.arena_bets||0),wins=Number(d.stats?.arena_wins||0);document.getElementById('statWinrate').textContent=(bets?((wins/bets)*100).toFixed(1):'0')+'%';document.getElementById('statBiggest').textContent=Number(d.stats?.biggest_win||0).toFixed(2);syncAv(d.avatar_url||tgUser?.photo_url||'',tgUser?.first_name||d.first_name||d.username||'U');if(d.is_admin)document.getElementById('openAdminBtn')?.classList.add('show');}catch(_){}}
   openProfile?.addEventListener('click',()=>{profile.classList.add('active');loadProfile();});document.getElementById('profileBackBtn')?.addEventListener('click',()=>profile.classList.remove('active'));loadProfile();setInterval(loadProfile,20000);
-  window.__syncBalance=async function(value){const n=Math.max(0,Number(value)||0);window.__serverBalance=n;document.querySelectorAll('.balance-val').forEach(x=>x.textContent=n.toFixed(3));const pb=document.getElementById('profileBalance');if(pb)pb.textContent=n.toFixed(3);const rk=document.getElementById('rkBalanceVal');if(rk)rk.textContent=n.toFixed(3);};
+  window.__syncBalance=async function(value){const n=Number(value||0);window.__serverBalance=n;document.querySelectorAll('.balance-val').forEach(x=>x.textContent=n.toFixed(3));const pb=document.getElementById('profileBalance');if(pb)pb.textContent=n.toFixed(3);const rk=document.getElementById('rkBalanceVal');if(rk)rk.textContent=n.toFixed(3);localStorage.setItem('caseBalance',String(n));};
   async function pollGlobalBalance(){try{const r=await fetch(API+'/api/me',{headers,cache:'no-store'});if(r.ok){const d=await r.json();window.__syncBalance(d.balance);}}catch(_){} }
   pollGlobalBalance();setInterval(pollGlobalBalance,2500);
   async function loadReferral(){try{const r=await fetch(API+'/api/referral',{headers,cache:'no-store'});if(!r.ok)return;const d=await r.json();document.getElementById('refCount').textContent=d.referrals||0;document.getElementById('refEarned').textContent=Number(d.earned||0).toFixed(3);const link=d.bot_link||d.link||'';document.getElementById('refLinkText').textContent=link||'Ссылка появится после настройки BOT_USERNAME';window.__refLink=link;window.__refShare=d.share_url||('https://t.me/share/url?url='+encodeURIComponent(link)+'&text='+encodeURIComponent('Заходи в NFT Gift 🎁'));}catch(_){} }
   document.getElementById('shareReferralBtn')?.addEventListener('click',()=>{const u=window.__refLink;if(!u){alert('Реферальная ссылка ещё не готова');return;}const share=window.__refShare||('https://t.me/share/url?url='+encodeURIComponent(u)+'&text='+encodeURIComponent('Заходи в NFT Gift 🎁'));try{tg?.openTelegramLink?tg.openTelegramLink(share):window.open(share,'_blank');}catch(_){window.open(share,'_blank');}});document.getElementById('copyReferralBtn')?.addEventListener('click',async()=>{if(!window.__refLink)return;try{await navigator.clipboard.writeText(window.__refLink);const b=document.getElementById('copyReferralBtn');b.textContent='✅ Скопировано';setTimeout(()=>b.textContent='📋 Скопировать ссылку',1500);}catch(_){}});loadReferral();setInterval(loadReferral,20000);
-  const collectionGrid=document.getElementById('collectionGrid');let catalog=[],special=[],filter='all';async function loadCollections(){if(!API)return;collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--sub);padding:25px">Загрузка NFT…</div>';try{const [a,b]=await Promise.all([fetch(API+'/api/catalog',{headers}),fetch(API+'/api/rare-gift-floors?backdrop=all&limit=300',{headers})]);const ad=await a.json(),bd=await b.json();catalog=ad.items||[];special=bd.items||[];renderCollections();}catch(_){collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#ff7474;padding:25px">Не удалось загрузить каталог</div>';}}function renderCollections(){const q=(document.getElementById('collectionSearch').value||'').toLowerCase().trim();const all=[...catalog,...special],seen=new Set();const list=all.filter(x=>{const k=(x.name||'')+'|'+(x.backdrop||'');if(seen.has(k))return false;seen.add(k);if(filter==='black'&&String(x.backdrop).toLowerCase()!=='black')return false;if(filter==='onyx'&&String(x.backdrop).toLowerCase()!=='onyx black')return false;return String(x.name||'').toLowerCase().includes(q);}).slice(0,300);document.getElementById('collectionsCount').textContent=list.length;collectionGrid.innerHTML='';list.forEach(g=>{const c=document.createElement('div');c.className='collection-card';const img=g.image_url||g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;c.innerHTML=`<img src="${img}" alt="" onerror="this.style.display='none'"><div class="collection-name">${g.name}</div><div class="collection-meta">${Number(g.floor||0)>0?Number(g.floor).toFixed(2)+' GRAM':'Floor —'}</div>${g.backdrop?`<span class="collection-badge">${g.backdrop}</span>`:''}`;collectionGrid.appendChild(c);});}document.getElementById('openCollectionsBtn')?.addEventListener('click',()=>{collections.classList.add('active');loadCollections();});document.getElementById('collectionsBackBtn')?.addEventListener('click',()=>collections.classList.remove('active'));document.getElementById('collectionSearch')?.addEventListener('input',renderCollections);document.querySelectorAll('.collection-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.collection-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;renderCollections();}));
+  const collectionGrid=document.getElementById('collectionGrid');let catalog=[],special=[],filter='all';async function loadCollections(){if(!API)return;collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--sub);padding:25px">Загрузка NFT…</div>';try{const [a,b]=await Promise.all([fetch(API+'/api/catalog',{headers}),fetch(API+'/api/rare-gift-floors?backdrop=all&limit=300',{headers})]);const ad=await a.json(),bd=await b.json();catalog=ad.items||[];special=bd.items||[];renderCollections();}catch(_){collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#ff7474;padding:25px">Не удалось загрузить каталог</div>';}}function renderCollections(){const q=(document.getElementById('collectionSearch').value||'').toLowerCase().trim();const all=[...catalog,...special],seen=new Set();const list=all.filter(x=>{const k=(x.name||'')+'|'+(x.backdrop||'');if(seen.has(k))return false;seen.add(k);if(filter==='black'&&String(x.backdrop).toLowerCase()!=='black')return false;if(filter==='onyx'&&String(x.backdrop).toLowerCase()!=='onyx black')return false;return String(x.name||'').toLowerCase().includes(q);}).slice(0,300);document.getElementById('collectionsCount').textContent=list.length;collectionGrid.innerHTML='';list.forEach(g=>{const c=document.createElement('div');c.className='collection-card';const img=g.image_url||g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;c.innerHTML=`<img src="${img}" alt="" onerror="this.style.display='none'"><div class="collection-name">${g.name}</div><div class="collection-meta">${Number(g.floor||0)>0?Number(g.floor).toFixed(2)+' TON':'Floor —'}</div>${g.backdrop?`<span class="collection-badge">${g.backdrop}</span>`:''}`;collectionGrid.appendChild(c);});}document.getElementById('openCollectionsBtn')?.addEventListener('click',()=>{collections.classList.add('active');loadCollections();});document.getElementById('collectionsBackBtn')?.addEventListener('click',()=>collections.classList.remove('active'));document.getElementById('collectionSearch')?.addEventListener('input',renderCollections);document.querySelectorAll('.collection-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.collection-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;renderCollections();}));
   async function loadRating(){const box=document.getElementById('ratingList');if(!box)return;try{const r=await fetch(API+'/api/rating',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach((p,i)=>{const row=document.createElement('div');row.className='rating-row'+(String(p.user_id)===String(d.you_user_id)?' me':'');const av=p.avatar_url?`<img src="${p.avatar_url}" alt="">`:`<div class="mini-avatar">${(p.first_name||p.username||'?').slice(0,1).toUpperCase()}</div>`;row.innerHTML=`<div>${i+1}</div><div class="rating-user">${av}<span>${p.username?'@'+p.username:(p.first_name||'Пользователь')}</span></div><div class="rating-volume">${Number(p.volume||0).toFixed(2)} GRAM</div>`;box.appendChild(row);});}catch(_){}}loadRating();setInterval(loadRating,15000);
   async function loadTasks(){const box=document.getElementById('tasksList');if(!box)return;try{const r=await fetch(API+'/api/tasks',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach(t=>{const el=document.createElement('div');el.className='task-real';el.innerHTML=`<div class="task-real-head"><div class="task-real-icon">${t.icon}</div><div><h4>${t.title}</h4><p>${t.description}</p></div></div><div class="task-real-foot"><span>${t.progress_label}</span><span class="reward">+${Number(t.reward||0).toFixed(2)} GRAM</span></div>`;box.appendChild(el);});}catch(_){}}loadTasks();setInterval(loadTasks,15000);
-  async function loadLive(){
-    const box=document.getElementById('topLiveTrack');
-    const feed=document.getElementById('topLiveFeed');
-    if(!box||!feed)return;
-    try{
-      const r=await fetch(API+'/api/live',{headers,cache:'no-store'});
-      if(!r.ok){feed.hidden=true;return;}
-      const d=await r.json();
-      const items=(d.items||[]).filter(e=>{const kind=String(e?.kind||'').toLowerCase();return (kind==='ton'||kind==='gram')||!!e?.image_url;}).slice(0,14);
-      box.innerHTML='';
-      if(!items.length){feed.hidden=true;return;}
-      items.forEach(e=>{
-        const row=document.createElement('div'); row.className='top-live-item';
-        const kind=String(e?.kind||'').toLowerCase(); const isGram=kind==='ton'||kind==='gram';
-        const icon=isGram?'<span class="top-live-ton" aria-hidden="true"></span>':`<img src="${String(e.image_url||'').replace(/"/g,'&quot;')}" alt="NFT" loading="lazy" onerror="this.closest('.top-live-item')?.remove();">`;
-        const title=isGram?'GRAM':String(e.name||'NFT');
-        const value=Number(e.value||0)>0?(isGram?`+${Number(e.value).toFixed(3)} GRAM`:`≈ ${Number(e.value).toFixed(3)} GRAM`):'NFT';
-        row.innerHTML=`${icon}<div><b>${title}</b><span>${value}</span></div>`; box.appendChild(row);
-      });
-      feed.hidden=box.children.length===0;
-    }catch(_){feed.hidden=true;}
-  }
-  loadLive();setInterval(loadLive,5000);
+  async function loadLive(){const box=document.getElementById('topLiveTrack');if(!box)return;try{const r=await fetch(API+'/api/live',{headers});if(!r.ok)return;const d=await r.json();const items=d.items||[];box.innerHTML='';(items.length?items:[{kind:'ton',name:'LIVE',value:0,action_text:'Здесь появятся реальные дропы'}]).slice(0,14).forEach(e=>{const row=document.createElement('div');row.className='top-live-item';let icon=e.image_url?`<img src="${e.image_url}" alt="" onerror="this.style.display='none'">`:(e.kind==='ton'?'<span class="top-live-ton">▽</span>':'<span class="top-live-avatar">🎁</span>');row.innerHTML=`${icon}<div><b>${e.username?'@'+e.username:'LIVE'}</b><span>${e.action_text||'получил награду'}${e.name?' · '+e.name:''}${Number(e.value||0)>0?' · '+Number(e.value).toFixed(2)+' TON':''}</span></div>`;box.appendChild(row);});}catch(_){}}loadLive();setInterval(loadLive,5000);
   document.getElementById('sendGiftProfileBtn')?.addEventListener('click',()=>{const u='https://t.me/chibiop';try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,'_blank');}catch(_){window.open(u,'_blank');}});
 
-  const caseConfig={promo:{name:'Promo Case',price:0,art:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png',loss:0,promo:true},summer:{name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82}};document.querySelectorAll('.case-card').forEach(card=>card.addEventListener('click',()=>{const cfg=caseConfig[card.dataset.case||'summer'];if(cfg)window.__openCaseConfig?.(cfg);}));window.__openCaseConfig=(cfg)=>{const s=document.getElementById('caseScreen');if(!s)return;s.classList.add('active');const title=s.querySelector('.case-top-title');if(title)title.innerHTML=`<button class="case-back" id="caseBackBtnDyn">←</button> ${cfg.name}`;const hero=s.querySelector('.case-hero-art');if(hero)hero.src=cfg.art;const n=s.querySelector('.case-hero-name');if(n)n.textContent=cfg.name;const p=s.querySelector('.case-price');if(p)p.textContent=cfg.promo?'0 GRAM':cfg.price+' GRAM';const sub=s.querySelector('.case-hero-sub');if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':`Открытие ${cfg.price} GRAM`;const btn=document.getElementById('caseOpenBtn');if(btn){btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' GRAM';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=cfg.price;btn.dataset.caseLoss=cfg.loss;btn.dataset.casePromo=cfg.promo?'1':'';}document.getElementById('caseBackBtnDyn')?.addEventListener('click',()=>s.classList.remove('active'),{once:true});};
+  const caseConfig={promo:{name:'Promo Case',price:0,art:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png',loss:0,promo:true},summer:{name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82}};document.querySelectorAll('.case-card').forEach(card=>card.addEventListener('click',()=>{const cfg=caseConfig[card.dataset.case||'summer'];if(cfg)window.__openCaseConfig?.(cfg);}));window.__openCaseConfig=(cfg)=>{const s=document.getElementById('caseScreen');if(!s)return;s.classList.add('active');const title=s.querySelector('.case-top-title');if(title)title.innerHTML=`<button class="case-back" id="caseBackBtnDyn">←</button> ${cfg.name}`;const hero=s.querySelector('.case-hero-art');if(hero)hero.src=cfg.art;const n=s.querySelector('.case-hero-name');if(n)n.textContent=cfg.name;const p=s.querySelector('.case-price');if(p)p.textContent=cfg.promo?'0 TON':cfg.price+' TON';const sub=s.querySelector('.case-hero-sub');if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':`Открытие ${cfg.price} TON`;const btn=document.getElementById('caseOpenBtn');if(btn){btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' TON';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=cfg.price;btn.dataset.caseLoss=cfg.loss;btn.dataset.casePromo=cfg.promo?'1':'';}document.getElementById('caseBackBtnDyn')?.addEventListener('click',()=>s.classList.remove('active'),{once:true});};
   window.__logActivity=async(type,amount,meta={})=>{try{await fetch(API+'/api/activity',{method:'POST',headers:{...headers,'Content-Type':'application/json'},body:JSON.stringify({type,amount:Number(amount||0),name:meta.name||'',image_url:meta.image_url||'',value:Number(meta.value||0),kind:meta.kind||'',action_text:meta.action_text||''})});}catch(_){}};
 })();
 </script>
 
 <script>
 (function(){
-  try{localStorage.removeItem('caseBalance');}catch(_){}
   const topup=document.getElementById('topupBtn');
   const modal=document.getElementById('tonModal');
   const close=document.getElementById('tonClose');
@@ -3283,9 +3148,9 @@ body{background:#050506!important;color:#fff!important;}
       if(!ui){
         ui=new window.TON_CONNECT_UI.TonConnectUI({manifestUrl:window.location.origin+'/tonconnect-manifest.json'});
         ui.uiOptions={language:'ru',uiPreferences:{theme:'DARK'}};
-        ui.onStatusChange(w=>{wallet=w||null; status.textContent=wallet?('Подключён: '+String(wallet.account.address).slice(0,10)+'…'+String(wallet.account.address).slice(-6)):'Кошелёк не подключён.'; sendBtn.disabled=!wallet; connectBtn.textContent=wallet?'Сменить кошелёк':'Подключить GRAM-кошелёк';});
+        ui.onStatusChange(w=>{wallet=w||null; status.textContent=wallet?('Подключён: '+String(wallet.account.address).slice(0,10)+'…'+String(wallet.account.address).slice(-6)):'Кошелёк не подключён.'; sendBtn.disabled=!wallet; connectBtn.textContent=wallet?'Сменить кошелёк':'Подключить TON-кошелёк';});
       }
-    }catch(e){status.textContent='Не удалось инициализировать GRAM Connect.';}
+    }catch(e){status.textContent='Не удалось инициализировать TON Connect.';}
   }
   connectBtn.addEventListener('click',async()=>{try{await init();if(ui) await ui.openModal();}catch(e){status.textContent='Не удалось открыть кошелёк.';}});
   sendBtn.addEventListener('click',async()=>{
@@ -3330,15 +3195,15 @@ body{background:#050506!important;color:#fff!important;}
   });
   async function adminRequest(path,opts={}){const r=await fetch(API+path,{...opts,headers:{...headers(),...(opts.headers||{})},cache:'no-store'});let d={};try{d=await r.json();}catch(_){d={detail:'Ошибка сервера'}}if(!r.ok)throw new Error(d.detail||d.error||'Ошибка');return d;}
   async function refreshAdmin(){
-    try{const d=await adminRequest('/api/admin/overview');$('adminUsers').textContent=d.users??0;$('adminBalance').textContent=Number(d.balance||0).toFixed(3)+' GRAM';$('adminVolume').textContent=Number(d.volume||0).toFixed(2)+' GRAM';$('adminBanned').textContent=d.banned??0;
-      const u=await adminRequest('/api/admin/users');const box=$('adminUsersList');if(box){box.innerHTML='';(u.items||u.users||[]).slice(0,100).forEach(x=>{const el=document.createElement('div');el.className='admin-block';el.style.margin='0';el.innerHTML=`<b>@${x.username||'без_username'}</b><div style="font-size:10px;color:var(--sub);margin-top:4px">${Number(x.balance||0).toFixed(3)} GRAM · оборот ${Number(x.volume||0).toFixed(2)} GRAM · ${x.is_banned?'ЗАБАНЕН':'активен'}</div>`;box.appendChild(el);});}}
+    try{const d=await adminRequest('/api/admin/overview');$('adminUsers').textContent=d.users??0;$('adminBalance').textContent=Number(d.balance||0).toFixed(3)+' TON';$('adminVolume').textContent=Number(d.volume||0).toFixed(2)+' TON';$('adminBanned').textContent=d.banned??0;
+      const u=await adminRequest('/api/admin/users');const box=$('adminUsersList');if(box){box.innerHTML='';(u.items||u.users||[]).slice(0,100).forEach(x=>{const el=document.createElement('div');el.className='admin-block';el.style.margin='0';el.innerHTML=`<b>@${x.username||'без_username'}</b><div style="font-size:10px;color:var(--sub);margin-top:4px">${Number(x.balance||0).toFixed(3)} TON · оборот ${Number(x.volume||0).toFixed(2)} TON · ${x.is_banned?'ЗАБАНЕН':'активен'}</div>`;box.appendChild(el);});}}
     catch(e){alert(e.message)}
     try{const p=await adminRequest('/api/admin/promo-codes');const list=$('adminPromoList');if(list){list.innerHTML='';(p.items||[]).forEach(x=>{const row=document.createElement('div');row.className='admin-block';row.style.margin='0';row.innerHTML=`<b>${x.code}</b><div style="font-size:10px;color:var(--sub)">${x.used_count||0}/${x.max_uses||'∞'} · ${x.active?'активен':'выключен'}</div>`;list.appendChild(row);});}}catch(_){ }
   }
   openBtn.addEventListener('click',()=>{admin.classList.add('active');refreshAdmin();});
   back?.addEventListener('click',()=>admin.classList.remove('active'));
   $('adminRefreshBtn')?.addEventListener('click',refreshAdmin);
-  $('adminBalanceBtn')?.addEventListener('click',async()=>{try{const username=$('adminBalanceUser').value.trim().replace(/^@/,'');const amount=Number($('adminBalanceAmount').value);const d=await adminRequest('/api/admin/balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,amount})});alert(`Готово. Баланс @${d.username}: ${Number(d.balance||0).toFixed(3)} GRAM`);refreshAdmin();}catch(e){alert(e.message)}});
+  $('adminBalanceBtn')?.addEventListener('click',async()=>{try{const username=$('adminBalanceUser').value.trim().replace(/^@/,'');const amount=Number($('adminBalanceAmount').value);const d=await adminRequest('/api/admin/balance',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username,amount})});alert(`Готово. Баланс @${d.username}: ${Number(d.balance||0).toFixed(3)} TON`);refreshAdmin();}catch(e){alert(e.message)}});
   $('adminGiftBtn')?.addEventListener('click',async()=>{try{const d=await adminRequest('/api/admin/gift',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('adminGiftUser').value.trim(),name:$('adminGiftName').value.trim(),floor:Number($('adminGiftFloor').value||0),image_url:$('adminGiftImage').value.trim()})});alert('NFT выдан');refreshAdmin();}catch(e){alert(e.message)}});
   $('adminBanBtn')?.addEventListener('click',async()=>{try{await adminRequest('/api/admin/ban',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('adminUserName').value.trim()})});alert('Пользователь заблокирован');refreshAdmin();}catch(e){alert(e.message)}});
   $('adminUnbanBtn')?.addEventListener('click',async()=>{try{await adminRequest('/api/admin/unban',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:$('adminUserName').value.trim()})});alert('Пользователь разблокирован');refreshAdmin();}catch(e){alert(e.message)}});
@@ -3394,8 +3259,8 @@ body{background:#050506!important;color:#fff!important;}
     if(title) title.innerHTML='<button class="case-back" id="caseBackBtnV37">←</button> '+cfg.name;
     const art=s?.querySelector('.case-hero-art'); if(art){art.src=cfg.art;art.style.display='block';}
     const name=s?.querySelector('.case-hero-name'); if(name)name.textContent=cfg.name;
-    const price=s?.querySelector('.case-price'); if(price)price.textContent=cfg.promo?'0 GRAM':cfg.price.toFixed(0)+' GRAM';
-    const sub=s?.querySelector('.case-hero-sub'); if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':'Открытие '+cfg.price.toFixed(0)+' GRAM';
+    const price=s?.querySelector('.case-price'); if(price)price.textContent=cfg.promo?'0 TON':cfg.price.toFixed(0)+' TON';
+    const sub=s?.querySelector('.case-hero-sub'); if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':'Открытие '+cfg.price.toFixed(0)+' TON';
     const btn=document.getElementById('caseOpenBtn');
     if(btn){btn.disabled=false;btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за 1 GRAM';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=String(cfg.price);btn.dataset.caseLoss=String(cfg.loss);btn.dataset.casePromo=cfg.promo?'1':'';}
     document.getElementById('caseBalanceVal').textContent=Number(window.__serverBalance||0).toFixed(3);
@@ -3412,7 +3277,7 @@ body{background:#050506!important;color:#fff!important;}
   window.__renderCasePossibleReal=function(){
     const grid=document.getElementById('possibleGrid'); if(!grid)return;
     const nft=[['Lol Pop','https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'],['Santa Hat','https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'],['Cookie Heart','https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png'],['Homemade Cake','https://cdn.changes.tg/gifts/models/Homemade%20Cake/png/Original.png'],['Jelly Bunny','https://cdn.changes.tg/gifts/models/Jelly%20Bunny/png/Original.png'],['Skull Flower','https://cdn.changes.tg/gifts/models/Skull%20Flower/png/Original.png']];
-    const cash=[['0 GRAM'],['0.3 GRAM'],['0.5 GRAM'],['1.5 GRAM'],['2 GRAM']];
+    const cash=[['0 TON'],['0.3 TON'],['0.5 TON'],['1.5 TON'],['2 TON']];
     grid.innerHTML='';
     cash.forEach(x=>{const c=document.createElement('div');c.className='possible-card ton-prize';c.innerHTML='<div class="possible-emoji"><span class="case-ton-icon">▽</span></div><div class="possible-name">'+x[0]+'</div>';grid.appendChild(c);});
     nft.forEach(x=>{const c=document.createElement('div');c.className='possible-card';c.innerHTML='<img src="'+x[1]+'" alt="'+x[0]+'" style="width:84px;height:84px;object-fit:contain"><div class="possible-name">'+x[0]+'</div><div class="possible-chance">1%</div>';grid.appendChild(c);});
@@ -3561,7 +3426,7 @@ body{background:#050506!important;color:#fff!important;}
     summer:{name:'Summer Case',price:1,promo:false,loss:82,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png'}
   };
   const prizePool=[
-    {type:'ton',name:'0 GRAM',value:0},{type:'ton',name:'0.3 GRAM',value:.3},{type:'ton',name:'0.5 GRAM',value:.5},{type:'ton',name:'1 GRAM',value:1},
+    {type:'ton',name:'0 TON',value:0},{type:'ton',name:'0.3 TON',value:.3},{type:'ton',name:'0.5 TON',value:.5},{type:'ton',name:'1 GRAM',value:1},
     {type:'nft',name:'Lol Pop',floor:3.35,img:'https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'},
     {type:'nft',name:'Santa Hat',floor:3.31,img:'https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'},
     {type:'nft',name:'Cookie Heart',floor:4.20,img:'https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png'},
@@ -3586,7 +3451,7 @@ body{background:#050506!important;color:#fff!important;}
     const title=caseScreen?.querySelector('.case-top-title'); if(title){title.innerHTML=`<button class="case-back" id="caseBackV41">←</button> ${cfg.name}`;}
     const art=caseScreen?.querySelector('.case-hero-art'); if(art){art.src=cfg.art;art.style.display='block';}
     const nm=caseScreen?.querySelector('.case-hero-name'); if(nm) nm.textContent=cfg.name;
-    const pr=caseScreen?.querySelector('.case-price'); if(pr) pr.textContent=cfg.promo?'0 GRAM':'1 GRAM';
+    const pr=caseScreen?.querySelector('.case-price'); if(pr) pr.textContent=cfg.promo?'0 TON':'1 GRAM';
     const sub=caseScreen?.querySelector('.case-hero-sub'); if(sub) sub.textContent=cfg.promo?'Бесплатно. Нужен промокод.':'Открытие за 1 GRAM';
     if(caseOpenBtn){caseOpenBtn.disabled=false;caseOpenBtn.dataset.casePrice=String(cfg.price);caseOpenBtn.dataset.casePromo=cfg.promo?'1':'';caseOpenBtn.dataset.caseType=cfg.name;caseOpenBtn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за 1 GRAM';}
     $('caseBalanceVal') && refreshBalance();
@@ -3607,12 +3472,12 @@ body{background:#050506!important;color:#fff!important;}
   }
   function buildReel(winner){
     reel.innerHTML=''; const arr=[]; for(let i=0;i<44;i++)arr.push(prizePool[(i*7+i%5)%prizePool.length]); const wi=35; arr[wi]=winner;
-    arr.forEach(p=>{const c=document.createElement('div');c.className='reel-card'; if(p.type==='nft') c.innerHTML=`<img src="${p.img}" alt=""><strong>${p.name}</strong><span>NFT</span>`; else c.innerHTML=`<div class="reel-ton-wrap"><span class="case-ton-icon">▽</span></div><strong>${p.name}</strong><span>GRAM</span>`; reel.appendChild(c);});
+    arr.forEach(p=>{const c=document.createElement('div');c.className='reel-card'; if(p.type==='nft') c.innerHTML=`<img src="${p.img}" alt=""><strong>${p.name}</strong><span>NFT</span>`; else c.innerHTML=`<div class="reel-ton-wrap"><span class="case-ton-icon">▽</span></div><strong>${p.name}</strong><span>TON</span>`; reel.appendChild(c);});
     return wi;
   }
   async function openSummerCase(){
     const bal=Number(window.__serverBalance??parseFloat($('caseBalanceVal')?.textContent||'0'));
-    if(!Number.isFinite(bal)||bal<1){$('caseInsufficient').textContent='Недостаточно GRAM. Нужно 1 GRAM.';return;}
+    if(!Number.isFinite(bal)||bal<1){$('caseInsufficient').textContent='Недостаточно TON. Нужно 1 GRAM.';return;}
     if(caseOpenBtn)caseOpenBtn.disabled=true; $('caseInsufficient').textContent='';
     const winner=pickPrize(); const wi=buildReel(winner);
     window.__serverBalance=bal-1; window.__syncBalance?.(bal-1); if($('caseBalanceVal'))$('caseBalanceVal').textContent=(bal-1).toFixed(3);
@@ -3621,15 +3486,15 @@ body{background:#050506!important;color:#fff!important;}
     let charged=false, chargeData=null;
     try{const rr=await fetch(API+'/api/wallet/charge',{method:'POST',headers:H(),body:JSON.stringify({amount:1,reason:'Summer Case'}),cache:'no-store'});if(rr.ok){charged=true;chargeData=await rr.json();window.__serverBalance=Number(chargeData.balance??bal-1);window.__syncBalance?.(window.__serverBalance);}}catch(_){}
     setTimeout(async()=>{
-      if(!charged){window.__serverBalance=bal;window.__syncBalance?.(bal);$('caseBalanceVal')&&( $('caseBalanceVal').textContent=bal.toFixed(3));reelWrap.classList.remove('active');if(caseOpenBtn)caseOpenBtn.disabled=false;$('caseInsufficient').textContent='Не удалось списать GRAM.';return;}
+      if(!charged){window.__serverBalance=bal;window.__syncBalance?.(bal);$('caseBalanceVal')&&( $('caseBalanceVal').textContent=bal.toFixed(3));reelWrap.classList.remove('active');if(caseOpenBtn)caseOpenBtn.disabled=false;$('caseInsufficient').textContent='Не удалось списать TON.';return;}
       const img=$('resultImage'), rp=$('resultPrize'), rn=$('resultNote');
-      if(winner.type==='nft'){img.src=winner.img;img.style.display='block';rp.textContent=winner.floor.toFixed(2)+' GRAM';rn.textContent='NFT: '+winner.name;}else{img.style.display='none';rp.textContent=winner.name;rn.textContent=winner.value>0?'Вы получили '+winner.value.toFixed(2)+' GRAM':'В этот раз приз не выпал.';}
+      if(winner.type==='nft'){img.src=winner.img;img.style.display='block';rp.textContent=winner.floor.toFixed(2)+' TON';rn.textContent='NFT: '+winner.name;}else{img.style.display='none';rp.textContent=winner.name;rn.textContent=winner.value>0?'Вы получили '+winner.value.toFixed(2)+' TON':'В этот раз приз не выпал.';}
       reelWrap.classList.remove('active'); caseResult.classList.add('active'); if(caseOpenBtn)caseOpenBtn.disabled=false;
     },2300);
   }
   caseOpenBtn?.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation(); if(this.dataset.casePromo==='1'){promoModal?.classList.add('active');promoModal&&(promoModal.style.display='flex');promoModal&&(promoModal.style.zIndex='12000');$('promoCodeInput')?.focus();}else openSummerCase();},true);
 
-  // Balance in modes opens GRAM Connect top-up.
+  // Balance in modes opens TON Connect top-up.
   document.addEventListener('click',function(e){const el=e.target?.closest?.('#rocketScreen .rk-balance-pill,#caseScreen .case-balance,#upgradeScreen .upgrade-balance,#iceScreen .playhub-balance');if(!el)return;e.preventDefault();e.stopImmediatePropagation();document.getElementById('topupBtn')?.click();},true);
 })();
 </script>
@@ -3660,9 +3525,9 @@ body{background:#050506!important;color:#fff!important;}
     summer:{name:'Summer Case',price:1,promo:false,loss:82,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png'}
   };
   const prizePool=[
-    {type:'ton',name:'0 GRAM',value:0},
-    {type:'ton',name:'0.3 GRAM',value:.3},
-    {type:'ton',name:'0.5 GRAM',value:.5},
+    {type:'ton',name:'0 TON',value:0},
+    {type:'ton',name:'0.3 TON',value:.3},
+    {type:'ton',name:'0.5 TON',value:.5},
     {type:'ton',name:'1 GRAM',value:1},
     {type:'nft',name:'Lol Pop',floor:3.35,img:'https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'},
     {type:'nft',name:'Santa Hat',floor:3.31,img:'https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'},
@@ -3716,7 +3581,7 @@ body{background:#050506!important;color:#fff!important;}
     const art=caseScreen?.querySelector('.case-hero-art'); if(art){art.src=cfg.art;art.style.display='block';}
     const nm=caseScreen?.querySelector('.case-hero-name'); if(nm)nm.textContent=cfg.name;
     const sub=caseScreen?.querySelector('.case-hero-sub'); if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод.':'Открытие за 1 GRAM';
-    const price=caseScreen?.querySelector('.case-price'); if(price)price.textContent=cfg.promo?'0 GRAM':'1 GRAM';
+    const price=caseScreen?.querySelector('.case-price'); if(price)price.textContent=cfg.promo?'0 TON':'1 GRAM';
     if(caseOpenBtn){caseOpenBtn.disabled=false;caseOpenBtn.dataset.casePromo=cfg.promo?'1':'';caseOpenBtn.dataset.casePrice=String(cfg.price);caseOpenBtn.dataset.caseType=cfg.name;caseOpenBtn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за 1 GRAM';}
     renderCasePrizes();
     const back=$('caseBackV42'); back?.addEventListener('click',()=>{caseScreen?.classList.remove('active');caseScreen?.style.removeProperty('display');});
@@ -3737,13 +3602,16 @@ body{background:#050506!important;color:#fff!important;}
   function buildReel(winner){
     reel.innerHTML=''; const items=[]; for(let i=0;i<46;i++) items.push(prizePool[(i*3+Math.floor(i/4))%prizePool.length]);
     const wi=36; items[wi]=winner;
-    items.forEach(p=>{const c=document.createElement('div');c.className='reel-card';if(p.type==='nft')c.innerHTML=`<img src="${p.img}" alt=""><strong>${p.name}</strong><span>NFT</span>`;else c.innerHTML=`<div class="reel-ton-wrap"><span class="case-ton-icon">▽</span></div><strong>${p.name}</strong><span>GRAM</span>`;reel.appendChild(c);});
+    items.forEach(p=>{const c=document.createElement('div');c.className='reel-card';if(p.type==='nft')c.innerHTML=`<img src="${p.img}" alt=""><strong>${p.name}</strong><span>NFT</span>`;else c.innerHTML=`<div class="reel-ton-wrap"><span class="case-ton-icon">▽</span></div><strong>${p.name}</strong><span>TON</span>`;reel.appendChild(c);});
     return wi;
   }
   async function addExactPrize(winner){
     if(winner.type==='ton'){
-      // Step 1 rule: a case GRAM drop appears in LIVE only. It never changes balance.
-      window.__logActivity?.('case_drop',0,{name:winner.name,value:Number(winner.value||0),kind:'gram',action_text:'выиграл GRAM в кейсе'});
+      if(Number(winner.value)>0){
+        const rr=await fetch(API+'/api/wallet/credit',{method:'POST',headers:H(),body:JSON.stringify({amount:Number(winner.value),reason:'Summer Case win'}),cache:'no-store'});
+        if(!rr.ok) throw new Error('Не удалось зачислить TON');
+        const d=await rr.json(); window.__serverBalance=Number(d.balance||0);window.__syncBalance?.(window.__serverBalance);const b=$('caseBalanceVal');if(b)b.textContent=window.__serverBalance.toFixed(3);
+      }
       return;
     }
     const gift={...winner,id:'case_'+Date.now()+'_'+Math.random().toString(36).slice(2),backdrop:winner.backdrop||'',kind:'nft'};
@@ -3754,19 +3622,19 @@ body{background:#050506!important;color:#fff!important;}
   async function openSummerReal(){
     if(caseBusy)return; caseBusy=true; if(caseOpenBtn)caseOpenBtn.disabled=true;
     const bal=Number(window.__serverBalance??0);
-    if(!Number.isFinite(bal)||bal<1){$('caseInsufficient').textContent='Недостаточно GRAM. Нужно 1 GRAM.';caseBusy=false;if(caseOpenBtn)caseOpenBtn.disabled=false;return;}
+    if(!Number.isFinite(bal)||bal<1){$('caseInsufficient').textContent='Недостаточно TON. Нужно 1 GRAM.';caseBusy=false;if(caseOpenBtn)caseOpenBtn.disabled=false;return;}
     const winner=pickPrize(); currentWinner=winner;
     let charged=false;
     window.__serverBalance=bal-1;window.__syncBalance?.(bal-1);if($('caseBalanceVal'))$('caseBalanceVal').textContent=(bal-1).toFixed(3);
     const wi=buildReel(winner);reelWrap.classList.add('active');reel.style.transition='none';reel.style.transform='translate3d(0,0,0)';void reel.offsetWidth;
     const variant=Math.floor(Math.random()*3); const dur=[2.8,3.15,3.45][variant]; const eases=['cubic-bezier(.08,.78,.15,1)','cubic-bezier(.14,.72,.18,1.02)','cubic-bezier(.10,.86,.15,1)'];
     requestAnimationFrame(()=>{const step=118, viewport=reelWrap.clientWidth||330, cw=108;const center=viewport/2-cw/2;const extra=(variant-1)*7;const target=-(wi*step-center+extra);reel.style.transition=`transform ${dur}s ${eases[variant]}`;reel.style.transform=`translate3d(${target}px,0,0)`;});
-    fetch(API+'/api/wallet/charge',{method:'POST',headers:H(),body:JSON.stringify({amount:1,reason:'Summer Case'}),cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error((await r.text())||'Не удалось списать GRAM');charged=true;const d=await r.json();window.__serverBalance=Number(d.balance??bal-1);window.__syncBalance?.(window.__serverBalance);}).catch(()=>{});
+    fetch(API+'/api/wallet/charge',{method:'POST',headers:H(),body:JSON.stringify({amount:1,reason:'Summer Case'}),cache:'no-store'}).then(async r=>{if(!r.ok)throw new Error((await r.text())||'Не удалось списать TON');charged=true;const d=await r.json();window.__serverBalance=Number(d.balance??bal-1);window.__syncBalance?.(window.__serverBalance);}).catch(()=>{});
     setTimeout(async()=>{
-      if(!charged){window.__serverBalance=bal;window.__syncBalance?.(bal);if($('caseBalanceVal'))$('caseBalanceVal').textContent=bal.toFixed(3);reelWrap.classList.remove('active');caseBusy=false;if(caseOpenBtn)caseOpenBtn.disabled=false;$('caseInsufficient').textContent='Не удалось списать GRAM.';return;}
+      if(!charged){window.__serverBalance=bal;window.__syncBalance?.(bal);if($('caseBalanceVal'))$('caseBalanceVal').textContent=bal.toFixed(3);reelWrap.classList.remove('active');caseBusy=false;if(caseOpenBtn)caseOpenBtn.disabled=false;$('caseInsufficient').textContent='Не удалось списать TON.';return;}
       try{await addExactPrize(winner);}catch(e){window.__serverBalance=bal-1;window.__syncBalance?.(window.__serverBalance);$('caseInsufficient').textContent=e.message||'Ошибка выдачи';}
       const img=$('resultImage'),rp=$('resultPrize'),rn=$('resultNote');
-      if(winner.type==='nft'){img.src=winner.img;img.style.display='block';rp.textContent=Number(winner.floor||0).toFixed(2)+' GRAM';rn.textContent='NFT: '+winner.name+' · добавлен в инвентарь';}
+      if(winner.type==='nft'){img.src=winner.img;img.style.display='block';rp.textContent=Number(winner.floor||0).toFixed(2)+' TON';rn.textContent='NFT: '+winner.name+' · добавлен в инвентарь';}
       else{img.style.display='none';rp.textContent=winner.name;rn.textContent=winner.value>0?'Награда зачислена на баланс.':'В этот раз приз не выпал.';}
       reelWrap.classList.remove('active');result.classList.add('active');if(caseOpenBtn)caseOpenBtn.disabled=false;caseBusy=false;
     },Math.round(dur*1000)+140);
@@ -3776,8 +3644,8 @@ body{background:#050506!important;color:#fff!important;}
   promoSubmit?.addEventListener('click',async e=>{
     e.preventDefault();e.stopImmediatePropagation();const code=($('promoCodeInput')?.value||'').trim().toUpperCase();const err=$('promoCodeError');if(!code){if(err)err.textContent='Введите промокод';return;}promoSubmit.disabled=true;if(err)err.textContent='';
     try{const r=await fetch(API+'/api/cases/promo/open',{method:'POST',headers:H(),body:JSON.stringify({code}),cache:'no-store'});const d=await r.json().catch(()=>({detail:'Ошибка'}));if(!r.ok)throw new Error(d.detail||'Промокод недействителен');closePromo();if(d.balance!=null){window.__serverBalance=Number(d.balance);window.__syncBalance?.(window.__serverBalance);}
-      const rw=d.reward||{};if(rw.kind==='ton'){currentWinner={type:'ton',name:rw.name||'0 GRAM',value:Number(rw.value||0)};const rp=$('resultPrize'),rn=$('resultNote');$('resultImage').style.display='none';rp.textContent=currentWinner.name;rn.textContent='Приз зачислен на баланс.';result.classList.add('active');}
-      else{currentWinner={type:'nft',name:rw.name||'NFT',floor:Number(rw.value||0),img:rw.image_url||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(rw.name||'Lol Pop')}/png/Original.png`};const inv=window.__giftInventory?.addInventoryGift?.({...currentWinner,id:'promo_'+Date.now(),kind:'nft'});const img=$('resultImage');img.src=currentWinner.img;img.style.display='block';$('resultPrize').textContent=currentWinner.floor.toFixed(2)+' GRAM';$('resultNote').textContent='NFT: '+currentWinner.name+' · добавлен в инвентарь';result.classList.add('active');if(inv)window.__giftInventory?.showNftRewardToast?.(inv,'case');}
+      const rw=d.reward||{};if(rw.kind==='ton'){currentWinner={type:'ton',name:rw.name||'0 TON',value:Number(rw.value||0)};const rp=$('resultPrize'),rn=$('resultNote');$('resultImage').style.display='none';rp.textContent=currentWinner.name;rn.textContent='Приз зачислен на баланс.';result.classList.add('active');}
+      else{currentWinner={type:'nft',name:rw.name||'NFT',floor:Number(rw.value||0),img:rw.image_url||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(rw.name||'Lol Pop')}/png/Original.png`};const inv=window.__giftInventory?.addInventoryGift?.({...currentWinner,id:'promo_'+Date.now(),kind:'nft'});const img=$('resultImage');img.src=currentWinner.img;img.style.display='block';$('resultPrize').textContent=currentWinner.floor.toFixed(2)+' TON';$('resultNote').textContent='NFT: '+currentWinner.name+' · добавлен в инвентарь';result.classList.add('active');if(inv)window.__giftInventory?.showNftRewardToast?.(inv,'case');}
     }catch(e){if(err)err.textContent=e.message||'Промокод недействителен';}finally{promoSubmit.disabled=false;}
   },true);
 
@@ -3851,61 +3719,99 @@ body{background:#050506!important;color:#fff!important;}
 </script>
 
 
-<script id="exact-home-runtime-v46">
-(function(){
-  const q=(s)=>document.querySelector(s);
-  const byId=(id)=>document.getElementById(id);
-  const exactAv=byId('exactHomeAvatar');
-  const syncAvatar=()=>{
-    const src=document.querySelector('#topAvatar img')?.src || document.querySelector('#profileAvatar')?.src || '';
-    if(src && exactAv){ exactAv.innerHTML='<img alt="" src="'+src.replace(/"/g,'&quot;')+'">'; }
-  };
-  syncAvatar();
-  document.addEventListener('click', function(e){
-    const t=e.target?.closest?.('#openProfileBtnExact,#topupBtnExact,#topupBtnExactVisual');
-    if(!t)return;
-    e.preventDefault(); e.stopImmediatePropagation();
-    if(t.id==='openProfileBtnExact') byId('openProfileBtn')?.click();
-    else byId('topupBtn')?.click();
-  }, true);
-  // Cases banner opens the real case screen, never scrolls to hidden cards.
-  byId('homeCasesBanner')?.addEventListener('click',function(e){
-    e.preventDefault(); e.stopImmediatePropagation();
-    window.__openCaseHard?.('summer');
-  }, true);
-  setInterval(syncAvatar,1500);
-})();
-</script>
+<style>
+/* ===== Glass bottom navigation redesign ===== */
+.bottomnav{
+  position:fixed!important;
+  left:50%!important;
+  bottom:10px!important;
+  transform:translateX(-50%)!important;
+  width:min(370px,calc(100% - 20px))!important;
+  min-height:68px;
+  padding:7px 6px 7px!important;
+  display:grid!important;
+  grid-template-columns:repeat(6,minmax(0,1fr));
+  gap:3px;
+  align-items:center;
+  overflow:visible!important;
+  border:1px solid rgba(255,255,255,.13)!important;
+  border-radius:24px!important;
+  background:
+    linear-gradient(180deg,rgba(255,255,255,.075),rgba(255,255,255,.018) 42%,rgba(0,0,0,.20)),
+    rgba(13,13,15,.72)!important;
+  -webkit-backdrop-filter:blur(24px) saturate(145%);
+  backdrop-filter:blur(24px) saturate(145%);
+  box-shadow:
+    0 16px 38px rgba(0,0,0,.48),
+    inset 0 1px 0 rgba(255,255,255,.10),
+    inset 0 -1px 0 rgba(255,255,255,.035),
+    0 0 0 1px rgba(0,0,0,.30);
+  z-index:1000!important;
+}
+.bottomnav:before{
+  content:"";position:absolute;inset:1px;border-radius:23px;pointer-events:none;
+  background:linear-gradient(115deg,rgba(255,255,255,.09),transparent 26%,transparent 72%,rgba(255,255,255,.035));
+  opacity:.7;
+}
+.navitem{
+  min-width:0!important;
+  width:100%;
+  height:54px;
+  padding:3px 1px!important;
+  gap:2px!important;
+  justify-content:center;
+  color:rgba(255,255,255,.62)!important;
+  font-size:8.5px!important;
+  font-weight:600;
+  line-height:1.05;
+  border-radius:18px!important;
+  transition:color .18s ease,transform .18s ease;
+  z-index:1;
+}
+.navitem:active{transform:scale(.96);}
+.navitem .navicon-wrap{
+  width:37px!important;height:31px!important;
+  border-radius:12px!important;
+  display:flex!important;align-items:center;justify-content:center;
+  background:transparent!important;
+  color:rgba(255,255,255,.68)!important;
+  transition:background .2s ease,box-shadow .2s ease,color .2s ease,transform .2s ease;
+}
+.navitem .navicon-wrap svg{
+  width:20px;height:20px;display:block;fill:none;
+  stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round;
+}
+.navitem .navlabel{display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+.navitem.active{color:#fff!important;}
+.navitem.active .navicon-wrap{
+  background:linear-gradient(145deg,rgba(255,52,61,.95),rgba(178,10,19,.82))!important;
+  color:#fff!important;
+  box-shadow:
+    0 0 0 1px rgba(255,112,118,.30),
+    0 5px 18px rgba(225,22,31,.38),
+    inset 0 1px 0 rgba(255,255,255,.25),
+    inset 0 -5px 12px rgba(75,0,5,.22);
+  transform:translateY(-1px);
+}
+.navitem.active .navicon-wrap svg{filter:drop-shadow(0 0 4px rgba(255,70,78,.45));}
+.navitem .count{
+  top:1px!important;right:3px!important;
+  min-width:15px;height:15px;padding:0 4px!important;
+  display:flex;align-items:center;justify-content:center;
+  border:2px solid rgba(18,18,20,.9);
+  background:#e31d27!important;
+  box-shadow:0 2px 8px rgba(225,29,39,.38);
+  font-size:8px!important;
+  z-index:3;
+}
+.content{padding-bottom:96px!important;}
+@media (max-width:360px){
+  .bottomnav{width:calc(100% - 12px)!important;bottom:7px!important;border-radius:21px!important;}
+  .navitem{font-size:8px!important;}
+  .navitem .navicon-wrap{width:34px!important;}
+}
+</style>
 
-<script id="v47-navigation-bridge">
-(function(){
-  const $=s=>document.querySelector(s);
-  const activateTab=(name)=>{
-    document.querySelectorAll('.navitem').forEach(n=>n.classList.toggle('active',n.dataset.tab===name));
-    document.querySelectorAll('.tabpane').forEach(p=>p.classList.remove('active'));
-    const pane=$('#tab-'+name); if(pane) pane.classList.add('active');
-  };
-  document.addEventListener('click',function(e){
-    const nav=e.target?.closest?.('.bottomnav .navitem');
-    if(nav){ e.preventDefault(); e.stopImmediatePropagation(); activateTab(nav.dataset.tab); return; }
-    const b=e.target?.closest?.('#homeRocketBanner,#homeCasesBanner,#homePlayHubBanner,#homeIceBanner');
-    if(!b)return;
-    e.preventDefault(); e.stopImmediatePropagation();
-    if(b.id==='homeRocketBanner'){ window.__openRocketHard?.(); return; }
-    if(b.id==='homeCasesBanner'){ window.__openCaseHard?.('summer'); return; }
-    if(b.id==='homePlayHubBanner'){ const x=$('#playHubScreen'); if(x){x.classList.add('active');x.style.display='flex';x.style.zIndex='9000';} return; }
-    if(b.id==='homeIceBanner'){ const x=$('#iceScreen'); if(x){x.classList.add('active');x.style.display='flex';x.style.zIndex='9000';} return; }
-  },true);
-  // Ensure the exact home is the initial tab and keep the Gram avatar synchronized.
-  activateTab('main');
-  const syncGramAvatars=()=>{
-    const src=$('#topAvatar img')?.src || $('#profileAvatar')?.src || '';
-    if(!src)return;
-    document.querySelectorAll('#exactHomeAvatar').forEach(x=>{x.innerHTML='<img alt="" src="'+src.replace(/"/g,'&quot;')+'">';});
-  };
-  syncGramAvatars(); setInterval(syncGramAvatars,1500);
-})();
-</script>
 </body>
 </html>
 

@@ -397,13 +397,13 @@ def arena_current(x_telegram_user_id: str | None = Header(default=None)):
 def arena_join(payload: ArenaJoinIn, x_telegram_user_id: str | None = Header(default=None)):
     amount = round(float(payload.amount), 6)
     if amount < 0.1:
-        raise HTTPException(400, 'Минимальная ставка — 0.1 GRAM')
+        raise HTTPException(400, 'Минимальная ставка — 0.1 TON')
     u = current_user(x_telegram_user_id)
     now = int(time.time())
     with db() as con:
         ulock = con.execute('SELECT * FROM users WHERE id=%s FOR UPDATE', (u['id'],)).fetchone()
         if float(ulock['balance'] or 0) + 1e-9 < amount:
-            raise HTTPException(400, 'Недостаточно GRAM на балансе')
+            raise HTTPException(400, 'Недостаточно TON на балансе')
 
         m = con.execute("SELECT * FROM arena_matches WHERE status IN ('waiting','countdown') ORDER BY created_at DESC LIMIT 1 FOR UPDATE").fetchone()
         if m and m['status']=='countdown' and m['start_at'] and now >= int(m['start_at']):
@@ -713,16 +713,14 @@ def tasks(x_telegram_user_id: str | None = Header(default=None)):
         stats=con.execute('SELECT * FROM user_stats WHERE user_id=%s',(u['id'],)).fetchone() or {'total_volume':0}
         rows=con.execute('SELECT type,COUNT(*) AS c,COALESCE(SUM(amount),0) AS s FROM activity_log WHERE user_id=%s GROUP BY type',(u['id'],)).fetchall()
     c={r['type']:(int(r['c']),float(r['s'] or 0)) for r in rows}
-    items=[{'icon':'💳','title':'Внеси депозит от 1 GRAM','description':'Первый депозит не меньше 1 GRAM','progress':1 if c.get('deposit',(0,0))[1]>=1 else 0,'target':1,'reward':0.2},{'icon':'❄️','title':'Сделай 3 ставки в Ice Arena','description':'Три PvP-ставки','progress':c.get('arena_bet',(0,0))[0],'target':3,'reward':0.3},{'icon':'🚀','title':'Сделай 5 ставок в Crash','description':'Пять раундов Ракетки','progress':c.get('crash_bet',(0,0))[0],'target':5,'reward':0.2},{'icon':'🎁','title':'Открой 3 кейса','description':'Три любых кейса','progress':c.get('case_open',(0,0))[0],'target':3,'reward':0.5},{'icon':'👥','title':'Пригласи 3 друзей','description':'Друзья должны зайти по ссылке','progress':int(u.get('referral_count') or 0),'target':3,'reward':0.5},{'icon':'💎','title':'Сделай оборот 10 GRAM','description':'Суммарный оборот приложения','progress':float(stats.get('total_volume') or 0),'target':10,'reward':0.8}]
+    items=[{'icon':'💳','title':'Внеси депозит от 1 TON','description':'Первый депозит не меньше 1 TON','progress':1 if c.get('deposit',(0,0))[1]>=1 else 0,'target':1,'reward':0.2},{'icon':'❄️','title':'Сделай 3 ставки в Ice Arena','description':'Три PvP-ставки','progress':c.get('arena_bet',(0,0))[0],'target':3,'reward':0.3},{'icon':'🚀','title':'Сделай 5 ставок в Crash','description':'Пять раундов Ракетки','progress':c.get('crash_bet',(0,0))[0],'target':5,'reward':0.2},{'icon':'🎁','title':'Открой 3 кейса','description':'Три любых кейса','progress':c.get('case_open',(0,0))[0],'target':3,'reward':0.5},{'icon':'👥','title':'Пригласи 3 друзей','description':'Друзья должны зайти по ссылке','progress':int(u.get('referral_count') or 0),'target':3,'reward':0.5},{'icon':'💎','title':'Сделай оборот 10 TON','description':'Суммарный оборот приложения','progress':float(stats.get('total_volume') or 0),'target':10,'reward':0.8}]
     for t in items:t['progress_label']=f"Готово · {t['target']}" if t['progress']>=t['target'] else (f"{t['progress']:.2f}/{t['target']}" if isinstance(t['progress'],float) else f"{t['progress']}/{t['target']}")
     return {'items':items}
 
 @app.get('/api/live')
 def live(x_telegram_user_id: str | None = Header(default=None)):
     current_user(x_telegram_user_id)
-    with db() as con:
-        rows=con.execute('SELECT id,name,image_url,value,kind,action_text,created_at FROM live_events ORDER BY created_at DESC LIMIT 30').fetchall()
-    # Public LIVE feed is reward-only: never expose usernames, profile pictures or Telegram identity.
+    with db() as con: rows=con.execute('SELECT * FROM live_events ORDER BY created_at DESC LIMIT 30').fetchall()
     return {'items':[dict(r) for r in rows]}
 
 
@@ -800,10 +798,10 @@ class AdminPromoIn(BaseModel):
     max_uses: int = 0
 
 PROMO_REWARDS = [
-    ('ton', '0.1 GRAM', 0.1, 80.0),
-    ('ton', '0.3 GRAM', 0.3, 10.0),
-    ('ton', '0.5 GRAM', 0.5, 5.0),
-    ('ton', '1 GRAM', 1.0, 2.0),
+    ('ton', '0.1 TON', 0.1, 80.0),
+    ('ton', '0.3 TON', 0.3, 10.0),
+    ('ton', '0.5 TON', 0.5, 5.0),
+    ('ton', '1 TON', 1.0, 2.0),
     ('nft', 'Scared Cat', 1.25, 3.0),
 ]
 
@@ -816,7 +814,7 @@ def draw_promo_reward():
             if kind == 'nft':
                 return {'kind':'nft','name':name,'value':float(value),'image_url':f"https://cdn.changes.tg/gifts/models/{urllib.parse.quote(name)}/png/Original.png"}
             return {'kind':'ton','name':name,'value':float(value),'image_url':''}
-    return {'kind':'ton','name':'0.1 GRAM','value':0.1,'image_url':''}
+    return {'kind':'ton','name':'0.1 TON','value':0.1,'image_url':''}
 
 @app.post('/api/cases/promo/open')
 def open_promo_case(payload: PromoOpenIn, x_telegram_user_id: str | None = Header(default=None)):
@@ -836,7 +834,8 @@ def open_promo_case(payload: PromoOpenIn, x_telegram_user_id: str | None = Heade
         reward = draw_promo_reward()
         now = int(time.time())
         if reward['kind'] == 'ton':
-            new_balance = float(u['balance'] or 0)
+            new_balance = float(u['balance'] or 0) + float(reward['value'])
+            con.execute('UPDATE users SET balance=%s WHERE id=%s', (new_balance, u['id']))
         else:
             item_id = uuid.uuid4().hex
             con.execute(
@@ -1115,9 +1114,9 @@ def create_deposit_intent(payload: DepositIntentIn, x_telegram_user_id: str | No
     wallet = str(payload.wallet_address or '').strip()
     amount = round(float(payload.amount or 0), 6)
     if not wallet or len(wallet) < 20:
-        raise HTTPException(400, 'Invalid GRAM wallet')
+        raise HTTPException(400, 'Invalid TON wallet')
     if amount < 0.01:
-        raise HTTPException(400, 'Минимум 0.01 GRAM')
+        raise HTTPException(400, 'Минимум 0.01 TON')
     if not TON_DEPOSIT_WALLET:
         raise HTTPException(503, 'Депозитный кошелёк не настроен')
     amount_nano = int(round(amount * 1_000_000_000))
@@ -1229,7 +1228,7 @@ def v9_wallet_charge(payload: V9WalletAmount, x_telegram_user_id: str | None = H
     with db() as con:
         row = con.execute('SELECT * FROM users WHERE id=%s FOR UPDATE', (u['id'],)).fetchone()
         if float(row['balance'] or 0) + 1e-9 < amount:
-            raise HTTPException(400, 'Недостаточно GRAM')
+            raise HTTPException(400, 'Недостаточно TON')
         now = int(time.time())
         con.execute('UPDATE users SET balance=balance-%s WHERE id=%s', (amount, u['id']))
         con.execute("INSERT INTO activity_log(user_id,type,amount,name,created_at) VALUES(%s,'wallet_charge',%s,%s,%s)", (u['id'], amount, payload.reason[:120] or 'Списание', now))
@@ -1239,9 +1238,14 @@ def v9_wallet_charge(payload: V9WalletAmount, x_telegram_user_id: str | None = H
 
 @app.post('/api/wallet/credit')
 def v9_wallet_credit(payload: V9WalletAmount, x_telegram_user_id: str | None = Header(default=None)):
-    # Balance is increased only by a confirmed deposit or an explicit admin credit.
-    current_user(x_telegram_user_id)
-    raise HTTPException(403, 'GRAM balance can be increased only by deposit confirmation or admin credit')
+    u = current_user(x_telegram_user_id)
+    amount = round(float(payload.amount), 6)
+    if amount <= 0:
+        raise HTTPException(400, 'Invalid amount')
+    with db() as con:
+        con.execute('UPDATE users SET balance=balance+%s WHERE id=%s', (amount, u['id']))
+        balance = float(con.execute('SELECT balance FROM users WHERE id=%s', (u['id'],)).fetchone()['balance'])
+    return {'ok': True, 'balance': balance}
 
 def v9_crash_multiplier(elapsed: float) -> float:
     return max(1.0, math.exp(0.17 * max(0.0, elapsed)))
@@ -1292,7 +1296,7 @@ def v9_crash_bet(payload: V9CrashBet, x_telegram_user_id: str | None = Header(de
     u = current_user(x_telegram_user_id)
     amount = round(float(payload.amount), 6)
     if amount < 0.1:
-        raise HTTPException(400, 'Минимальная ставка — 0.1 GRAM')
+        raise HTTPException(400, 'Минимальная ставка — 0.1 TON')
     with db() as con:
         r = v9_ensure_round(con)
         if r['status'] != 'waiting':
@@ -1301,13 +1305,13 @@ def v9_crash_bet(payload: V9CrashBet, x_telegram_user_id: str | None = Header(de
             raise HTTPException(409, 'В этом раунде ставка уже сделана')
         row = con.execute('SELECT * FROM users WHERE id=%s FOR UPDATE', (u['id'],)).fetchone()
         if float(row['balance'] or 0) + 1e-9 < amount:
-            raise HTTPException(400, 'Недостаточно GRAM')
+            raise HTTPException(400, 'Недостаточно TON')
         now = int(time.time())
         con.execute('UPDATE users SET balance=balance-%s WHERE id=%s', (amount, u['id']))
         con.execute('INSERT INTO crash_bets(round_id,user_id,stake,created_at) VALUES(%s,%s,%s,%s)', (r['id'], u['id'], amount, now))
         con.execute("INSERT INTO activity_log(user_id,type,amount,name,created_at) VALUES(%s,'crash_bet',%s,'Crash',%s)", (u['id'], amount, now))
         con.execute('INSERT INTO user_stats(user_id,total_volume,updated_at) VALUES(%s,%s,%s) ON CONFLICT(user_id) DO UPDATE SET total_volume=user_stats.total_volume+EXCLUDED.total_volume,updated_at=EXCLUDED.updated_at', (u['id'], amount, now))
-        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', amount, f'поставил {amount:.2f} GRAM в Crash', now))
+        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', amount, f'поставил {amount:.2f} TON в Crash', now))
         balance = float(row['balance'] or 0) - amount
         return {'ok': True, 'balance': balance, **v9_crash_payload(con, r, u['id'])}
 
@@ -1329,8 +1333,8 @@ def v9_crash_cashout(x_telegram_user_id: str | None = Header(default=None)):
         payout = round(float(bet['stake']) * mult, 6)
         con.execute('UPDATE crash_bets SET cashout_multiplier=%s,payout=%s WHERE id=%s', (mult, payout, bet['id']))
         con.execute('UPDATE users SET balance=balance+%s WHERE id=%s', (payout, u['id']))
-        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', payout, f'забрал {payout:.2f} GRAM в Crash на x{mult:.2f}', now))
-        con.execute("INSERT INTO activity_log(user_id,type,amount,name,value,kind,action_text,created_at) VALUES(%s,'crash_win',0,'Crash',%s,'ton',%s,%s)", (u['id'], payout, f'забрал {payout:.2f} GRAM в Crash на x{mult:.2f}', now))
+        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
+        con.execute("INSERT INTO activity_log(user_id,type,amount,name,value,kind,action_text,created_at) VALUES(%s,'crash_win',0,'Crash',%s,'ton',%s,%s)", (u['id'], payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
         balance = float(con.execute('SELECT balance FROM users WHERE id=%s', (u['id'],)).fetchone()['balance'])
         return {'ok': True, 'balance': balance, 'payout': payout, 'multiplier': mult, **v9_crash_payload(con, r, u['id'])}
 
