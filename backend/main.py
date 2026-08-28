@@ -720,16 +720,15 @@ def tasks(x_telegram_user_id: str | None = Header(default=None)):
 @app.get('/api/live')
 def live(x_telegram_user_id: str | None = Header(default=None)):
     current_user(x_telegram_user_id)
+    # LIVE is intentionally drop-only: no usernames, no bets, no deposits, no Crash events.
+    # The frontend needs only the prize image/type/value, so keep this endpoint minimal.
     with db() as con:
         rows=con.execute("""
-            SELECT id,user_id,username,name,image_url,value,kind,action_text,created_at
-            FROM live_events
-            UNION ALL
-            SELECT (1000000000000 + a.id) AS id,a.user_id,u.username,a.name,a.image_url,a.value,a.kind,a.action_text,a.created_at
-            FROM activity_log a JOIN users u ON u.id=a.user_id
-            WHERE a.type='case_drop'
-              AND NOT EXISTS (SELECT 1 FROM live_events l WHERE l.user_id=a.user_id AND l.created_at=a.created_at AND l.name=a.name AND l.kind=a.kind)
-            ORDER BY created_at DESC LIMIT 30
+            SELECT id,name,image_url,value,kind,created_at
+            FROM activity_log
+            WHERE type='case_drop'
+            ORDER BY created_at DESC, id DESC
+            LIMIT 30
         """).fetchall()
     return {'items':[dict(r) for r in rows]}
 
@@ -855,7 +854,8 @@ def open_promo_case(payload: PromoOpenIn, x_telegram_user_id: str | None = Heade
             new_balance = float(u['balance'] or 0)
         con.execute('INSERT INTO promo_redemptions(code,user_id,reward_kind,reward_name,reward_value,created_at) VALUES(%s,%s,%s,%s,%s,%s)', (code,u['id'],reward['kind'],reward['name'],float(reward['value']),now))
         con.execute('UPDATE promo_codes SET used_count=used_count+1 WHERE code=%s', (code,))
-        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,%s,%s,%s,%s,%s,%s)", (u['id'], u['username'] or u['first_name'] or '', reward['name'], reward['image_url'], float(reward['value']), reward['kind'], 'получил по промокоду', now))
+        # Promo rewards participate in the same drop-only LIVE stream as normal case drops.
+        con.execute("INSERT INTO activity_log(user_id,type,amount,name,image_url,value,kind,action_text,created_at) VALUES(%s,'case_drop',0,%s,%s,%s,%s,%s,%s)", (u['id'], reward['name'], reward['image_url'], float(reward['value']), reward['kind'], 'promo_drop', now))
     return {'ok':True,'code':code,'reward':reward,'balance':new_balance}
 
 @app.post('/api/admin/promo-code')

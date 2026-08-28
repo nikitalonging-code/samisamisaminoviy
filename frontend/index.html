@@ -1104,6 +1104,9 @@
   .reference-banner{padding:0!important;min-height:0!important;height:auto!important;border:0!important;background:#160305!important;box-shadow:0 12px 28px rgba(0,0,0,.34)!important;border-radius:20px!important;overflow:hidden!important;display:block!important;}
   .reference-banner:before{display:none!important;}
   .reference-banner-img{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;max-width:none!important;object-fit:cover!important;z-index:2!important;filter:none!important;border-radius:inherit!important;}
+  .ice-arena-home{cursor:pointer;}
+  .ice-arena-home .ice-arena-banner-img{display:block!important;width:100%!important;height:auto!important;}
+
   .cases-banner-img{aspect-ratio:478/155;width:100%!important;}
   .paketka-banner-img{aspect-ratio:478/134;width:100%!important;}
   .playhub-home{background:linear-gradient(135deg,#2a0609 0%,#99131b 56%,#3d080c 100%);}
@@ -1185,13 +1188,16 @@
           <img class="reference-banner-img cases-banner-img" src="assets/cases_banner_ref.png" alt="CASES">
         </button>
         <button class="home-banner rocket-home paketka-banner reference-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
-          <img class="reference-banner-img paketka-banner-img" src="assets/paketka_banner_ref.png" alt="Пакетка — Stellar Rocket">
+          <img class="reference-banner-img paketka-banner-img" src="assets/paketka_banner_8k.png" alt="Пакетка — Stellar Rocket">
         </button>
         <button class="home-banner playhub-home" id="homePlayHubBanner" type="button">
           <span class="home-banner-tag">🎮 ХИТ</span>
           <span class="home-banner-title">TILT PLAY</span>
           <span class="home-banner-sub">ИГРЫ И РЕЖИМЫ</span>
-          <img src="https://cdn.changes.tg/gifts/models/Plush%20Pepe/png/Original.png" alt="TILT PLAY">
+          <img src="assets/litl_play.png" alt="TILT PLAY">
+        </button>
+        <button class="home-banner ice-arena-home reference-banner" id="homeIceArenaBanner" type="button" aria-label="Ice Arena">
+          <img class="reference-banner-img ice-arena-banner-img" src="assets/ice_arena_banner_ref.png" alt="ICE ARENA">
         </button>
       </div>
 
@@ -1243,10 +1249,6 @@
     <button class="navitem" data-tab="main" aria-label="Главная">
       <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 10.5 8-6 8 6v8A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-8Z"/><path d="M9.5 20v-5.5h5V20"/></svg></span>
       <span class="navlabel">Главная</span>
-    </button>
-    <button class="navitem" data-tab="pvp" aria-label="PVP">
-      <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m14.5 4.5 5 5M19.5 4.5l-5 5M7 14l3 3M10 17l-3 3M6 18l-2-2 8-8 2 2-8 8ZM14 6l2-2 4 4-2 2-4-4Z"/></svg></span>
-      <span class="navlabel">PVP</span>
     </button>
     <button class="navitem" data-tab="rating" aria-label="Рейтинг">
       <span class="navicon-wrap" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M7 4h10v3c0 3.7-2.1 6-5 6s-5-2.3-5-6V4Z"/><path d="M7 6H4v1c0 3 1.7 5 4.2 5M17 6h3v1c0 3-1.7 5-4.2 5M12 13v4M8.5 20h7M10 17h4"/></svg></span>
@@ -1637,7 +1639,9 @@
     const gift=document.querySelector('.gift-feature');
     const pvpCompact=document.getElementById('openPvpCompactBtn');
     const pvpBtn=document.getElementById('openPvpIceBtn');
+    const homeIceArenaBanner=document.getElementById('homeIceArenaBanner');
     const openPvp=()=>{ document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active')); const p=document.querySelector('.navitem[data-tab="pvp"]'); p?.classList.add('active'); document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active')); document.getElementById('tab-pvp')?.classList.add('active'); };
+    homeIceArenaBanner?.addEventListener('click',()=>{ document.getElementById('iceScreen')?.classList.add('active'); });
     compact?.addEventListener('click',()=>playHubScreen?.classList.add('active'));
     gift?.addEventListener('click',()=>playHubScreen?.classList.add('active'));
     pvpCompact?.addEventListener('click',openPvp);
@@ -4106,9 +4110,291 @@
 
   // Make the exact reference banner stick even if another older runtime tries to swap it.
   const pb=$('homeRocketBanner')?.querySelector('.paketka-banner-img');
-  if(pb){pb.src='assets/paketka_banner_ref.png';}
-  const obs=pb?new MutationObserver(()=>{if(pb.getAttribute('src')!=='assets/paketka_banner_ref.png')pb.src='assets/paketka_banner_ref.png';}):null;
+  if(pb){pb.src='assets/paketka_banner_8k.png';}
+  const obs=pb?new MutationObserver(()=>{if(pb.getAttribute('src')!=='assets/paketka_banner_8k.png')pb.src='assets/paketka_banner_8k.png';}):null;
   obs?.observe(pb,{attributes:true,attributeFilter:['src']});
+})();
+</script>
+
+
+<style id="v51-final-style">
+/* ---------- GRAM: premium 3D coin treatment ---------- */
+.ton-icon{position:relative!important;width:20px!important;height:20px!important;min-width:20px!important;border-radius:50%!important;background:#03080d url('assets/gram_coin.svg') center/100% 100% no-repeat!important;box-shadow:0 2px 7px rgba(0,0,0,.55),0 0 10px rgba(31,164,238,.18),inset 0 0 0 1px rgba(255,255,255,.10)!important;font-size:0!important;color:transparent!important;display:inline-flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;}
+.ton-icon::before{content:"";position:absolute;inset:0;border-radius:50%;background:linear-gradient(125deg,rgba(255,255,255,.24),transparent 30%,transparent 70%,rgba(0,0,0,.18));pointer-events:none;}
+.case-balance .ton-icon,.cases-hub-balance .ton-icon{width:24px!important;height:24px!important;min-width:24px!important;background-image:url('assets/gram_coin.svg')!important;}
+.case-ton-icon{font-size:0!important;width:36px!important;height:36px!important;display:inline-block!important;background:url('assets/gram_coin.svg') center/contain no-repeat!important;}
+.reel-ton-wrap{display:grid!important;place-items:center!important;}
+
+/* ---------- PAKETKA: supplied Stellar Rocket banner with depth/bloom ---------- */
+.home-banner.paketka-banner{padding:0!important;border-radius:19px!important;overflow:hidden!important;background:#36070a!important;box-shadow:0 10px 28px rgba(0,0,0,.28),0 0 0 1px rgba(255,55,55,.24),inset 0 1px 0 rgba(255,255,255,.16)!important;position:relative!important;}
+.home-banner.paketka-banner::after{content:"";position:absolute;inset:0;pointer-events:none;border-radius:inherit;background:linear-gradient(115deg,rgba(255,255,255,.08),transparent 26%,transparent 65%,rgba(255,90,40,.12));mix-blend-mode:screen;}
+.paketka-banner-img{width:100%!important;height:auto!important;display:block!important;object-fit:cover!important;position:relative!important;filter:contrast(1.04) saturate(1.05)!important;}
+
+/* ---------- Cases hub ---------- */
+.cases-hub-screen{z-index:55000!important;}
+.hub-case-image{position:relative!important;}
+.hub-case-image img{width:72px;height:72px;object-fit:contain;filter:drop-shadow(0 10px 14px rgba(0,0,0,.5));}
+.hub-case-image.blue{background:radial-gradient(circle at 50% 42%,#1e5b98,#0c1118 72%)!important}
+.hub-case-image.red{background:radial-gradient(circle at 50% 42%,#a52129,#17070a 72%)!important}
+.hub-case-image.purple{background:radial-gradient(circle at 50% 42%,#74308d,#15091a 72%)!important}
+
+/* ---------- LIVE: only prizes, no people/text ---------- */
+.top-live{min-height:58px!important;}
+.top-live-head{flex:0 0 auto!important;}
+.top-live-track{align-items:center!important;}
+.top-live-empty{opacity:.7!important;}
+
+/* ---------- Ice Arena staged finish ---------- */
+#iceScreen .ice-arena{will-change:transform!important;}
+#iceScreen .ice-zone.winner-zone::before{content:"";position:absolute;inset:2px;border:0 solid rgba(255,255,255,0);border-radius:12px;box-shadow:0 0 0 rgba(255,255,255,0);opacity:0;transition:opacity .8s ease,box-shadow .8s ease,border-color .8s ease;pointer-events:none;z-index:4;}
+#iceScreen .ice-zone.winner-zone.v51-glow::before{border-width:2px;border-color:rgba(255,255,255,.98);box-shadow:0 0 12px rgba(255,255,255,.5),0 0 28px rgba(255,255,255,.2);opacity:1;}
+#iceScreen .ice-winner{transition:opacity .55s ease,transform .55s ease;}
+#iceScreen .ice-winner.v51-staged{opacity:0!important;transform:translate(-50%,12px) scale(.96)!important;pointer-events:none!important;}
+#iceScreen .ice-winner.v51-reveal{opacity:1!important;transform:translate(-50%,0) scale(1)!important;}
+
+/* ---------- Case visual effects ---------- */
+.case-v51-fx{position:absolute;inset:0;pointer-events:none;z-index:120;overflow:hidden;border-radius:inherit;}
+.case-v51-fx .fx-flash{position:absolute;inset:0;background:radial-gradient(circle at 50% 46%,rgba(255,255,255,.75),rgba(255,55,55,.24) 26%,transparent 62%);opacity:0;}
+.case-v51-fx.burst .fx-flash{animation:v51Flash .7s ease-out both;}
+@keyframes v51Flash{0%{opacity:0}16%{opacity:1}100%{opacity:0}}
+.case-v51-particle{position:absolute;width:8px;height:8px;border-radius:2px;background:linear-gradient(145deg,#fff,#ff3240);box-shadow:0 0 10px rgba(255,70,70,.8);animation:v51Particle var(--d,1.2s) cubic-bezier(.15,.72,.22,1) forwards;}
+@keyframes v51Particle{from{opacity:0;transform:translate(0,0) scale(.35) rotate(0)}14%{opacity:1}to{opacity:0;transform:translate(var(--x),var(--y)) scale(.08) rotate(240deg)}}
+.case-v51-preview{position:absolute;left:50%;top:50%;width:118px;height:118px;transform:translate(-50%,-50%) scale(.8);display:grid;place-items:center;border-radius:20px;background:linear-gradient(145deg,rgba(255,255,255,.11),rgba(255,38,48,.08));border:1px solid rgba(255,255,255,.18);box-shadow:0 0 35px rgba(255,42,54,.32),inset 0 1px 0 rgba(255,255,255,.14);opacity:0;}
+.case-v51-preview img{max-width:90px;max-height:90px;object-fit:contain;filter:drop-shadow(0 10px 12px rgba(0,0,0,.5));}
+.case-v51-preview .gram{width:62px;height:62px;background:url('assets/gram_coin.svg') center/contain no-repeat;filter:drop-shadow(0 7px 10px rgba(0,0,0,.5));}
+.case-v51-fx.active .case-v51-preview{animation:v51Preview .95s .18s cubic-bezier(.16,.72,.2,1) forwards;}
+@keyframes v51Preview{0%{opacity:0;transform:translate(-50%,-50%) scale(.65) rotate(-8deg)}60%{opacity:1;transform:translate(-50%,-50%) scale(1.08) rotate(2deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.case-v51-fx.rare .case-v51-preview{animation:v51Rare .9s .2s ease-out forwards!important;}
+@keyframes v51Rare{0%{opacity:0;transform:translate(-50%,-50%) scale(.45)}45%{opacity:1;transform:translate(-50%,-50%) scale(1.16)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+.case-v51-fx.promo .case-v51-preview{animation:v51Promo .85s .28s cubic-bezier(.14,.78,.16,1) forwards!important;}
+@keyframes v51Promo{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-18deg)}38%{opacity:1;transform:translate(-50%,-50%) scale(1.2) rotate(6deg)}100%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}}
+</style>
+
+<script id="v51-final-runtime">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const API=()=>String(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+  const UID=()=>String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999');
+  const H=()=>({'X-Telegram-User-Id':UID(),'Content-Type':'application/json'});
+
+  /* ---------- Always use the supplied PAKETKA banner ---------- */
+  const pb=$('homeRocketBanner')?.querySelector('.paketka-banner-img');
+  if(pb) pb.src='assets/paketka_banner_8k.png';
+
+  /* ---------- Bottom Ice Arena button opens the real arena directly ---------- */
+  const iceNav=document.querySelector('.navitem[data-tab="pvp"]');
+  iceNav?.addEventListener('click',function(e){
+    e.preventDefault(); e.stopImmediatePropagation();
+    document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelectorAll('.tabpane').forEach(p=>p.classList.remove('active'));
+    $('iceScreen')?.classList.add('active');
+  },true);
+
+  /* ---------- CASES hub: reliable capture-phase routing ---------- */
+  const hub=$('casesHubScreen');
+  const homeCases=$('homeCasesBanner');
+  const hubBack=$('casesHubBack');
+  const caseScreen=$('caseScreen');
+  const caseOpen=$('caseOpenBtn');
+  const result=$('caseResult');
+  const resultImg=$('resultImage');
+  const resultPrize=$('resultPrize');
+  const resultNote=$('resultNote');
+  const reelWrap=$('caseReelWrap');
+  const reel=$('caseReel');
+  const insuff=$('caseInsufficient');
+  const promoModal=$('promoCodeModal');
+  const promoInput=$('promoCodeInput');
+  const promoError=$('promoCodeError');
+  const cfgs={
+    basic:{name:'Basic Case',price:1,kind:'basic',promo:false,loss:82},
+    promo:{name:'Promo Case',price:0,kind:'promo',promo:true,loss:0},
+    rare:{name:'Rare Case',price:3,kind:'rare',promo:false,loss:70}
+  };
+  let activeType='basic', caseBusy=false;
+  const pools={
+    basic:[
+      {type:'ton',name:'0 GRAM',value:0},{type:'ton',name:'0.3 GRAM',value:.3},{type:'ton',name:'0.5 GRAM',value:.5},{type:'ton',name:'1 GRAM',value:1},
+      {type:'nft',name:'Lol Pop',floor:3.35,img:'https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'},
+      {type:'nft',name:'Santa Hat',floor:3.31,img:'https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'},
+      {type:'nft',name:'Cookie Heart',floor:4.20,img:'https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png'}
+    ],
+    promo:[
+      {type:'ton',name:'0 GRAM',value:0},{type:'ton',name:'0.5 GRAM',value:.5},{type:'ton',name:'1 GRAM',value:1},
+      {type:'nft',name:'Stellar Rocket',floor:25,img:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png'},
+      {type:'nft',name:'Heart Locket',floor:1024.99,img:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png'}
+    ],
+    rare:[
+      {type:'ton',name:'1 GRAM',value:1},{type:'ton',name:'3 GRAM',value:3},{type:'ton',name:'5 GRAM',value:5},
+      {type:'nft',name:'Jelly Bunny',floor:7.30,img:'https://cdn.changes.tg/gifts/models/Jelly%20Bunny/png/Original.png'},
+      {type:'nft',name:'Heroic Helmet',floor:175.21,img:'https://cdn.changes.tg/gifts/models/Heroic%20Helmet/png/Original.png'},
+      {type:'nft',name:'Stellar Rocket',floor:25,img:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png'}
+    ]
+  };
+  function balance(){
+    const n=Number(window.__serverBalance);
+    if(Number.isFinite(n)) return n;
+    const v=parseFloat(localStorage.getItem('caseBalance')||'0');
+    return Number.isFinite(v)?v:0;
+  }
+  function setBal(v){
+    const n=Math.max(0,Number(v)||0); window.__serverBalance=n; localStorage.setItem('caseBalance',String(n));
+    document.querySelectorAll('.balance-val,#caseBalanceVal,#rkBalanceVal').forEach(el=>el.textContent=n.toFixed(3));
+    window.__syncBalance?.(n);
+  }
+  async function syncBal(){try{const r=await fetch(API()+'/api/me',{headers:H(),cache:'no-store'});if(r.ok){const d=await r.json();setBal(Number(d.balance||0));}}catch(_){} }
+  function hideCaseLayers(){
+    result?.classList.remove('active');reelWrap?.classList.remove('active');
+    const fx=document.querySelector('.case-v51-fx');fx?.remove();
+    if(reel){reel.style.transition='none';reel.style.transform='translate3d(0,0,0)';reel.innerHTML='';}
+  }
+  function openHub(){hub?.classList.add('active');hub?.setAttribute('aria-hidden','false');syncBal();}
+  function closeHub(){hub?.classList.remove('active');hub?.setAttribute('aria-hidden','true');}
+  homeCases?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openHub();},true);
+  hubBack?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();closeHub();},true);
+  document.querySelectorAll('.hub-case-card').forEach(card=>card.addEventListener('click',e=>{
+    e.preventDefault();e.stopImmediatePropagation();
+    activeType=card.dataset.kind||'basic'; closeHub(); openCaseScreen(activeType);
+  },true));
+  function openCaseScreen(type){
+    const cfg=cfgs[type]||cfgs.basic; activeType=type; hideCaseLayers(); caseScreen?.classList.add('active'); if(caseScreen)caseScreen.style.display='flex';
+    const title=caseScreen?.querySelector('.case-top-title'); if(title)title.innerHTML=`<button class="case-back" id="caseBackV51">←</button> ${cfg.name}`;
+    const art=caseScreen?.querySelector('.case-hero-art'); if(art){art.src= type==='promo' ? 'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png' : type==='rare' ? 'https://cdn.changes.tg/gifts/models/Heroic%20Helmet/png/Original.png' : 'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png';art.style.display='block';}
+    const nm=caseScreen?.querySelector('.case-hero-name'); if(nm)nm.textContent=cfg.name;
+    const pr=caseScreen?.querySelector('.case-price'); if(pr)pr.textContent=cfg.price?cfg.price+' GRAM':'0 GRAM';
+    const sub=caseScreen?.querySelector('.case-hero-sub'); if(sub)sub.textContent=cfg.promo?'Бесплатно по промокоду':`Открытие за ${cfg.price} GRAM`;
+    if(caseOpen){caseOpen.disabled=false;caseOpen.dataset.casePrice=String(cfg.price);caseOpen.dataset.casePromo=cfg.promo?'1':'';caseOpen.dataset.caseType=cfg.name;caseOpen.dataset.caseKind=cfg.kind;caseOpen.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' GRAM';}
+    setTimeout(()=>syncBal(),0);
+  }
+  document.addEventListener('click',e=>{if(e.target?.closest?.('#caseBackV51')){e.preventDefault();e.stopImmediatePropagation();caseScreen?.classList.remove('active');if(caseScreen)caseScreen.style.removeProperty('display');}},true);
+
+  function choose(pool,kind){
+    // Weighted but deterministic per open-session choice so visual and awarded item are literally the same object.
+    const r=Math.random();
+    if(kind==='promo') return r<.60?pool[0]:r<.80?pool[1]:r<.88?pool[2]:pool[3+(Math.random()<.75?0:1)];
+    if(kind==='rare') return r<.24?pool[0]:r<.54?pool[1]:r<.72?pool[2]:pool[3+Math.floor(Math.random()*(pool.length-3))];
+    return r<.30?pool[0]:r<.56?pool[1]:r<.80?pool[2]:r<.97?pool[3]:pool[4+Math.floor(Math.random()*(pool.length-4))];
+  }
+  function cardHTML(p){
+    if(p.type==='nft')return `<div class="reel-card"><img src="${p.img}" alt=""><strong>${p.name}</strong><span>NFT</span></div>`;
+    return `<div class="reel-card"><div class="reel-ton-wrap"><span class="case-ton-icon"></span></div><strong>${p.name}</strong><span>GRAM</span></div>`;
+  }
+  function buildReel(pool,winner){
+    const arr=[]; for(let i=0;i<46;i++)arr.push(pool[(i*7+Math.floor(i/4))%pool.length]); const wi=35; arr[wi]=winner;
+    reel.innerHTML=arr.map(cardHTML).join(''); return wi;
+  }
+  function fxFor(winner,type){
+    const fx=document.createElement('div');fx.className='case-v51-fx '+type;fx.innerHTML='<div class="fx-flash"></div>';
+    const pv=document.createElement('div');pv.className='case-v51-preview';
+    if(winner.type==='nft') pv.innerHTML=`<img src="${winner.img}" alt="">`; else pv.innerHTML='<div class="gram"></div>';
+    fx.appendChild(pv);
+    if(type==='promo'){
+      fx.classList.add('burst'); for(let i=0;i<18;i++){const p=document.createElement('span');p.className='case-v51-particle';p.style.left=(50+(Math.random()*20-10))+'%';p.style.top=(50+(Math.random()*14-7))+'%';p.style.setProperty('--x',(Math.random()*260-130)+'px');p.style.setProperty('--y',(Math.random()*220-170)+'px');p.style.setProperty('--d',(0.7+Math.random()*0.65).toFixed(2)+'s');fx.appendChild(p);}
+    } else if(type==='rare') fx.classList.add('rare');
+    caseScreen?.querySelector('.case-body')?.appendChild(fx); return fx;
+  }
+  async function award(winner,type){
+    if(winner.type==='ton'){
+      if(winner.value>0){const r=await fetch(API()+'/api/wallet/credit',{method:'POST',headers:H(),body:JSON.stringify({amount:winner.value,reason:type+' Case win'}),cache:'no-store'});if(!r.ok)throw new Error('Не удалось зачислить GRAM');const d=await r.json();setBal(Number(d.balance||0));}
+      window.__logActivity?.('case_drop',0,{name:winner.name,value:Number(winner.value||0),kind:'ton',image_url:'',action_text:'drop'});
+      return;
+    }
+    const item={...winner,id:'case_v51_'+Date.now()+'_'+Math.random().toString(36).slice(2),kind:'nft'};
+    window.__giftInventory?.addInventoryGift?.(item);
+    window.__logActivity?.('case_drop',0,{name:winner.name,image_url:winner.img,value:Number(winner.floor||0),kind:'nft',action_text:'drop'});
+  }
+  function showResult(winner){
+    if(winner.type==='nft'){resultImg.src=winner.img;resultImg.style.display='block';resultPrize.textContent=winner.name;resultNote.textContent='NFT добавлен в инвентарь';}
+    else{resultImg.style.display='none';resultPrize.textContent=winner.name;resultNote.textContent=winner.value>0?'Награда зачислена на баланс.':'В этот раз GRAM не выпал.';}
+    result?.classList.add('active');
+  }
+  async function runCase(){
+    if(caseBusy)return; caseBusy=true;
+    const cfg=cfgs[activeType]||cfgs.basic;
+    if(cfg.promo){promoModal?.classList.add('active'); if(promoModal)promoModal.style.display='flex'; promoInput?.focus(); caseBusy=false;return;}
+    const bal=balance(); if(!Number.isFinite(bal)||bal<cfg.price){if(insuff)insuff.textContent=`Недостаточно GRAM. Нужно ${cfg.price} GRAM.`;caseBusy=false;return;}
+    if(insuff)insuff.textContent=''; caseOpen.disabled=true; hideCaseLayers();
+    const pool=pools[activeType]||pools.basic; const winner=choose(pool,activeType); const wi=buildReel(pool,winner); reelWrap?.classList.add('active');
+    setBal(bal-cfg.price);
+    let charged=false;
+    try{
+      const r=await fetch(API()+'/api/wallet/charge',{method:'POST',headers:H(),body:JSON.stringify({amount:cfg.price,reason:cfg.name}),cache:'no-store'});
+      if(!r.ok)throw new Error((await r.text())||'Не удалось списать GRAM');
+      const d=await r.json();charged=true;setBal(Number(d.balance??bal-cfg.price));
+    }catch(err){setBal(bal);reelWrap?.classList.remove('active');caseOpen.disabled=false;caseBusy=false;if(insuff)insuff.textContent=err.message||'Не удалось открыть кейс';return;}
+
+    if(activeType==='basic'){
+      reel.style.transition='none';reel.style.transform='translate3d(0,0,0)';void reel.offsetWidth;
+      const step=118, cw=108, center=(reelWrap?.clientWidth||330)/2-cw/2; const x=-(wi*step-center);
+      reel.style.transition='transform 2.65s cubic-bezier(.08,.82,.16,1)';reel.style.transform=`translate3d(${x}px,0,0)`;
+      await new Promise(r=>setTimeout(r,2850));
+    }else{
+      // Promo = explosion; Rare = light reveal. The same winner object drives the preview and final award.
+      reelWrap?.classList.remove('active');
+      fxFor(winner,activeType);
+      await new Promise(r=>setTimeout(r,1450));
+    }
+    if(charged){try{await award(winner,activeType);}catch(err){if(insuff)insuff.textContent=err.message||'Ошибка выдачи';}}
+    const fx=document.querySelector('.case-v51-fx');fx?.remove(); reelWrap?.classList.remove('active'); showResult(winner); caseOpen.disabled=false; caseBusy=false;
+  }
+  caseOpen?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();runCase();},true);
+  promoModal?.addEventListener('click',e=>{if(e.target===promoModal){promoModal.classList.remove('active');promoModal.style.display='none';caseBusy=false;}},true);
+
+  /* ---------- LIVE: merge server stream + local immediate drops ---------- */
+  const liveTrack=$('topLiveTrack');
+  const LOCAL_KEY='v51_live_drops';
+  function localDrops(){try{return JSON.parse(localStorage.getItem(LOCAL_KEY)||'[]');}catch(_){return[];}}
+  function saveLocal(drop){const arr=localDrops();arr.unshift({...drop,id:'local_'+Date.now()+'_'+Math.random().toString(36).slice(2),created_at:Math.floor(Date.now()/1000)});localStorage.setItem(LOCAL_KEY,JSON.stringify(arr.slice(0,20)));}
+  function gramSVG(){return '<svg viewBox="0 0 96 96" width="26" height="26"><circle cx="48" cy="50" r="32" fill="none" stroke="rgba(255,255,255,.35)" stroke-width="3"/><path d="M28 30h40L48 64 28 30Zm10 0 10 17 10-17M48 47v17" fill="none" stroke="#fff" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/></svg>';}
+  function renderLive(items){
+    if(!liveTrack)return; liveTrack.innerHTML=''; const all=(Array.isArray(items)?items:[]).concat(localDrops());
+    const seen=new Set(), filtered=[];
+    for(const e of all){if(!e)continue;const key=[String(e.kind||''),String(e.name||''),String(e.value||0),String(e.created_at||'')].join('|');if(seen.has(key))continue;seen.add(key);filtered.push(e);if(filtered.length>=14)break;}
+    for(const e of filtered){const nft=String(e.kind||'').toLowerCase()==='nft' || !!e.image_url; const row=document.createElement('div');row.className='top-live-item '+(nft?'drop-nft':'drop-gram');row.setAttribute('aria-label',nft?'NFT drop':'GRAM drop');
+      if(nft&&e.image_url){const img=document.createElement('img');img.alt='';img.src=e.image_url;img.onerror=()=>{row.innerHTML='<span class="top-live-ton">'+gramSVG()+'</span>';};row.appendChild(img);}else{const sp=document.createElement('span');sp.className='top-live-ton';sp.innerHTML=gramSVG();row.appendChild(sp);} liveTrack.appendChild(row);}
+    if(!filtered.length){const e=document.createElement('div');e.className='top-live-empty';e.textContent='Ждём новый дроп';liveTrack.appendChild(e);}
+  }
+  async function pullLive(){if(!liveTrack||!API())return;try{const r=await fetch(API()+'/api/live',{headers:{'X-Telegram-User-Id':UID()},cache:'no-store'});if(!r.ok)throw new Error('live');const d=await r.json();renderLive(d.items||[]);}catch(_){renderLive([]);}}
+  /* Wrap activity logger so every actual case reward hits LIVE immediately. */
+  const priorLog=window.__logActivity;
+  window.__logActivity=async function(type,amount,meta){
+    const m=meta||{};
+    if(type==='case_drop'){
+      saveLocal({kind:m.kind||'ton',name:m.name||'',image_url:m.image_url||'',value:Number(m.value||0)}); renderLive([]);
+    }
+    try{return await (typeof priorLog==='function'?priorLog(type,amount,meta):Promise.resolve());}catch(_){return false;}
+  };
+  renderLive(localDrops()); pullLive(); setInterval(pullLive,3500);
+
+  /* ---------- Ice Arena final presentation sequence ---------- */
+  const iceScreen=$('iceScreen'); const iceArena=$('iceArena'); const iceWinner=$('iceWinner');
+  if(iceScreen&&iceArena&&iceWinner){
+    let staging=false;
+    const obs=new MutationObserver(()=>{
+      if(staging) return;
+      if(!iceWinner.classList.contains('show')) return;
+      staging=true;
+      // Hide winner immediately; then zoom, outline, reveal, and pull back.
+      iceWinner.classList.remove('show'); iceWinner.classList.add('v51-staged');
+      iceArena.style.transformOrigin='50% 50%';
+      iceArena.style.transition='transform 1.8s cubic-bezier(.2,.8,.2,1)';
+      iceArena.style.transform='scale(1.11)';
+      setTimeout(()=>{
+        iceScreen.querySelectorAll('.ice-zone.winner-zone').forEach(z=>z.classList.add('v51-glow'));
+      },850);
+      setTimeout(()=>{
+        iceWinner.classList.add('show','v51-reveal');
+      },1450);
+      setTimeout(()=>{
+        iceArena.style.transform='scale(1)';
+        iceScreen.querySelectorAll('.ice-zone.winner-zone').forEach(z=>z.classList.remove('v51-glow'));
+      },3600);
+      setTimeout(()=>{iceWinner.classList.remove('v51-staged','v51-reveal','show');staging=false;},4250);
+    });
+    obs.observe(iceWinner,{attributes:true,attributeFilter:['class']});
+  }
 })();
 </script>
 
@@ -4161,3 +4447,7 @@ playhub-game-card.rocket-game-card{margin-bottom:10px}.playhub-game-card.rocket-
   },true);
 })();
 </script>
+
+<style id="ice-arena-home-banner-cleanup">
+  #tab-pvp{display:none!important;}
+</style>

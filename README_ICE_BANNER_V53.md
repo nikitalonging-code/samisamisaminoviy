@@ -1,0 +1,1 @@
+v53: Added user-supplied ICE ARENA banner as frontend/assets/ice_arena_banner_ref.png, placed as a fourth home banner, removed the bottom PVP/Ice Arena navigation button, and wired the banner to open the existing Ice Arena screen. Legacy PVP pane remains hidden for compatibility.
