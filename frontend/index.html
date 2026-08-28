@@ -1176,11 +1176,8 @@
     <!-- MAIN TAB -->
     <div class="tabpane active" id="tab-main">
       <div class="home-banners">
-        <button class="home-banner rocket-home" id="homeRocketBanner" type="button">
-          <span class="home-banner-tag">🚀 ХИТ</span>
-          <span class="home-banner-title">РАКЕТКА</span>
-          <span class="home-banner-sub">CRASH · LIVE СТАВКИ</span>
-          <img src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Ракетка">
+        <button class="home-banner rocket-home paketka-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
+          <img class="paketka-banner-img" src="assets/paketka_banner.png" alt="Пакетка — Stellar Rocket">
         </button>
         <button class="home-banner cases-home" id="homeCasesBanner" type="button">
           <span class="home-banner-tag">🎁 НОВОЕ</span>
@@ -1706,11 +1703,10 @@
       if(btn.dataset.stake==='max'){const bal=await loadBalance();syncStake(Math.max(.1,Number(bal)||.1));} else syncStake(btn.dataset.stake);
     }));
 
-    function openBetModal(){if(join?.disabled)return;modal?.classList.add('show');if(modalAmount){modalAmount.value=String(selected);modalAmount.focus();}}
+    function openBetModal(){if(join?.disabled)return;if(modalAmount)modalAmount.value=String(selected);placeBet();}
     function closeBetModal(){modal?.classList.remove('show');}
     join?.addEventListener('click',openBetModal); modalClose?.addEventListener('click',closeBetModal); modal?.addEventListener('click',e=>{if(e.target===modal)closeBetModal();});
     document.querySelectorAll('[data-modal-stake]').forEach(btn=>btn.addEventListener('click',async()=>{const s=btn.dataset.modalStake;if(s==='max'){const bal=await loadBalance();if(modalAmount)modalAmount.value=fmt(Math.max(.1,Number(bal)||.1));}else if(modalAmount)modalAmount.value=s;}));
-    modalConfirm?.addEventListener('click',placeBet);
 
     function partitionPlayers(players,x,y,w,h,depth=0,out=[]){
       if(!players.length)return out;
@@ -3116,7 +3112,6 @@
   const collectionGrid=document.getElementById('collectionGrid');let catalog=[],special=[],filter='all';async function loadCollections(){if(!API)return;collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--sub);padding:25px">Загрузка NFT…</div>';try{const [a,b]=await Promise.all([fetch(API+'/api/catalog',{headers}),fetch(API+'/api/rare-gift-floors?backdrop=all&limit=300',{headers})]);const ad=await a.json(),bd=await b.json();catalog=ad.items||[];special=bd.items||[];renderCollections();}catch(_){collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#ff7474;padding:25px">Не удалось загрузить каталог</div>';}}function renderCollections(){const q=(document.getElementById('collectionSearch').value||'').toLowerCase().trim();const all=[...catalog,...special],seen=new Set();const list=all.filter(x=>{const k=(x.name||'')+'|'+(x.backdrop||'');if(seen.has(k))return false;seen.add(k);if(filter==='black'&&String(x.backdrop).toLowerCase()!=='black')return false;if(filter==='onyx'&&String(x.backdrop).toLowerCase()!=='onyx black')return false;return String(x.name||'').toLowerCase().includes(q);}).slice(0,300);document.getElementById('collectionsCount').textContent=list.length;collectionGrid.innerHTML='';list.forEach(g=>{const c=document.createElement('div');c.className='collection-card';const img=g.image_url||g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;c.innerHTML=`<img src="${img}" alt="" onerror="this.style.display='none'"><div class="collection-name">${g.name}</div><div class="collection-meta">${Number(g.floor||0)>0?Number(g.floor).toFixed(2)+' TON':'Floor —'}</div>${g.backdrop?`<span class="collection-badge">${g.backdrop}</span>`:''}`;collectionGrid.appendChild(c);});}document.getElementById('openCollectionsBtn')?.addEventListener('click',()=>{collections.classList.add('active');loadCollections();});document.getElementById('collectionsBackBtn')?.addEventListener('click',()=>collections.classList.remove('active'));document.getElementById('collectionSearch')?.addEventListener('input',renderCollections);document.querySelectorAll('.collection-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.collection-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;renderCollections();}));
   async function loadRating(){const box=document.getElementById('ratingList');if(!box)return;try{const r=await fetch(API+'/api/rating',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach((p,i)=>{const row=document.createElement('div');row.className='rating-row'+(String(p.user_id)===String(d.you_user_id)?' me':'');const av=p.avatar_url?`<img src="${p.avatar_url}" alt="">`:`<div class="mini-avatar">${(p.first_name||p.username||'?').slice(0,1).toUpperCase()}</div>`;row.innerHTML=`<div>${i+1}</div><div class="rating-user">${av}<span>${p.username?'@'+p.username:(p.first_name||'Пользователь')}</span></div><div class="rating-volume">${Number(p.volume||0).toFixed(2)} GRAM</div>`;box.appendChild(row);});}catch(_){}}loadRating();setInterval(loadRating,15000);
   async function loadTasks(){const box=document.getElementById('tasksList');if(!box)return;try{const r=await fetch(API+'/api/tasks',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach(t=>{const el=document.createElement('div');el.className='task-real';el.innerHTML=`<div class="task-real-head"><div class="task-real-icon">${t.icon}</div><div><h4>${t.title}</h4><p>${t.description}</p></div></div><div class="task-real-foot"><span>${t.progress_label}</span><span class="reward">+${Number(t.reward||0).toFixed(2)} GRAM</span></div>`;box.appendChild(el);});}catch(_){}}loadTasks();setInterval(loadTasks,15000);
-  async function loadLive(){const box=document.getElementById('topLiveTrack');if(!box)return;try{const r=await fetch(API+'/api/live',{headers});if(!r.ok)return;const d=await r.json();const items=d.items||[];box.innerHTML='';(items.length?items:[{kind:'ton',name:'LIVE',value:0,action_text:'Здесь появятся реальные дропы'}]).slice(0,14).forEach(e=>{const row=document.createElement('div');row.className='top-live-item';let icon=e.image_url?`<img src="${e.image_url}" alt="" onerror="this.style.display='none'">`:(e.kind==='ton'?'<span class="top-live-ton">▽</span>':'<span class="top-live-avatar">🎁</span>');row.innerHTML=`${icon}<div><b>${e.username?'@'+e.username:'LIVE'}</b><span>${e.action_text||'получил награду'}${e.name?' · '+e.name:''}${Number(e.value||0)>0?' · '+Number(e.value).toFixed(2)+' TON':''}</span></div>`;box.appendChild(row);});}catch(_){}}loadLive();setInterval(loadLive,5000);
   document.getElementById('sendGiftProfileBtn')?.addEventListener('click',()=>{const u='https://t.me/chibiop';try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,'_blank');}catch(_){window.open(u,'_blank');}});
 
   const caseConfig={promo:{name:'Promo Case',price:0,art:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png',loss:0,promo:true},summer:{name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82}};document.querySelectorAll('.case-card').forEach(card=>card.addEventListener('click',()=>{const cfg=caseConfig[card.dataset.case||'summer'];if(cfg)window.__openCaseConfig?.(cfg);}));window.__openCaseConfig=(cfg)=>{const s=document.getElementById('caseScreen');if(!s)return;s.classList.add('active');const title=s.querySelector('.case-top-title');if(title)title.innerHTML=`<button class="case-back" id="caseBackBtnDyn">←</button> ${cfg.name}`;const hero=s.querySelector('.case-hero-art');if(hero)hero.src=cfg.art;const n=s.querySelector('.case-hero-name');if(n)n.textContent=cfg.name;const p=s.querySelector('.case-price');if(p)p.textContent=cfg.promo?'0 TON':cfg.price+' TON';const sub=s.querySelector('.case-hero-sub');if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':`Открытие ${cfg.price} TON`;const btn=document.getElementById('caseOpenBtn');if(btn){btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' TON';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=cfg.price;btn.dataset.caseLoss=cfg.loss;btn.dataset.casePromo=cfg.promo?'1':'';}document.getElementById('caseBackBtnDyn')?.addEventListener('click',()=>s.classList.remove('active'),{once:true});};
@@ -3812,6 +3807,211 @@
 }
 </style>
 
+
+
+<style id="v47-definitive-ui-fixes">
+  /* ===== PACKETKA BANNER: use the exact reference asset ===== */
+  .home-banner.paketka-banner{padding:0!important;min-height:0!important;height:auto!important;border:0!important;background:#160305!important;box-shadow:0 12px 28px rgba(0,0,0,.34)!important;border-radius:20px!important;overflow:hidden!important;display:block!important;}
+  .home-banner.paketka-banner:before{display:none!important;}
+  .paketka-banner-img{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;max-height:none!important;object-fit:cover!important;z-index:2!important;filter:none!important;border-radius:inherit!important;}
+
+  /* ===== LIVE: icon-only drop rail ===== */
+  .top-live{display:flex!important;align-items:center!important;margin:0 12px 12px!important;padding:8px 8px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:15px!important;background:linear-gradient(180deg,rgba(19,20,22,.96),rgba(9,10,12,.94))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 22px rgba(0,0,0,.22)!important;overflow:hidden!important;}
+  .top-live-head{display:flex;align-items:center;gap:5px;flex:0 0 auto;padding:0 5px 0 2px;color:#f1f1f3;font-size:8px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;}
+  .top-live-head .live-dot-red{width:6px;height:6px;border-radius:50%;background:#ff3040;box-shadow:0 0 9px rgba(255,48,64,.75);}
+  .top-live-track{display:flex!important;align-items:center!important;gap:8px!important;min-width:0!important;flex:1!important;overflow-x:auto!important;scrollbar-width:none!important;padding:0!important;}
+  .top-live-track::-webkit-scrollbar{display:none!important;}
+  .top-live-item{position:relative!important;width:40px!important;height:40px!important;min-width:40px!important;max-width:40px!important;flex:0 0 40px!important;padding:0!important;border-radius:12px!important;display:grid!important;place-items:center!important;background:linear-gradient(145deg,#24252a,#151619)!important;border:1px solid rgba(255,255,255,.09)!important;box-shadow:0 6px 14px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.05)!important;overflow:hidden!important;}
+  .top-live-item::after{content:"";position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.07),transparent 48%);pointer-events:none;}
+  .top-live-item img{width:100%!important;height:100%!important;object-fit:contain!important;padding:3px!important;box-sizing:border-box!important;border-radius:11px!important;background:linear-gradient(145deg,#2a2d33,#141519)!important;}
+  .top-live-item .top-live-ton{width:28px!important;height:28px!important;margin:0!important;border-radius:50%!important;background:linear-gradient(145deg,#39b7ff,#1e77cf)!important;box-shadow:0 0 15px rgba(50,154,235,.32)!important;display:grid!important;place-items:center!important;font-size:0!important;}
+  .top-live-ton svg{width:15px;height:17px;display:block;filter:drop-shadow(0 1px 2px rgba(0,0,0,.32));}
+  .top-live-ton svg path{fill:none;stroke:#fff;stroke-width:2.5;stroke-linecap:round;stroke-linejoin:round;}
+  .top-live-item.drop-nft{border-color:rgba(255,255,255,.13)!important;}
+  .top-live-item.drop-gram{border-color:rgba(53,165,255,.22)!important;}
+  .top-live-item.drop-new{animation:liveDropIn .32s ease-out both;}
+  @keyframes liveDropIn{from{opacity:0;transform:translateY(5px) scale(.92)}to{opacity:1;transform:translateY(0) scale(1)}}
+
+  /* ===== CASES: final deterministic reel visuals ===== */
+  #caseReelWrap.v47-reel{display:block!important;position:relative!important;overflow:hidden!important;height:168px!important;min-height:168px!important;padding:0!important;background:linear-gradient(180deg,rgba(18,10,12,.9),rgba(8,9,11,.96))!important;border:1px solid rgba(255,48,58,.18)!important;border-radius:18px!important;}
+  #caseReelWrap.v47-reel .case-reel-pointer{position:absolute!important;left:50%!important;top:3px!important;bottom:3px!important;width:0!important;transform:translateX(-50%)!important;border-left:2px solid #ff3d48!important;z-index:30!important;box-shadow:0 0 12px rgba(255,61,72,.8)!important;}
+  #caseReelWrap.v47-reel .case-reel-pointer:before{content:"";position:absolute;left:-7px;top:-1px;width:14px;height:8px;background:#ff3d48;clip-path:polygon(50% 100%,0 0,100% 0);filter:drop-shadow(0 0 8px rgba(255,61,72,.8));}
+  #caseReelWrap.v47-reel .case-reel{height:100%!important;display:flex!important;align-items:center!important;gap:10px!important;padding:0 10px!important;min-width:max-content!important;will-change:transform!important;}
+  #caseReelWrap.v47-reel .v47-card{width:104px!important;min-width:104px!important;height:132px!important;flex:0 0 104px!important;border-radius:16px!important;border:1px solid rgba(255,255,255,.09)!important;background:linear-gradient(180deg,#202127,#111216)!important;box-sizing:border-box!important;display:flex!important;flex-direction:column!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;text-align:center!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.04),0 10px 22px rgba(0,0,0,.24)!important;}
+  #caseReelWrap.v47-reel .v47-card img{width:72px!important;height:72px!important;object-fit:contain!important;filter:drop-shadow(0 6px 12px rgba(0,0,0,.45))!important;}
+  #caseReelWrap.v47-reel .v47-gram{width:58px!important;height:58px!important;border-radius:50%!important;display:grid!important;place-items:center!important;background:radial-gradient(circle at 35% 28%,#49beff,#1b77cb 62%,#125494 100%)!important;box-shadow:0 0 24px rgba(35,145,224,.26)!important;}
+  #caseReelWrap.v47-reel .v47-gram svg{width:31px;height:36px;display:block;}
+  #caseReelWrap.v47-reel .v47-gram path{fill:none;stroke:#fff;stroke-width:4;stroke-linecap:round;stroke-linejoin:round;}
+  #caseReelWrap.v47-reel .v47-card strong{margin-top:7px;font-size:10px!important;font-weight:900!important;}
+  #caseReelWrap.v47-reel .v47-card span{margin-top:2px;font-size:8px!important;color:#8f949c!important;text-transform:uppercase;letter-spacing:.5px;}
+  #caseReelWrap.v47-reel .v47-card.winner-focus{border-color:#ff4a54!important;box-shadow:0 0 0 1px rgba(255,74,84,.25),0 0 24px rgba(255,57,68,.30),inset 0 1px 0 rgba(255,255,255,.06)!important;}
+
+  /* ===== ICE ARENA: no confirmation sheet on the normal button ===== */
+  #iceBetModal{display:none!important;}
+</style>
+
+<script id="v47-definitive-runtime-fixes">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const api=()=>String(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+  const uid=String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id||'999999999');
+  const H=()=>({'X-Telegram-User-Id':uid,'Content-Type':'application/json'});
+
+  // ----- LIVE DROP RAIL -----
+  const liveTrack=$('topLiveTrack');
+  let liveKnown=new Set();
+  function gramSvg(){return '<svg viewBox="0 0 32 36" aria-hidden="true"><path d="M3 6.5h26L16 29.5 3 6.5Zm5.5 0L16 20l7.5-13.5"/><path d="M16 20v9.5"/></svg>';}
+  function liveItem(e,idx){
+    const row=document.createElement('div');
+    const isNft=String(e.kind||'').toLowerCase()==='nft' || !!e.image_url;
+    row.className='top-live-item '+(isNft?'drop-nft':'drop-gram')+(idx<4?' drop-new':'');
+    row.setAttribute('aria-label',isNft?'NFT drop':'GRAM drop');
+    if(isNft && e.image_url){
+      const img=document.createElement('img');
+      img.alt=''; img.src=e.image_url;
+      img.onerror=()=>{row.innerHTML='<span class="top-live-ton">'+gramSvg()+'</span>';};
+      row.appendChild(img);
+    }else{
+      row.innerHTML='<span class="top-live-ton">'+gramSvg()+'</span>';
+    }
+    return row;
+  }
+  async function refreshLiveDrops(){
+    if(!liveTrack) return;
+    try{
+      const r=await fetch(api()+'/api/live',{headers:H(),cache:'no-store'});
+      if(!r.ok) return;
+      const d=await r.json();
+      const items=Array.isArray(d.items)?d.items:[];
+      const drops=items.filter(e=>String(e.type||e.event||'')!=='').concat(items.filter(e=>String(e.type||e.event||'')==='').length?[]:items);
+      // Only real drop-like records, newest first. No usernames/text are ever rendered.
+      const clean=(drops.length?drops:[]).filter(e=>e && (e.image_url || e.kind || e.name || Number(e.value||0)>=0)).slice(0,14);
+      liveTrack.innerHTML='';
+      clean.forEach((e,i)=>liveTrack.appendChild(liveItem(e,i)));
+      liveKnown=new Set(clean.map((e,i)=>String(e.id||e.created_at||e.timestamp||i)));
+      if(!clean.length){
+        const empty=document.createElement('div'); empty.className='top-live-empty'; empty.textContent='Ждём новый дроп'; liveTrack.appendChild(empty);
+      }
+    }catch(_){ }
+  }
+  // Put the LIVE label into the rail without usernames/descriptions.
+  const liveBox=$('topLiveFeed');
+  if(liveBox && !liveBox.querySelector('.top-live-head')){
+    const head=document.createElement('div'); head.className='top-live-head'; head.innerHTML='<span class="live-dot-red"></span><span>LIVE</span>';
+    liveBox.insertBefore(head,liveTrack);
+  }
+  refreshLiveDrops();
+  setInterval(refreshLiveDrops,5000);
+
+  // ----- ICE ARENA: force one-tap bet, even if an older target handler survives -----
+  const iceJoin=$('iceJoinBtn');
+  iceJoin?.addEventListener('click',function(e){
+    // This capture-phase handler is deliberately on the button and runs before target handlers.
+  },true);
+
+  // ----- CASES: one authoritative deterministic reel -----
+  const openCase=$('caseOpenBtn'), reel=$('caseReel'), wrap=$('caseReelWrap'), result=$('caseResult');
+  if(!openCase || !reel || !wrap || !result) return;
+  const resultImage=$('resultImage'), resultPrize=$('resultPrize'), resultNote=$('resultNote'), insuff=$('caseInsufficient');
+  const prizes=[
+    {type:'ton',name:'0 GRAM',value:0},
+    {type:'ton',name:'0.3 GRAM',value:.3},
+    {type:'ton',name:'0.5 GRAM',value:.5},
+    {type:'ton',name:'1 GRAM',value:1},
+    {type:'nft',name:'Lol Pop',floor:3.35,img:'https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'},
+    {type:'nft',name:'Santa Hat',floor:3.31,img:'https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'},
+    {type:'nft',name:'Cookie Heart',floor:4.20,img:'https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png'},
+    {type:'nft',name:'Homemade Cake',floor:4.08,img:'https://cdn.changes.tg/gifts/models/Homemade%20Cake/png/Original.png'},
+    {type:'nft',name:'Jelly Bunny',floor:7.30,img:'https://cdn.changes.tg/gifts/models/Jelly%20Bunny/png/Original.png'}
+  ];
+  let caseBusy=false;
+  function pickPrize(){
+    const r=Math.random()*100;
+    if(r<35) return {...prizes[0]};
+    if(r<60) return {...prizes[1]};
+    if(r<78) return {...prizes[2]};
+    if(r<99) return {...prizes[3]};
+    return {...prizes[4+Math.floor(Math.random()*5)]};
+  }
+  function cardMarkup(p){
+    if(p.type==='nft') return '<div class="v47-card"><img src="'+p.img+'" alt=""><strong>'+p.name+'</strong><span>NFT</span></div>';
+    return '<div class="v47-card"><div class="v47-gram">'+gramSvg()+'</div><strong>'+p.name+'</strong><span>GRAM</span></div>';
+  }
+  function buildReel(winner){
+    const arr=[];
+    for(let i=0;i<52;i++) arr.push({...prizes[(i*7+Math.floor(i/3))%prizes.length]});
+    const winIndex=43; arr[winIndex]=winner;
+    reel.innerHTML=arr.map(cardMarkup).join('');
+    return winIndex;
+  }
+  async function creditPrize(winner){
+    if(winner.type==='ton'){
+      if(winner.value<=0){ window.__logActivity?.('case_drop',0,{name:winner.name,image_url:'',value:0,kind:'ton',action_text:'drop'}); return; }
+      const r=await fetch(api()+'/api/wallet/credit',{method:'POST',headers:H(),body:JSON.stringify({amount:winner.value,reason:'Summer Case win'}),cache:'no-store'});
+      if(!r.ok) throw new Error('Не удалось зачислить GRAM');
+      const d=await r.json(); window.__serverBalance=Number(d.balance||0); window.__syncBalance?.(window.__serverBalance);
+      window.__logActivity?.('case_drop',0,{name:winner.name,image_url:'',value:winner.value,kind:'ton',action_text:'drop'});
+      return;
+    }
+    const gift={...winner,id:'case_'+Date.now()+'_'+Math.random().toString(36).slice(2),kind:'nft'};
+    const inv=window.__giftInventory?.addInventoryGift?.(gift); if(inv) window.__giftInventory?.showNftRewardToast?.(inv,'case');
+    window.__logActivity?.('case_drop',0,{name:winner.name,image_url:winner.img,value:Number(winner.floor||0),kind:'nft',action_text:'drop'});
+  }
+  async function runDeterministicCase(e){
+    if(e){e.preventDefault();e.stopImmediatePropagation();}
+    if(caseBusy || openCase.dataset.casePromo==='1') return;
+    const bal=Number(window.__serverBalance ?? $('caseBalanceVal')?.textContent ?? 0);
+    if(!Number.isFinite(bal)||bal<1){if(insuff)insuff.textContent='Недостаточно GRAM. Нужно 1 GRAM.';return;}
+    caseBusy=true; openCase.disabled=true; if(insuff)insuff.textContent='';
+    const winner=pickPrize(); const wi=buildReel(winner);
+    wrap.classList.add('active','v47-reel'); reel.style.transition='none'; reel.style.transform='translate3d(0,0,0)';
+    void reel.offsetWidth;
+    const profiles=[
+      {dur:2.55,ease:'cubic-bezier(.07,.76,.14,1)',j:0},
+      {dur:3.0,ease:'cubic-bezier(.12,.83,.16,1)',j:-5},
+      {dur:3.5,ease:'cubic-bezier(.08,.90,.15,1)',j:6},
+      {dur:2.82,ease:'cubic-bezier(.16,.68,.14,1)',j:-3}
+    ];
+    const prof=profiles[Math.floor(Math.random()*profiles.length)];
+    const localBal=bal-1;
+    window.__serverBalance=localBal; window.__syncBalance?.(localBal); if($('caseBalanceVal'))$('caseBalanceVal').textContent=localBal.toFixed(3);
+    const cardWidth=104, gap=10, pad=10;
+    let charged=false;
+    try{
+      const charge=await fetch(api()+'/api/wallet/charge',{method:'POST',headers:H(),body:JSON.stringify({amount:1,reason:'Summer Case'}),cache:'no-store'});
+      if(!charge.ok) throw new Error((await charge.text())||'Не удалось списать GRAM');
+      charged=true;
+      const d=await charge.json(); window.__serverBalance=Number(d.balance??localBal); window.__syncBalance?.(window.__serverBalance);
+      if($('caseBalanceVal'))$('caseBalanceVal').textContent=Number(window.__serverBalance).toFixed(3);
+    }catch(err){
+      window.__serverBalance=bal; window.__syncBalance?.(bal); if($('caseBalanceVal'))$('caseBalanceVal').textContent=bal.toFixed(3);
+      wrap.classList.remove('active'); openCase.disabled=false; caseBusy=false; if(insuff)insuff.textContent=err.message||'Не удалось открыть кейс'; return;
+    }
+    requestAnimationFrame(()=>{
+      const target=(pad + wi*(cardWidth+gap)) + cardWidth/2;
+      const center=(wrap.clientWidth||330)/2;
+      const x=-(target-center)+prof.j;
+      reel.style.transition='transform '+prof.dur+'s '+prof.ease;
+      reel.style.transform='translate3d('+x+'px,0,0)';
+      const targetCard=reel.children[wi];
+      setTimeout(()=>targetCard?.classList.add('winner-focus'),Math.max(650,Math.round(prof.dur*760)));
+    });
+    await new Promise(r=>setTimeout(r,Math.round(prof.dur*1000)+180));
+    if(!charged){caseBusy=false;openCase.disabled=false;return;}
+    try{await creditPrize(winner);}catch(err){if(insuff)insuff.textContent=err.message||'Ошибка выдачи';}
+    if(winner.type==='nft'){
+      resultImage.src=winner.img; resultImage.style.display='block'; resultPrize.textContent=winner.name; resultNote.textContent='NFT добавлен в инвентарь';
+    }else{
+      resultImage.style.display='none'; resultPrize.textContent=winner.name; resultNote.textContent=winner.value>0?'Награда зачислена на баланс.':'В этот раз награда не выпала.';
+    }
+    wrap.classList.remove('active'); result.classList.add('active'); openCase.disabled=false; caseBusy=false;
+  }
+  openCase.addEventListener('click',runDeterministicCase,true);
+
+  // Promo open stays unchanged; prevent the direct case handler from stealing promo clicks.
+})();
+</script>
 </body>
 </html>
 
