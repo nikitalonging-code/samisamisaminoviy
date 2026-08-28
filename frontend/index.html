@@ -4681,6 +4681,230 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 </script>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const apiBase = (window.__APP_CONFIG__?.apiBase || 'http://localhost:8080').replace(/\/$/, '');
+  const tgId = () => String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '999999999');
+  
+  const els = {
+    betBtn: document.getElementById('betBtn'),
+    cashoutBtn: document.getElementById('cashoutBtn'),
+    multiplier: document.getElementById('rocketMultiplier'),
+    countdownRing: document.getElementById('countdownRing'),
+    countdownNum: document.getElementById('countdownNum'),
+    rocketBob: document.getElementById('rocketBob'),
+    rocketVideo: document.getElementById('rocketVideo'),
+    rocketBoom: document.getElementById('rocketBoom'),
+    historyRow: document.getElementById('historyRow'),
+    rkBalance: document.getElementById('rkBalanceVal')
+  };
+
+  let state = {
+    multiplier: 1.00,
+    crashPoint: 0,
+    isRunning: false,
+    currentBet: null,
+    balance: 0,
+    history: [],
+    startTime: 0
+  };
+
+  function showRocket() {
+    if (els.rocketVideo) {
+      els.rocketVideo.style.display = 'block';
+      els.rocketVideo.style.opacity = '1';
+      els.rocketVideo.play().catch(e => console.log('Video error:', e));
+    }
+    if (els.rocketBoom) els.rocketBoom.style.display = 'none';
+  }
+
+  function explodeRocket() {
+    if (els.rocketVideo) {
+      els.rocketVideo.pause();
+      els.rocketVideo.style.opacity = '0';
+      setTimeout(() => els.rocketVideo.style.display = 'none', 300);
+    }
+    if (els.rocketBoom) {
+      els.rocketBoom.style.display = 'block';
+      setTimeout(() => els.rocketBoom.style.display = 'none', 1000);
+    }
+  }
+
+  function updateBalance() {
+    fetch(`${apiBase}/api/balance`, {
+      headers: { 'X-Telegram-User-Id': tgId() }
+    })
+    .then(r => r.json())
+    .then(data => {
+      if (data.balance !== undefined) {
+        state.balance = data.balance;
+        if (els.rkBalance) els.rkBalance.textContent = data.balance.toFixed(3);
+      }
+    });
+  }
+
+  function startCountdown() {
+    state.isRunning = false;
+    state.multiplier = 1.00;
+    
+    if (els.countdownRing) els.countdownRing.style.display = 'flex';
+    if (els.multiplier) {
+      els.multiplier.textContent = '1.00x';
+      els.multiplier.style.color = '#ffffff';
+    }
+    if (els.betBtn) els.betBtn.style.display = 'block';
+    if (els.cashoutBtn) els.cashoutBtn.style.display = 'none';
+    
+    let seconds = 5;
+    if (els.countdownNum) els.countdownNum.textContent = seconds;
+    
+    const interval = setInterval(() => {
+      seconds--;
+      if (els.countdownNum) els.countdownNum.textContent = seconds;
+      if (seconds < 0) {
+        clearInterval(interval);
+        if (els.countdownRing) els.countdownRing.style.display = 'none';
+        startGame();
+      }
+    }, 1000);
+  }
+
+  function startGame() {
+    if (Math.random() < 0.03) {
+      state.crashPoint = 1.00;
+    } else {
+      const r = Math.random() * 95;
+      state.crashPoint = Math.max(1.00, 100 / (100 - r));
+    }
+    
+    state.isRunning = true;
+    state.startTime = Date.now();
+    state.multiplier = 1.00;
+    
+    showRocket();
+    gameLoop();
+  }
+
+  function gameLoop() {
+    if (!state.isRunning) return;
+    
+    const elapsed = (Date.now() - state.startTime) / 1000;
+    state.multiplier = 1.00 + (0.1 * elapsed) + (0.05 * Math.pow(elapsed, 2));
+    
+    if (els.multiplier) els.multiplier.textContent = state.multiplier.toFixed(2) + 'x';
+    
+    if (els.cashoutBtn && state.currentBet) {
+      els.cashoutBtn.textContent = `Забрать на x${state.multiplier.toFixed(2)}`;
+    }
+    
+    if (state.multiplier >= state.crashPoint) {
+      crash();
+    } else {
+      requestAnimationFrame(gameLoop);
+    }
+  }
+
+  function crash() {
+    state.isRunning = false;
+    
+    if (els.multiplier) {
+      els.multiplier.textContent = state.crashPoint.toFixed(2) + 'x';
+      els.multiplier.style.color = '#ef4444';
+    }
+    
+    explodeRocket();
+    state.history.push({ multiplier: state.crashPoint });
+    if (state.history.length > 20) state.history.shift();
+    
+    state.currentBet = null;
+    if (els.cashoutBtn) els.cashoutBtn.style.display = 'none';
+    if (els.betBtn) els.betBtn.style.display = 'block';
+    
+    setTimeout(() => startCountdown(), 3000);
+  }
+
+  async function placeBet(amount) {
+    if (!amount || amount <= 0) {
+      alert('Введите сумму ставки');
+      return;
+    }
+    
+    try {
+      const res = await fetch(`${apiBase}/api/crash/bet`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Telegram-User-Id': tgId()
+        },
+        body: JSON.stringify({ amount: parseFloat(amount) })
+      });
+      
+      const data = await res.json();
+      
+      if (data.ok) {
+        state.currentBet = { id: data.bet_id, amount: amount, cashedOut: false };
+        state.balance = data.new_balance;
+        if (els.rkBalance) els.rkBalance.textContent = state.balance.toFixed(3);
+        
+        if (els.betBtn) els.betBtn.style.display = 'none';
+        if (state.isRunning && els.cashoutBtn) {
+          els.cashoutBtn.style.display = 'block';
+        }
+      } else {
+        alert(data.detail || 'Ошибка ставки');
+      }
+    } catch (e) {
+      console.error('Bet error:', e);
+      alert('Ошибка соединения');
+    }
+  }
+
+  async function cashOut() {
+    if (!state.currentBet || state.currentBet.cashedOut || !state.isRunning) return;
+    
+    try {
+      const res = await fetch(`${apiBase}/api/crash/cashout`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-Telegram-User-Id': tgId()
+        },
+        body: JSON.stringify({
+          bet_id: state.currentBet.id,
+          multiplier: state.multiplier
+        })
+      });
+      
+      const data = await res.json();
+      
+      if (data.ok) {
+        state.currentBet.cashedOut = true;
+        state.balance = data.new_balance;
+        if (els.rkBalance) els.rkBalance.textContent = state.balance.toFixed(3);
+        if (els.cashoutBtn) els.cashoutBtn.style.display = 'none';
+      }
+    } catch (e) {
+      console.error('Cashout error:', e);
+    }
+  }
+
+  if (els.betBtn) {
+    els.betBtn.addEventListener('click', () => {
+      const amount = prompt('Введите сумму ставки (TON):', '1');
+      if (amount) placeBet(parseFloat(amount));
+    });
+  }
+  
+  if (els.cashoutBtn) {
+    els.cashoutBtn.addEventListener('click', () => cashOut());
+  }
+
+  updateBalance();
+  startCountdown();
+  setInterval(updateBalance, 5000);
+});
+</script>
+
 <style id="ice-arena-home-banner-cleanup">
   #tab-pvp{display:none!important;}
 </style>
