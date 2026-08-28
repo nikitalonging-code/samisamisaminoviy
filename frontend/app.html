@@ -1104,6 +1104,9 @@
   .reference-banner{padding:0!important;min-height:0!important;height:auto!important;border:0!important;background:#160305!important;box-shadow:0 12px 28px rgba(0,0,0,.34)!important;border-radius:20px!important;overflow:hidden!important;display:block!important;}
   .reference-banner:before{display:none!important;}
   .reference-banner-img{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;max-width:none!important;object-fit:cover!important;z-index:2!important;filter:none!important;border-radius:inherit!important;}
+  .ice-arena-home{cursor:pointer;}
+  .ice-arena-home .ice-arena-banner-img{display:block!important;width:100%!important;height:auto!important;}
+
   .cases-banner-img{aspect-ratio:478/155;width:100%!important;}
   .paketka-banner-img{aspect-ratio:478/134;width:100%!important;}
   .playhub-home{background:linear-gradient(135deg,#2a0609 0%,#99131b 56%,#3d080c 100%);}
@@ -1187,11 +1190,8 @@
         <button class="home-banner rocket-home paketka-banner reference-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
           <img class="reference-banner-img paketka-banner-img" src="assets/paketka_banner_8k.png" alt="Пакетка — Stellar Rocket">
         </button>
-        <button class="home-banner playhub-home" id="homePlayHubBanner" type="button">
-          <span class="home-banner-tag">🎮 ХИТ</span>
-          <span class="home-banner-title">TILT PLAY</span>
-          <span class="home-banner-sub">ИГРЫ И РЕЖИМЫ</span>
-          <img src="assets/litl_play.png" alt="TILT PLAY">
+        <button class="home-banner playhub-home reference-banner tilt-reference-banner" id="homePlayHubBanner" type="button" aria-label="TILT PLAY">
+          <img class="reference-banner-img tilt-play-banner-img" src="assets/litl_play.png" alt="TILT PLAY">
         </button>
         <button class="home-banner ice-arena-home reference-banner" id="homeIceArenaBanner" type="button" aria-label="Ice Arena">
           <img class="reference-banner-img ice-arena-banner-img" src="assets/ice_arena_banner_ref.png" alt="ICE ARENA">
@@ -1636,7 +1636,9 @@
     const gift=document.querySelector('.gift-feature');
     const pvpCompact=document.getElementById('openPvpCompactBtn');
     const pvpBtn=document.getElementById('openPvpIceBtn');
+    const homeIceArenaBanner=document.getElementById('homeIceArenaBanner');
     const openPvp=()=>{ document.querySelectorAll('.navitem').forEach(n=>n.classList.remove('active')); const p=document.querySelector('.navitem[data-tab="pvp"]'); p?.classList.add('active'); document.querySelectorAll('.tabpane').forEach(x=>x.classList.remove('active')); document.getElementById('tab-pvp')?.classList.add('active'); };
+    homeIceArenaBanner?.addEventListener('click',()=>{ document.getElementById('iceScreen')?.classList.add('active'); });
     compact?.addEventListener('click',()=>playHubScreen?.classList.add('active'));
     gift?.addEventListener('click',()=>playHubScreen?.classList.add('active'));
     pvpCompact?.addEventListener('click',openPvp);
@@ -4393,6 +4395,64 @@
 })();
 </script>
 
+
+<style id="v54-final-ui-tweaks">
+/* TILT PLAY — use the supplied banner as the full card artwork, like the other hero banners. */
+.home-banner.tilt-reference-banner{
+  padding:0!important;
+  min-height:0!important;
+  height:auto!important;
+  border:0!important;
+  border-radius:20px!important;
+  overflow:hidden!important;
+  display:block!important;
+  background:#3a080c!important;
+  box-shadow:0 10px 28px rgba(0,0,0,.30),0 0 0 1px rgba(255,55,55,.20),inset 0 1px 0 rgba(255,255,255,.12)!important;
+}
+.home-banner.tilt-reference-banner::before,
+.home-banner.tilt-reference-banner::after{display:none!important;}
+.tilt-play-banner-img{
+  position:relative!important;
+  inset:auto!important;
+  display:block!important;
+  width:100%!important;
+  height:auto!important;
+  max-height:none!important;
+  object-fit:cover!important;
+  filter:none!important;
+  border-radius:inherit!important;
+}
+
+/* Bottom navigation — five equal tabs, no phantom sixth column, centered like the reference. */
+.bottomnav{
+  grid-template-columns:repeat(5,minmax(0,1fr))!important;
+  width:min(370px,calc(100% - 20px))!important;
+  min-height:66px!important;
+  padding:6px 5px 6px!important;
+  gap:2px!important;
+}
+.navitem{
+  height:52px!important;
+  padding:2px 1px!important;
+  border-radius:16px!important;
+  font-size:8.5px!important;
+}
+.navitem .navicon-wrap{
+  width:34px!important;
+  height:30px!important;
+  border-radius:11px!important;
+}
+.navitem.active .navicon-wrap{
+  background:linear-gradient(145deg,rgba(255,55,65,.98),rgba(183,12,21,.90))!important;
+  box-shadow:0 4px 16px rgba(225,22,31,.34),inset 0 1px 0 rgba(255,255,255,.24)!important;
+}
+.navitem .count{top:0!important;right:1px!important;}
+
+@media (max-width:360px){
+  .bottomnav{width:calc(100% - 14px)!important;}
+  .navitem{font-size:8px!important;}
+}
+</style>
 </body>
 </html>
 
@@ -4443,4 +4503,6 @@ playhub-game-card.rocket-game-card{margin-bottom:10px}.playhub-game-card.rocket-
 })();
 </script>
 
-<style id="ice-arena-home-banner-cleanup">#tab-pvp{display:none!important;}</style>
+<style id="ice-arena-home-banner-cleanup">
+  #tab-pvp{display:none!important;}
+</style>
