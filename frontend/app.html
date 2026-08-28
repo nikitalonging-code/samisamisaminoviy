@@ -1154,7 +1154,8 @@
   </div>
 
   <div class="top-live" id="topLiveFeed">
-    <div class="top-live-track" id="topLiveTrack"><div class="top-live-item"><span class="top-live-ton">▽</span><div><b>LIVE</b><span>Лента загружается…</span></div></div></div>
+    <div class="top-live-head"><span class="live-dot-red"></span><span>LIVE</span></div>
+    <div class="top-live-track" id="topLiveTrack"><div class="top-live-empty">Ждём новый дроп</div></div>
   </div>
 
 
@@ -3116,7 +3117,28 @@
   const collectionGrid=document.getElementById('collectionGrid');let catalog=[],special=[],filter='all';async function loadCollections(){if(!API)return;collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:var(--sub);padding:25px">Загрузка NFT…</div>';try{const [a,b]=await Promise.all([fetch(API+'/api/catalog',{headers}),fetch(API+'/api/rare-gift-floors?backdrop=all&limit=300',{headers})]);const ad=await a.json(),bd=await b.json();catalog=ad.items||[];special=bd.items||[];renderCollections();}catch(_){collectionGrid.innerHTML='<div style="grid-column:1/-1;text-align:center;color:#ff7474;padding:25px">Не удалось загрузить каталог</div>';}}function renderCollections(){const q=(document.getElementById('collectionSearch').value||'').toLowerCase().trim();const all=[...catalog,...special],seen=new Set();const list=all.filter(x=>{const k=(x.name||'')+'|'+(x.backdrop||'');if(seen.has(k))return false;seen.add(k);if(filter==='black'&&String(x.backdrop).toLowerCase()!=='black')return false;if(filter==='onyx'&&String(x.backdrop).toLowerCase()!=='onyx black')return false;return String(x.name||'').toLowerCase().includes(q);}).slice(0,300);document.getElementById('collectionsCount').textContent=list.length;collectionGrid.innerHTML='';list.forEach(g=>{const c=document.createElement('div');c.className='collection-card';const img=g.image_url||g.img||`https://cdn.changes.tg/gifts/models/${encodeURIComponent(g.name)}/png/Original.png`;c.innerHTML=`<img src="${img}" alt="" onerror="this.style.display='none'"><div class="collection-name">${g.name}</div><div class="collection-meta">${Number(g.floor||0)>0?Number(g.floor).toFixed(2)+' TON':'Floor —'}</div>${g.backdrop?`<span class="collection-badge">${g.backdrop}</span>`:''}`;collectionGrid.appendChild(c);});}document.getElementById('openCollectionsBtn')?.addEventListener('click',()=>{collections.classList.add('active');loadCollections();});document.getElementById('collectionsBackBtn')?.addEventListener('click',()=>collections.classList.remove('active'));document.getElementById('collectionSearch')?.addEventListener('input',renderCollections);document.querySelectorAll('.collection-filter').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('.collection-filter').forEach(x=>x.classList.remove('active'));b.classList.add('active');filter=b.dataset.filter;renderCollections();}));
   async function loadRating(){const box=document.getElementById('ratingList');if(!box)return;try{const r=await fetch(API+'/api/rating',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach((p,i)=>{const row=document.createElement('div');row.className='rating-row'+(String(p.user_id)===String(d.you_user_id)?' me':'');const av=p.avatar_url?`<img src="${p.avatar_url}" alt="">`:`<div class="mini-avatar">${(p.first_name||p.username||'?').slice(0,1).toUpperCase()}</div>`;row.innerHTML=`<div>${i+1}</div><div class="rating-user">${av}<span>${p.username?'@'+p.username:(p.first_name||'Пользователь')}</span></div><div class="rating-volume">${Number(p.volume||0).toFixed(2)} GRAM</div>`;box.appendChild(row);});}catch(_){}}loadRating();setInterval(loadRating,15000);
   async function loadTasks(){const box=document.getElementById('tasksList');if(!box)return;try{const r=await fetch(API+'/api/tasks',{headers});if(!r.ok)return;const d=await r.json();box.innerHTML='';(d.items||[]).forEach(t=>{const el=document.createElement('div');el.className='task-real';el.innerHTML=`<div class="task-real-head"><div class="task-real-icon">${t.icon}</div><div><h4>${t.title}</h4><p>${t.description}</p></div></div><div class="task-real-foot"><span>${t.progress_label}</span><span class="reward">+${Number(t.reward||0).toFixed(2)} GRAM</span></div>`;box.appendChild(el);});}catch(_){}}loadTasks();setInterval(loadTasks,15000);
-  async function loadLive(){const box=document.getElementById('topLiveTrack');if(!box)return;try{const r=await fetch(API+'/api/live',{headers});if(!r.ok)return;const d=await r.json();const items=d.items||[];box.innerHTML='';(items.length?items:[{kind:'ton',name:'LIVE',value:0,action_text:'Здесь появятся реальные дропы'}]).slice(0,14).forEach(e=>{const row=document.createElement('div');row.className='top-live-item';let icon=e.image_url?`<img src="${e.image_url}" alt="" onerror="this.style.display='none'">`:(e.kind==='ton'?'<span class="top-live-ton">▽</span>':'<span class="top-live-avatar">🎁</span>');row.innerHTML=`${icon}<div><b>${e.username?'@'+e.username:'LIVE'}</b><span>${e.action_text||'получил награду'}${e.name?' · '+e.name:''}${Number(e.value||0)>0?' · '+Number(e.value).toFixed(2)+' TON':''}</span></div>`;box.appendChild(row);});}catch(_){}}loadLive();setInterval(loadLive,5000);
+  async function loadLive(){
+    const box=document.getElementById('topLiveTrack'); if(!box)return;
+    try{
+      const r=await fetch(API+'/api/live',{headers,cache:'no-store'}); if(!r.ok)return;
+      const d=await r.json();
+      // The LIVE strip is intentionally limited to case drops only.
+      const items=(d.items||[]).filter(e=>/кейсе/i.test(String(e.action_text||''))).slice(0,18);
+      box.innerHTML='';
+      if(!items.length){box.innerHTML='<div class="top-live-empty">Ждём новый дроп</div>';return;}
+      items.forEach(e=>{
+        const row=document.createElement('div'); row.className='top-live-item'; row.title=e.kind==='nft'?(e.name||'NFT'):(e.name||'GRAM');
+        if(e.kind==='nft' && e.image_url){
+          const img=document.createElement('img'); img.src=e.image_url; img.alt='NFT'; img.loading='lazy';
+          img.onerror=()=>{row.innerHTML='<span class="top-live-ton">GRAM</span>';}; row.appendChild(img);
+        }else{
+          row.innerHTML='<span class="top-live-ton" aria-label="GRAM"></span>';
+        }
+        box.appendChild(row);
+      });
+    }catch(_){ }
+  }
+  loadLive(); setInterval(loadLive,5000);
   document.getElementById('sendGiftProfileBtn')?.addEventListener('click',()=>{const u='https://t.me/chibiop';try{tg?.openTelegramLink?tg.openTelegramLink(u):window.open(u,'_blank');}catch(_){window.open(u,'_blank');}});
 
   const caseConfig={promo:{name:'Promo Case',price:0,art:'https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png',loss:0,promo:true},summer:{name:'Summer Case',price:1,art:'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png',loss:82}};document.querySelectorAll('.case-card').forEach(card=>card.addEventListener('click',()=>{const cfg=caseConfig[card.dataset.case||'summer'];if(cfg)window.__openCaseConfig?.(cfg);}));window.__openCaseConfig=(cfg)=>{const s=document.getElementById('caseScreen');if(!s)return;s.classList.add('active');const title=s.querySelector('.case-top-title');if(title)title.innerHTML=`<button class="case-back" id="caseBackBtnDyn">←</button> ${cfg.name}`;const hero=s.querySelector('.case-hero-art');if(hero)hero.src=cfg.art;const n=s.querySelector('.case-hero-name');if(n)n.textContent=cfg.name;const p=s.querySelector('.case-price');if(p)p.textContent=cfg.promo?'0 TON':cfg.price+' TON';const sub=s.querySelector('.case-hero-sub');if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод администратора.':`Открытие ${cfg.price} TON`;const btn=document.getElementById('caseOpenBtn');if(btn){btn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за '+cfg.price+' TON';btn.dataset.caseType=cfg.name;btn.dataset.casePrice=cfg.price;btn.dataset.caseLoss=cfg.loss;btn.dataset.casePromo=cfg.promo?'1':'';}document.getElementById('caseBackBtnDyn')?.addEventListener('click',()=>s.classList.remove('active'),{once:true});};
@@ -3582,7 +3604,7 @@
     const nm=caseScreen?.querySelector('.case-hero-name'); if(nm)nm.textContent=cfg.name;
     const sub=caseScreen?.querySelector('.case-hero-sub'); if(sub)sub.textContent=cfg.promo?'Бесплатно. Нужен промокод.':'Открытие за 1 GRAM';
     const price=caseScreen?.querySelector('.case-price'); if(price)price.textContent=cfg.promo?'0 TON':'1 GRAM';
-    if(caseOpenBtn){caseOpenBtn.disabled=false;caseOpenBtn.dataset.casePromo=cfg.promo?'1':'';caseOpenBtn.dataset.casePrice=String(cfg.price);caseOpenBtn.dataset.caseType=cfg.name;caseOpenBtn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за 1 GRAM';}
+    const visibleOpenBtn=document.getElementById('caseOpenBtn'); if(visibleOpenBtn){visibleOpenBtn.disabled=false;visibleOpenBtn.dataset.casePromo=cfg.promo?'1':'';visibleOpenBtn.dataset.casePrice=String(cfg.price);visibleOpenBtn.dataset.caseType=cfg.name;visibleOpenBtn.textContent=cfg.promo?'🎟️ Ввести промокод':'🎁 Открыть за 1 GRAM';}
     renderCasePrizes();
     const back=$('caseBackV42'); back?.addEventListener('click',()=>{caseScreen?.classList.remove('active');caseScreen?.style.removeProperty('display');});
     if(cfg.promo){
@@ -3812,6 +3834,181 @@
 }
 </style>
 
+
+<style id="v46-live-case-icons">
+/* ===== LIVE case-drop strip ===== */
+.top-live{position:relative!important;margin:2px 12px 10px!important;padding:7px 7px 8px!important;border:1px solid rgba(255,255,255,.08)!important;border-radius:15px!important;background:linear-gradient(180deg,rgba(20,21,24,.92),rgba(11,12,14,.86))!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.035),0 8px 22px rgba(0,0,0,.18)!important;display:flex!important;align-items:center!important;gap:8px!important;overflow:hidden!important;}
+.top-live-head{display:flex;align-items:center;gap:5px;flex:0 0 auto;padding-left:2px;color:#f3f3f5;font-size:8px;font-weight:900;letter-spacing:.7px;}
+.live-dot-red{width:6px;height:6px;border-radius:50%;background:#ff3040;box-shadow:0 0 9px rgba(255,48,64,.75);animation:livePulse 1.2s ease-in-out infinite;}
+.top-live-track{display:flex!important;align-items:center!important;gap:7px!important;overflow-x:auto!important;scrollbar-width:none!important;padding:0!important;min-width:0!important;flex:1!important;}
+.top-live-track::-webkit-scrollbar{display:none!important;}
+.top-live-item{width:38px!important;height:38px!important;min-width:38px!important;max-width:38px!important;padding:0!important;flex:0 0 38px!important;display:grid!important;place-items:center!important;border-radius:12px!important;background:linear-gradient(145deg,#24252a,#17181b)!important;border:1px solid rgba(255,255,255,.08)!important;box-shadow:0 6px 14px rgba(0,0,0,.24),inset 0 1px 0 rgba(255,255,255,.05)!important;overflow:hidden!important;position:relative!important;}
+.top-live-item::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(135deg,rgba(255,255,255,.06),transparent 48%);pointer-events:none;}
+.top-live-item img{width:100%!important;height:100%!important;object-fit:contain!important;padding:3px!important;box-sizing:border-box!important;border-radius:11px!important;background:linear-gradient(145deg,#282b31,#141519)!important;}
+.top-live-ton{width:26px!important;height:26px!important;border-radius:50%!important;display:grid!important;place-items:center!important;font-size:0!important;font-weight:900!important;background:linear-gradient(145deg,#38b8ff,#207ed1)!important;box-shadow:0 0 16px rgba(48,156,239,.32)!important;position:relative!important;}
+.top-live-ton::before{content:'';width:14px;height:16px;display:block;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 36'%3E%3Cpath d='M16 2L29 9.5v15L16 32 3 24.5v-15z' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M10 14h12M16 10v16' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat;}
+.top-live-empty{font-size:9px;color:#70757d;padding:4px 2px;white-space:nowrap;}
+@keyframes livePulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.55;transform:scale(.82)}}
+
+/* ===== GRAM coin icon (replace the old letter G) ===== */
+.ton-icon,.case-ton-icon{font-size:0!important;position:relative!important;color:transparent!important;background:linear-gradient(145deg,#39b9ff,#247fd7)!important;box-shadow:0 0 0 1px rgba(255,255,255,.08),0 5px 14px rgba(58,167,255,.20)!important;}
+.ton-icon::before,.case-ton-icon::before{content:''!important;position:absolute!important;inset:22%!important;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 36'%3E%3Cpath d='M16 2L29 9.5v15L16 32 3 24.5v-15z' fill='none' stroke='white' stroke-width='3'/%3E%3Cpath d='M10 14h12M16 10v16' stroke='white' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E") center/contain no-repeat!important;line-height:0!important;}
+.case-ton-icon::before{inset:20%!important;}
+
+/* ===== Different case animations; winner is positioned from the real card ===== */
+#caseScreen .case-reel{transform:translate3d(0,0,0);}
+#caseScreen .reel-card{transition:filter .18s ease,transform .18s ease;}
+#caseScreen .reel-card.winner-focus{filter:brightness(1.15);transform:scale(1.03);}
+#caseScreen .reel-card.nft-card img{width:72px;height:72px;object-fit:contain;}
+</style>
+<script id="v46-live-case-arena-fix">
+(function(){
+  const $=id=>document.getElementById(id);
+  const api=()=>String(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+  const tg=window.Telegram?.WebApp;
+  const uid=()=>String(tg?.initDataUnsafe?.user?.id||'999999999');
+  const headers=()=>({'X-Telegram-User-Id':uid(),'Content-Type':'application/json'});
+
+  // ----- ICE ARENA: one tap = immediate bet; keep the old modal out of the flow. -----
+  const join=$('iceJoinBtn'), modal=$('iceBetModal'), modalAmount=$('iceBetAmount');
+  function directArenaBet(){
+    const amount=Number($('iceStakeInput')?.value||0.1);
+    if(modalAmount) modalAmount.value=String(amount);
+    // Reuse the real arena placement function but bypass its confirmation sheet.
+    try{ window.__placeIceBet?.(amount); }catch(_){}
+  }
+  if(join){
+    const fresh=join.cloneNode(true); join.replaceWith(fresh);
+    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();directArenaBet();},true);
+  }
+  // Expose a safe bridge used above; mirrors the existing placeBet logic.
+  window.__placeIceBet=async function(amount){
+    const err=$('iceError'); const joinBtn=$('iceJoinBtn');
+    amount=Number(amount); if(!Number.isFinite(amount)||amount<.1){if(err)err.textContent='Минимальная ставка — 0.1 GRAM';return;}
+    const before=Number(localStorage.getItem('caseBalance')||$('profileBalance')?.textContent||0);
+    if(!Number.isFinite(before)||before+1e-9<amount){
+      if(err)err.textContent='Недостаточно GRAM'; return;
+    }
+    modal?.classList.remove('show');
+    if(err)err.textContent='';
+    if(joinBtn){joinBtn.disabled=true;joinBtn.textContent='Ставка отправляется…';}
+    try{
+      const r=await fetch(api()+'/api/arena/join',{method:'POST',headers:headers(),body:JSON.stringify({amount}),cache:'no-store'});
+      const text=await r.text(); if(!r.ok)throw new Error(text||'Не удалось сделать ставку');
+      const d=JSON.parse(text);
+      // Let the native arena controller redraw using the returned state.
+      if(typeof window.__renderIceArena==='function') window.__renderIceArena(d);
+      window.__syncBalance?.(Number(d.balance??before-amount));
+      window.__logActivity?.('arena_bet',amount,{name:'Ice Arena PvP'});
+    }catch(e){
+      try{location.reload();}catch(_){}
+      if(err){try{err.textContent=JSON.parse(e.message).detail||'Не удалось сделать ставку';}catch(_){err.textContent='Не удалось сделать ставку';}}
+    }finally{
+      if(joinBtn){joinBtn.disabled=false;joinBtn.textContent='Сделать ставку';}
+    }
+  };
+
+  // Bridge into the existing arena controller without rewriting its physics.
+  const oldJoin=$('iceJoinBtn');
+  // Poll until the native render function can be exposed by the existing IIFE below.
+  const expose=()=>{
+    if(window.__renderIceArena) return true;
+    const probe=$('iceArena');
+    return !!probe;
+  };
+
+  // ----- CASES: deterministic winner + real-card centering + multiple motion profiles. -----
+  let openBtn=$('caseOpenBtn'), reel=$('caseReel'), wrap=$('caseReelWrap');
+  const result=$('caseResult');
+  let running=false;
+  const pools=[
+    {type:'ton',name:'0 GRAM',value:0},
+    {type:'ton',name:'0.3 GRAM',value:.3},
+    {type:'ton',name:'0.5 GRAM',value:.5},
+    {type:'ton',name:'1 GRAM',value:1},
+    {type:'nft',name:'Lol Pop',floor:3.35,img:'https://cdn.changes.tg/gifts/models/Lol%20Pop/png/Original.png'},
+    {type:'nft',name:'Santa Hat',floor:3.31,img:'https://cdn.changes.tg/gifts/models/Santa%20Hat/png/Original.png'},
+    {type:'nft',name:'Cookie Heart',floor:4.20,img:'https://cdn.changes.tg/gifts/models/Cookie%20Heart/png/Original.png'},
+    {type:'nft',name:'Homemade Cake',floor:4.08,img:'https://cdn.changes.tg/gifts/models/Homemade%20Cake/png/Original.png'},
+    {type:'nft',name:'Jelly Bunny',floor:7.30,img:'https://cdn.changes.tg/gifts/models/Jelly%20Bunny/png/Original.png'}
+  ];
+  function pick(){
+    const r=Math.random()*100;
+    if(r<35)return {...pools[0]}; if(r<60)return {...pools[1]}; if(r<78)return {...pools[2]}; if(r<99)return {...pools[3]};
+    return {...pools[4+Math.floor(Math.random()*5)]};
+  }
+  function cardHtml(p,i){
+    if(p.type==='nft') return `<div class="reel-card nft-card" data-i="${i}"><img src="${p.img}" alt="${p.name}"><strong>${p.name}</strong><span>NFT</span></div>`;
+    return `<div class="reel-card ton-card" data-i="${i}"><div class="reel-ton-wrap"><span class="case-ton-icon" aria-label="GRAM"></span></div><strong>${p.name}</strong><span>GRAM</span></div>`;
+  }
+  function buildExactReel(winner){
+    const items=[]; for(let i=0;i<48;i++) items.push({...pools[(i*5+Math.floor(i/3))%pools.length]});
+    // Make fillers look varied and ensure the exact winner exists only at the target slot.
+    const winIndex=38; items[winIndex]=winner;
+    reel.innerHTML=items.map(cardHtml).join('');
+    return {items,winIndex};
+  }
+  function getProfiles(){
+    return [
+      {dur:2.55,ease:'cubic-bezier(.08,.74,.18,1)',jitter:-4},
+      {dur:3.05,ease:'cubic-bezier(.14,.82,.15,1)',jitter:4},
+      {dur:3.65,ease:'cubic-bezier(.10,.92,.13,1)',jitter:-7},
+      {dur:2.9,ease:'cubic-bezier(.18,.66,.12,1)',jitter:7}
+    ];
+  }
+  async function award(winner){
+    if(winner.type==='ton'){
+      if(winner.value<=0){ window.__logActivity?.('case_drop',0,{name:winner.name,image_url:'',value:0,kind:'ton',action_text:'выиграл в кейсе'}); return; }
+      const r=await fetch(api()+'/api/wallet/credit',{method:'POST',headers:headers(),body:JSON.stringify({amount:winner.value,reason:'Summer Case win'}),cache:'no-store'});
+      if(!r.ok)throw new Error('Не удалось зачислить GRAM');
+      const d=await r.json(); window.__serverBalance=Number(d.balance||0); window.__syncBalance?.(window.__serverBalance);
+      window.__logActivity?.('case_drop',0,{name:winner.name,image_url:'',value:Number(winner.value),kind:'ton',action_text:'выиграл в кейсе'});
+      return;
+    }
+    const gift={...winner,id:'case_'+Date.now()+'_'+Math.random().toString(36).slice(2),kind:'nft'};
+    const inv=window.__giftInventory?.addInventoryGift?.(gift); if(inv)window.__giftInventory?.showNftRewardToast?.(inv,'case');
+    window.__logActivity?.('case_drop',0,{name:winner.name,image_url:winner.img,value:Number(winner.floor||0),kind:'nft',action_text:'вытащил NFT из кейса'});
+  }
+  async function runCase(){
+    if(running)return;
+    const promo=openBtn?.dataset.casePromo==='1'; if(promo)return;
+    const bal=Number(window.__serverBalance??$('caseBalanceVal')?.textContent??0);
+    if(!Number.isFinite(bal)||bal<1){$('caseInsufficient').textContent='Недостаточно GRAM. Нужно 1 GRAM.';return;}
+    running=true; openBtn.disabled=true; $('caseInsufficient').textContent='';
+    const winner=pick(); const built=buildExactReel(winner);
+    const variant=Math.floor(Math.random()*4), prof=getProfiles()[variant];
+    window.__serverBalance=bal-1; window.__syncBalance?.(bal-1); if($('caseBalanceVal'))$('caseBalanceVal').textContent=(bal-1).toFixed(3);
+    wrap.classList.add('active'); reel.style.transition='none'; reel.style.transform='translate3d(0,0,0)'; void reel.offsetWidth;
+    requestAnimationFrame(()=>{
+      const targetCard=reel.querySelector(`[data-i="${built.winIndex}"]`); if(!targetCard)return;
+      const viewport=wrap.clientWidth||330; const cardCenter=targetCard.offsetLeft+targetCard.offsetWidth/2;
+      const center=viewport/2; const target=-(cardCenter-center)+prof.jitter;
+      reel.style.transition=`transform ${prof.dur}s ${prof.ease}`;
+      reel.style.transform=`translate3d(${target}px,0,0)`;
+      setTimeout(()=>targetCard.classList.add('winner-focus'),Math.max(350,prof.dur*650));
+    });
+    let charged=false;
+    try{
+      const r=await fetch(api()+'/api/wallet/charge',{method:'POST',headers:headers(),body:JSON.stringify({amount:1,reason:'Summer Case'}),cache:'no-store'});
+      if(!r.ok)throw new Error((await r.text())||'Не удалось списать GRAM');
+      charged=true; const d=await r.json(); window.__serverBalance=Number(d.balance??bal-1); window.__syncBalance?.(window.__serverBalance);
+    }catch(e){
+      window.__serverBalance=bal; window.__syncBalance?.(bal); if($('caseBalanceVal'))$('caseBalanceVal').textContent=bal.toFixed(3); wrap.classList.remove('active'); openBtn.disabled=false; running=false; $('caseInsufficient').textContent=e.message||'Не удалось списать GRAM'; return;
+    }
+    await new Promise(r=>setTimeout(r,Math.round(prof.dur*1000)+180));
+    if(!charged){running=false;openBtn.disabled=false;return;}
+    try{await award(winner);}catch(e){$('caseInsufficient').textContent=e.message||'Ошибка выдачи';}
+    const img=$('resultImage'), rp=$('resultPrize'), rn=$('resultNote');
+    if(winner.type==='nft'){img.src=winner.img;img.style.display='block';rp.textContent=winner.name;rn.textContent='NFT добавлен в инвентарь';}
+    else{img.style.display='none';rp.textContent=winner.name;rn.textContent=winner.value>0?'Награда зачислена на баланс.':'В этот раз награда не выпала.';}
+    wrap.classList.remove('active'); result.classList.add('active'); openBtn.disabled=false; running=false;
+  }
+  if(openBtn){
+    const fresh=openBtn.cloneNode(true); openBtn.replaceWith(fresh); openBtn=fresh;
+    fresh.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();if(fresh.dataset.casePromo==='1'){$('promoCodeModal')?.classList.add('active');$('promoCodeModal')?.style.setProperty('display','flex');$('promoCodeInput')?.focus();}else runCase();},true);
+  }
+})();
+</script>
 </body>
 </html>
 
