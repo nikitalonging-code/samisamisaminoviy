@@ -1088,6 +1088,34 @@
 #promoCodeModal.active{display:flex!important;visibility:visible!important;opacity:1!important;}
 </style>
 
+  <style>
+.rocket-video {
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
+  transition: opacity 0.3s;
+  display: block;
+}
+
+#rocketBob {
+  animation: rocketFloat 2s ease-in-out infinite;
+}
+
+@keyframes rocketFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-15px) rotate(-5deg); }
+}
+
+.rocket-explode {
+  animation: explode 0.5s ease-out forwards;
+}
+
+@keyframes explode {
+  0% { transform: scale(1) rotate(0deg); opacity: 1; }
+  100% { transform: scale(2) rotate(180deg); opacity: 0; }
+}
+</style>
+
 
 <style id="v45-red-gram-theme">
   :root{--bg:#090909;--card:#151515;--card2:#1f1f22;--purple:#d71920;--purple2:#ff4a52;--gold:#ffb83d;--green:#4fce82;--blue:#3aa7ff;--text:#f7f7f7;--sub:#9d9da3;--border:rgba(255,255,255,.10);}
