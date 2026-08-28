@@ -1184,11 +1184,11 @@
     <!-- MAIN TAB -->
     <div class="tabpane active" id="tab-main">
       <div class="home-banners">
-        <button class="home-banner cases-home reference-banner" id="homeCasesBanner" type="button" aria-label="CASES">
-          <img class="reference-banner-img cases-banner-img" src="assets/cases_banner_ref.png" alt="CASES">
-        </button>
         <button class="home-banner rocket-home paketka-banner reference-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
           <img class="reference-banner-img paketka-banner-img" src="assets/paketka_banner_8k.png" alt="Пакетка — Stellar Rocket">
+        </button>
+        <button class="home-banner cases-home reference-banner" id="homeCasesBanner" type="button" aria-label="CASES">
+          <img class="reference-banner-img cases-banner-img" src="assets/cases_banner_ref.png" alt="CASES">
         </button>
         <button class="home-banner playhub-home reference-banner tilt-reference-banner" id="homePlayHubBanner" type="button" aria-label="TILT PLAY">
           <img class="reference-banner-img tilt-play-banner-img" src="assets/litl_play.png" alt="TILT PLAY">
@@ -1501,11 +1501,6 @@
       </div>
       <button class="playhub-game-card upgrade-game-card" id="playHubUpgradeBtn">
         <div class="playhub-card-copy"><span class="playhub-card-badge">NFT РЕЖИМ</span><h3>Апгрейды</h3><p>Обменяйте подарок на шанс получить ценнее.</p><span class="playhub-action">Открыть <b>→</b></span></div>
-        <div class="playhub-gifts"><img class="playhub-gift-small" src="https://cdn.changes.tg/gifts/models/Durov's%20Cap/png/Original.png" alt="Durov's Cap"><img class="playhub-gift-main" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Stellar Rocket"></div>
-      </button>
-
-      <button class="playhub-game-card rocket-game-card" id="playHubRocketBtn">
-        <div class="playhub-card-copy"><span class="playhub-card-badge">CRASH</span><h3>🚀 Ракетка</h3><p>Сделать ставку одним нажатием — окно ставки откроется сразу.</p><span class="playhub-action">Играть <b>→</b></span></div>
         <div class="playhub-gifts"><img class="playhub-gift-small" src="https://cdn.changes.tg/gifts/models/Durov's%20Cap/png/Original.png" alt="Durov's Cap"><img class="playhub-gift-main" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Stellar Rocket"></div>
       </button>
       <div class="playhub-note"><span>✦</span> Для апгрейда нужен хотя бы один NFT в инвентаре.</div>
@@ -2714,12 +2709,6 @@
     backBtn.addEventListener('click', ()=>{
       rocketScreen.classList.remove('active');
     });
-    document.getElementById('playHubRocketBtn')?.addEventListener('click', ()=>{
-      document.getElementById('playHubScreen')?.classList.remove('active');
-      rocketScreen.classList.add('active');
-      syncCrashRound();
-      renderHistory(); renderBets();
-    });
     setInterval(()=>{ if(rocketScreen.classList.contains('active')) syncCrashRound(); }, 900);
 
     // ---- bet modal ----
@@ -3289,12 +3278,10 @@
     nft.forEach(x=>{const c=document.createElement('div');c.className='possible-card';c.innerHTML='<img src="'+x[1]+'" alt="'+x[0]+'" style="width:84px;height:84px;object-fit:contain"><div class="possible-name">'+x[0]+'</div><div class="possible-chance">1%</div>';grid.appendChild(c);});
   };
 
-  // Capture clicks before older handlers so the intended mode always opens.
+  // Capture case clicks before older handlers so the case hub remains responsive.
   document.addEventListener('click',e=>{
-    const rocket=e.target?.closest?.('#playHubRocketBtn,.rocket-game-card,#openRocketBtn');
-    if(rocket){e.preventDefault();e.stopImmediatePropagation();window.__openRocketHard();return;}
     const card=e.target?.closest?.('.case-card');
-    if(card){e.preventDefault();e.stopImmediatePropagation();window.__openCaseHard(card.dataset.case||'summer');return;}
+    if(card){e.preventDefault();e.stopImmediatePropagation();window.__openCaseHard?.(card.dataset.case||'summer');return;}
   },true);
 
   // Make the Rocket balance clickable everywhere inside its screen.
