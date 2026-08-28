@@ -1101,6 +1101,11 @@
   .home-banner img{position:absolute;right:8px;bottom:-8px;width:150px;height:150px;object-fit:contain;z-index:1;filter:drop-shadow(0 12px 18px rgba(0,0,0,.32));}
   .rocket-home{background:linear-gradient(135deg,#6f0710 0%,#e31f2b 50%,#7b0a12 100%);}
   .cases-home{background:linear-gradient(135deg,#450509 0%,#c5141d 55%,#5a070d 100%);}
+  .reference-banner{padding:0!important;min-height:0!important;height:auto!important;border:0!important;background:#160305!important;box-shadow:0 12px 28px rgba(0,0,0,.34)!important;border-radius:20px!important;overflow:hidden!important;display:block!important;}
+  .reference-banner:before{display:none!important;}
+  .reference-banner-img{position:relative!important;inset:auto!important;display:block!important;width:100%!important;height:auto!important;max-width:none!important;object-fit:cover!important;z-index:2!important;filter:none!important;border-radius:inherit!important;}
+  .cases-banner-img{aspect-ratio:478/155;width:100%!important;}
+  .paketka-banner-img{aspect-ratio:478/134;width:100%!important;}
   .playhub-home{background:linear-gradient(135deg,#2a0609 0%,#99131b 56%,#3d080c 100%);}
   .ice-home{background:linear-gradient(135deg,#240407 0%,#c4141d 48%,#4c070d 100%);}
   .ice-avatar-frame{position:absolute;right:20px;top:14px;width:72px;height:72px;border-radius:50%;padding:2px;background:linear-gradient(135deg,#ff4a52,#fff 48%,#9a0008);z-index:1;box-shadow:0 0 24px rgba(255,70,80,.24);}
@@ -1176,14 +1181,11 @@
     <!-- MAIN TAB -->
     <div class="tabpane active" id="tab-main">
       <div class="home-banners">
-        <button class="home-banner rocket-home paketka-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
-          <img class="paketka-banner-img" src="assets/paketka_banner.png" alt="Пакетка — Stellar Rocket">
+        <button class="home-banner cases-home reference-banner" id="homeCasesBanner" type="button" aria-label="CASES">
+          <img class="reference-banner-img cases-banner-img" src="assets/cases_banner_ref.png" alt="CASES">
         </button>
-        <button class="home-banner cases-home" id="homeCasesBanner" type="button">
-          <span class="home-banner-tag">🎁 НОВОЕ</span>
-          <span class="home-banner-title">CASES</span>
-          <span class="home-banner-sub">РАЗНЫЕ ДРОПЫ · 2 КЕЙСА</span>
-          <img src="https://cdn.changes.tg/gifts/models/Heart%20Locket/png/Original.png" alt="Cases">
+        <button class="home-banner rocket-home paketka-banner reference-banner" id="homeRocketBanner" type="button" aria-label="Пакетка">
+          <img class="reference-banner-img paketka-banner-img" src="assets/paketka_banner_ref.png" alt="Пакетка — Stellar Rocket">
         </button>
         <button class="home-banner playhub-home" id="homePlayHubBanner" type="button">
           <span class="home-banner-tag">🎮 ХИТ</span>
@@ -4104,8 +4106,8 @@
 
   // Make the exact reference banner stick even if another older runtime tries to swap it.
   const pb=$('homeRocketBanner')?.querySelector('.paketka-banner-img');
-  if(pb){pb.src='assets/paketka_banner.png';}
-  const obs=pb?new MutationObserver(()=>{if(pb.getAttribute('src')!=='assets/paketka_banner.png')pb.src='assets/paketka_banner.png';}):null;
+  if(pb){pb.src='assets/paketka_banner_ref.png';}
+  const obs=pb?new MutationObserver(()=>{if(pb.getAttribute('src')!=='assets/paketka_banner_ref.png')pb.src='assets/paketka_banner_ref.png';}):null;
   obs?.observe(pb,{attributes:true,attributeFilter:['src']});
 })();
 </script>
