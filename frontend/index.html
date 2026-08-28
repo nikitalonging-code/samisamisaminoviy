@@ -4904,6 +4904,163 @@ document.addEventListener('DOMContentLoaded', () => {
   setInterval(updateBalance, 5000);
 });
 </script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const apiBase = (window.__APP_CONFIG__?.apiBase || 'http://localhost:8080').replace(/\/$/, '');
+  const tgId = () => String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id || '999999999');
+
+  // Находим элементы модального окна по классам из твоего CSS
+  const modalOverlay = document.querySelector('.modal-overlay');
+  const betBtn = document.querySelector('.bet-btn');
+  const confirmBetBtn = document.querySelector('.confirm-bet-btn');
+  const cancelBetBtn = document.querySelector('.cancel-bet-btn');
+  const amountInput = document.querySelector('.amount-input-row input');
+  const quickBtns = document.querySelectorAll('.quick-btn');
+  const modalTabs = document.querySelectorAll('.modal-tab');
+
+  let balance = 0;
+
+  // 1. Получение баланса с сервера
+  async function fetchBalance() {
+    try {
+      const res = await fetch(`${apiBase}/api/balance`, {
+        headers: { 'X-Telegram-User-Id': tgId() }
+      });
+      const data = await res.json();
+      if (data.balance !== undefined) {
+        balance = data.balance;
+        // Обновляем отображение баланса во всех местах
+        document.querySelectorAll('.rk-balance-pill span:nth-child(2), .balance-val').forEach(el => {
+          el.textContent = balance.toFixed(3);
+        });
+      }
+    } catch (e) {
+      console.error('Balance fetch error:', e);
+    }
+  }
+
+  // 2. Открытие модального окна при нажатии "Сделать ставку"
+  if (betBtn) {
+    betBtn.addEventListener('click', async () => {
+      await fetchBalance();
+      if (modalOverlay) {
+        modalOverlay.classList.add('active');
+        if (amountInput) {
+          amountInput.value = '1.00';
+        }
+      }
+    });
+  }
+
+  // 3. Закрытие модального окна (кнопка "Отмена")
+  if (cancelBetBtn) {
+    cancelBetBtn.addEventListener('click', () => {
+      if (modalOverlay) modalOverlay.classList.remove('active');
+    });
+  }
+
+  // Закрытие при клике на затемненный фон
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) {
+        modalOverlay.classList.remove('active');
+      }
+    });
+  }
+
+  // 4. Быстрые кнопки (½, 2×, Max)
+  quickBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const text = btn.textContent.trim();
+      let val = parseFloat(amountInput?.value || '1');
+      
+      if (text === '½') {
+        val = Math.max(0.1, val / 2);
+      } else if (text === '2×') {
+        val = val * 2;
+      } else if (text === 'Max') {
+        val = balance;
+      }
+      
+      if (amountInput) {
+        amountInput.value = val.toFixed(2);
+      }
+    });
+  });
+
+  // 5. Подтверждение ставки (кнопка "Поставить")
+  if (confirmBetBtn) {
+    confirmBetBtn.addEventListener('click', async () => {
+      const amount = parseFloat(amountInput?.value || '0');
+      
+      if (amount < 0.1) {
+        alert('Минимальная ставка — 0.1 TON');
+        return;
+      }
+      if (amount > balance) {
+        alert('Недостаточно средств на балансе');
+        return;
+      }
+
+      // Блокируем кнопку на время запроса
+      confirmBetBtn.disabled = true;
+      confirmBetBtn.textContent = 'Обработка...';
+
+      try {
+        const res = await fetch(`${apiBase}/api/crash/bet`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'X-Telegram-User-Id': tgId()
+          },
+          body: JSON.stringify({ amount })
+        });
+        const data = await res.json();
+
+        if (data.ok) {
+          balance = data.new_balance;
+          document.querySelectorAll('.rk-balance-pill span:nth-child(2), .balance-val').forEach(el => {
+            el.textContent = balance.toFixed(3);
+          });
+          
+          modalOverlay.classList.remove('active');
+          
+          // Вибрация успеха в Telegram
+          if (window.Telegram?.WebApp?.HapticFeedback) {
+            window.Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+          }
+          
+          // Меняем главную кнопку на "Ставка принята"
+          if (betBtn) {
+            betBtn.textContent = 'Ставка принята';
+            betBtn.classList.add('placed');
+            betBtn.disabled = true;
+          }
+        } else {
+          alert(data.detail || 'Ошибка при ставке');
+        }
+      } catch (e) {
+        console.error('Bet error:', e);
+        alert('Ошибка соединения с сервером');
+      } finally {
+        confirmBetBtn.disabled = false;
+        confirmBetBtn.textContent = 'Поставить';
+      }
+    });
+  }
+
+  // 6. Переключение табов (Баланс / NFT подарок) - визуальное
+  modalTabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      modalTabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+    });
+  });
+
+  // Запускаем получение баланса при загрузке
+  fetchBalance();
+});
+</script>
 
 <style id="ice-arena-home-banner-cleanup">
   #tab-pvp{display:none!important;}
