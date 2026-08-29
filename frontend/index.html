@@ -1968,8 +1968,24 @@
         if(mine&&!currentBet){currentBet={type:'balance',amount:mine.stake,reserved:true};currentBetCashedOut=false;}
         if(round.status==='waiting'){
           const seconds=Math.max(0,Number(d.waiting_seconds||0));
-          if(phase!=='waiting'||!countdownTimer)startWaitingPhase(seconds,false);
-          else{countdown=Math.max(1,Math.ceil(seconds));countdownNum.textContent=countdown;setRingProgress(Math.min(1,seconds/5));}
+          // Never restart a finished countdown with `1`. When the server reaches
+          // zero, wait for the next poll to confirm that the round is flying.
+          if(seconds<=0){
+            if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
+            phase='waiting';
+            countdownNum.textContent='1';
+            setRingProgress(0);
+            countdownRing.style.display='flex';
+            // Render may be slightly ahead of the second-resolution backend clock.
+            // Retry quickly instead of resetting the countdown.
+            setTimeout(()=>{ if(rocketScreen.classList.contains('active')) syncCrashRound(); },120);
+          }else if(phase!=='waiting'||!countdownTimer){
+            startWaitingPhase(seconds,false);
+          }else{
+            countdown=Math.max(1,Math.ceil(seconds));
+            countdownNum.textContent=countdown;
+            setRingProgress(Math.min(1,seconds/5));
+          }
         }else if(round.status==='flying'){
           if(phase!=='flying')startFlight(Number(d.multiplier||1));
           else if(Number.isFinite(Number(d.multiplier))){
@@ -2611,9 +2627,16 @@
       if(!currentBet)bets=[];renderBets();clearInterval(countdownTimer);
       const endAt=Date.now()+countdown*1000;
       countdownTimer=setInterval(()=>{
-        const left=Math.max(0,endAt-Date.now());countdown=Math.ceil(left/1000);
-        if(left<=0){clearInterval(countdownTimer);countdownTimer=null;if(fetchServer)syncCrashRound();else startFlight(1);}
-        else{countdownNum.textContent=countdown;setRingProgress(Math.min(1,left/5000));}
+        const left=Math.max(0,endAt-Date.now());
+        countdown=Math.max(0,Math.ceil(left/1000));
+        if(left<=0){
+          clearInterval(countdownTimer);countdownTimer=null;
+          // The backend is authoritative. Do not locally restart the countdown.
+          if(fetchServer)syncCrashRound();else startFlight(1);
+        }else{
+          countdownNum.textContent=countdown;
+          setRingProgress(Math.min(1,left/5000));
+        }
       },100);
       if(fetchServer)syncCrashRound();
     }
@@ -3341,10 +3364,8 @@
 
   // --- Rocket: button must live inside the app viewport and open the modal immediately. ---
   const betBtn=$('betBtn'), betModal=$('betModal');
-  betBtn?.addEventListener('click',function(e){
-    e.preventDefault(); e.stopImmediatePropagation();
-    if(betModal){betModal.classList.add('active'); betModal.style.zIndex='11000';}
-  },true);
+  // Bet opening is handled by the authoritative Rocket controller below.
+  // Do not add a capture handler here: it would allow betting during flight.
 
   // --- Cases: a single clean opener. ---
   const caseScreen=$('caseScreen'), caseOpenBtn=$('caseOpenBtn'), reelWrap=$('caseReelWrap'), reel=$('caseReel'), caseResult=$('caseResult');
@@ -3595,7 +3616,7 @@
     try{document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance||0).toFixed(3);}catch(_){ }
   }
   window.__openRocketHard=openRocket;
-  betBtn?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();betModal?.classList.add('active');if(betModal){betModal.style.display='flex';betModal.style.zIndex='32000';}try{window.__serverBalance!=null&&(document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance).toFixed(3));}catch(_){ }},true);
+  // Betting is allowed only while the server round is waiting.
   betBack?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();rocket?.classList.remove('active');if(rocket)rocket.style.removeProperty('display');},true);
 
   // Modal close / submit fallbacks.
@@ -4375,6 +4396,116 @@
   .navitem{font-size:8px!important;}
 }
 </style>
+<!-- ROCKET FINAL FIX 2026-08-29: countdown / flight / controls -->
+<style id="rocket-final-runtime-fix">
+  #rocketScreen.active{
+    display:flex!important;
+    visibility:visible!important;
+    opacity:1!important;
+    z-index:99990!important;
+    pointer-events:auto!important;
+    background:#09090a!important;
+  }
+  #rocketScreen .rocket-stage{
+    position:relative!important;
+    flex:0 0 290px!important;
+    height:290px!important;
+    margin:0 12px!important;
+    background:#09090a!important;
+    border:0!important;
+    border-radius:0!important;
+    box-shadow:none!important;
+    overflow:hidden!important;
+  }
+  #rocketScreen .countdown-ring{
+    position:absolute!important;
+    left:50%!important;
+    top:50%!important;
+    transform:translate(-50%,-50%)!important;
+    display:flex!important;
+    width:190px!important;
+    height:190px!important;
+    z-index:100!important;
+  }
+  #rocketScreen .countdown-num{font-size:72px!important;font-weight:1000!important;line-height:1!important;}
+  #rocketScreen .rocket-anchor{top:50%!important;left:50%!important;z-index:20!important;}
+  #rocketScreen .rocket-video{
+    width:330px!important;height:290px!important;object-fit:contain!important;
+    pointer-events:none!important;
+  }
+  #rocketScreen .rocket-emoji-wrap{width:110px!important;height:110px!important;}
+  #rocketScreen .rocket-multiplier{
+    position:absolute!important;left:50%!important;top:18%!important;
+    transform:translateX(-50%)!important;z-index:80!important;
+    font-size:46px!important;font-weight:1000!important;
+  }
+  #rocketScreen:not(.rocket-flying) .rocket-multiplier{display:none!important;}
+
+  /* The controls are intentionally viewport-fixed so the long LIVE list cannot push them off-screen. */
+  #rocketScreen .bet-btn,
+  #rocketScreen .cashout-btn{
+    position:fixed!important;
+    left:50%!important;
+    right:auto!important;
+    transform:translateX(-50%)!important;
+    width:min(358px,calc(100vw - 32px))!important;
+    min-height:54px!important;
+    margin:0!important;
+    border-radius:16px!important;
+    z-index:2147483000!important;
+    box-sizing:border-box!important;
+    pointer-events:auto!important;
+  }
+  #rocketScreen .bet-btn{bottom:16px!important;}
+  #rocketScreen .cashout-btn{bottom:82px!important;}
+  #rocketScreen .bets-list{padding-bottom:145px!important;}
+
+  /* Hide the main navigation while Crash is open; it must not cover the controls. */
+  body:has(#rocketScreen.active) .bottomnav{display:none!important;}
+  #rocketScreen .round-bets-title{padding-bottom:6px!important;}
+</style>
+<script id="rocket-final-runtime-fix-script">
+(function(){
+  const $=id=>document.getElementById(id);
+  const rocket=$('rocketScreen');
+  const bet=$('betBtn');
+  const cash=$('cashoutBtn');
+  const ring=$('countdownRing');
+  const video=$('rocketVideo');
+  if(!rocket||!bet||!cash||!ring)return;
+
+  function setControls(){
+    const phase=window.__getCrashPhase?.()||'';
+    const waiting=phase==='waiting';
+    const flying=phase==='flying';
+    bet.style.display='block';
+    bet.style.visibility='visible';
+    bet.disabled=!waiting || bet.classList.contains('placed');
+    if(flying){
+      cash.style.display='block';
+      cash.style.visibility='visible';
+    }else{
+      cash.style.display='none';
+    }
+    rocket.classList.toggle('rocket-flying',flying);
+  }
+
+  // Keep the UI responsive even when another legacy timer/poll is running.
+  setInterval(setControls,200);
+  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&rocket.classList.contains('active'))window.__syncCrashRoundNow?.();});
+
+  // If the app was opened directly, start the server-backed round controller.
+  function boot(){
+    if(!rocket.classList.contains('active'))return;
+    try{window.__startCrashRound?.();}catch(e){console.error('Rocket boot',e);}
+    setControls();
+  }
+  const mo=new MutationObserver(()=>{if(rocket.classList.contains('active'))setControls();});
+  mo.observe(rocket,{attributes:true,attributeFilter:['class','style']});
+  window.__rocketFinalBoot=boot;
+})();
+</script>
+
 </body>
 </html>
 
