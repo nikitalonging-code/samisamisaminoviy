@@ -4506,6 +4506,154 @@
 })();
 </script>
 
+
+<!-- V42 ROCKET COUNTDOWN FINAL FIX -->
+<style id="rocket-v42-countdown-css">
+  #rocketScreen .rocket-emoji-wrap{
+    transition:opacity .18s ease, visibility .18s ease!important;
+  }
+  /* Rocket is physically invisible before the countdown finishes. */
+  #rocketScreen.rocket-countdown-active .rocket-emoji-wrap{
+    opacity:0!important;
+    visibility:hidden!important;
+  }
+  #rocketScreen.rocket-countdown-active .rocket-video,
+  #rocketScreen.rocket-countdown-active .rocket-lottie{
+    visibility:hidden!important;
+  }
+  #rocketScreen.rocket-flying .rocket-emoji-wrap{
+    opacity:1!important;
+    visibility:visible!important;
+  }
+  #rocketScreen.rocket-flying .rocket-video{
+    visibility:visible!important;
+  }
+  #rocketScreen .countdown-ring{pointer-events:none!important;}
+</style>
+<script id="rocket-v42-countdown-script">
+(function(){
+  const $=id=>document.getElementById(id);
+  const screen=$('rocketScreen'), ring=$('countdownRing'), num=$('countdownNum'), video=$('rocketVideo');
+  if(!screen||!ring||!num)return;
+
+  let timer=null, deadline=0, running=false;
+
+  function hideRocket(){
+    screen.classList.add('rocket-countdown-active');
+    screen.classList.remove('rocket-flying');
+    if(video){ try{video.pause(); video.currentTime=0;}catch(_){} }
+  }
+  function showRocket(){
+    screen.classList.remove('rocket-countdown-active');
+    screen.classList.add('rocket-flying');
+    if(video){
+      video.style.visibility='visible';
+      try{video.currentTime=0;}catch(_){}
+      const p=video.play(); if(p&&p.catch)p.catch(()=>{});
+    }
+  }
+  function paint(left){
+    const sec=Math.max(1,Math.ceil(left/1000));
+    num.textContent=String(sec);
+    const progress=Math.max(0,Math.min(1,left/5000));
+    const circumference=2*Math.PI*72;
+    const path=ring.querySelector('.ring-progress');
+    if(path)path.style.strokeDashoffset=String(circumference*(1-progress));
+  }
+  async function getRound(){
+    const API=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+    const tg=window.Telegram?.WebApp;
+    const headers={'X-Telegram-User-Id':String(tg?.initDataUnsafe?.user?.id||'')};
+    try{
+      const r=await fetch(API+'/api/crash/current',{headers,cache:'no-store'});
+      if(!r.ok)return null;
+      return await r.json();
+    }catch(_){return null;}
+  }
+
+  async function startAuthoritativeCountdown(){
+    if(!screen.classList.contains('active')||running)return;
+    running=true;
+    hideRocket();
+    ring.style.display='flex';
+
+    const d=await getRound();
+    let seconds=Number(d?.waiting_seconds);
+    if(!Number.isFinite(seconds)||seconds<=0){
+      /* If the server has already moved to flying, don't show a fake countdown. */
+      if(d?.round?.status==='flying'){
+        ring.style.display='none'; showRocket(); running=false; return;
+      }
+      seconds=5;
+    }
+    seconds=Math.min(5,Math.max(1,Math.ceil(seconds)));
+    deadline=Date.now()+seconds*1000;
+    paint(seconds*1000);
+
+    clearInterval(timer);
+    timer=setInterval(async()=>{
+      if(!screen.classList.contains('active')){clearInterval(timer);timer=null;running=false;return;}
+      const left=deadline-Date.now();
+      if(left>0){paint(left);return;}
+      clearInterval(timer);timer=null;
+      num.textContent='1';
+      ring.style.display='none';
+
+      /* Ask the backend to advance waiting -> flying, then reveal the rocket. */
+      const current=await getRound();
+      if(current?.round?.status==='flying'){
+        showRocket();
+        if(typeof window.__syncCrashRoundNow==='function')window.__syncCrashRoundNow(current);
+      }else{
+        /* Render/DB can be a fraction late because timestamps are second based. */
+        setTimeout(async()=>{
+          const retry=await getRound();
+          if(retry?.round?.status==='flying')showRocket();
+          if(typeof window.__syncCrashRoundNow==='function'&&retry)window.__syncCrashRoundNow(retry);
+          running=false;
+        },250);
+      }
+      running=false;
+    },100);
+  }
+
+  function enforce(){
+    if(!screen.classList.contains('active'))return;
+    const phase=window.__getCrashPhase?.()||'';
+    if(phase==='waiting' || (!screen.classList.contains('rocket-flying') && ring.style.display!=='none')){
+      screen.classList.add('rocket-countdown-active');
+      if(!running)startAuthoritativeCountdown();
+    }else if(phase==='flying'){
+      ring.style.display='none';
+      screen.classList.remove('rocket-countdown-active');
+      screen.classList.add('rocket-flying');
+      if(video && video.paused){const p=video.play();if(p&&p.catch)p.catch(()=>{});}
+    }
+  }
+
+  const observer=new MutationObserver(()=>{
+    if(screen.classList.contains('active')){
+      setTimeout(enforce,0);
+    }
+  });
+  observer.observe(screen,{attributes:true,attributeFilter:['class','style']});
+  setInterval(enforce,250);
+
+  /* Open/return to Rocket: always start the visual countdown if a round is waiting. */
+  document.addEventListener('click',e=>{
+    const t=e.target?.closest?.('#openRocketBtn');
+    if(t)setTimeout(startAuthoritativeCountdown,50);
+  },true);
+  document.addEventListener('visibilitychange',()=>{
+    if(!document.hidden&&screen.classList.contains('active')){
+      running=false; clearInterval(timer); timer=null; startAuthoritativeCountdown();
+    }
+  });
+
+  if(screen.classList.contains('active'))startAuthoritativeCountdown();
+})();
+</script>
+
 </body>
 </html>
 
