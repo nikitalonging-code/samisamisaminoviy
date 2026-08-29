@@ -4602,11 +4602,12 @@
   let countdownTimer=null;
   let pollTimer=null;
   let raf=null;
+  let localFlightPending=false;
   let lastRoundSignature='';
   let history=JSON.parse(localStorage.getItem('rocketHistory')||'[]');
 
   function setButtonState(){
-    const canBet = (phase==='waiting' || phase==='idle') && !currentBet;
+    const canBet = (phase==='waiting' || phase==='idle') && !currentBet && !localFlightPending;
     betBtn.style.display='block';
     betBtn.disabled=!canBet;
     betBtn.classList.toggle('placed',!!currentBet);
@@ -4657,7 +4658,7 @@
   }
 
   function resetLocalVisual(){
-    phase='idle'; roundId=null; roundStatus=null; countdownEnd=0; serverStartedAt=0; crashPoint=0; serverMultiplier=1; cashoutBusy=false;
+    phase='idle'; localFlightPending=false; roundId=null; roundStatus=null; countdownEnd=0; serverStartedAt=0; crashPoint=0; serverMultiplier=1; cashoutBusy=false;
     if(countdownTimer) clearInterval(countdownTimer); countdownTimer=null;
     if(raf) cancelAnimationFrame(raf); raf=null;
     try{video.pause();video.currentTime=0;}catch(_){}
@@ -4669,6 +4670,7 @@
 
   function startLocalCountdownFallback(){
     if(phase==='flying') return;
+    localFlightPending=false;
     if(countdownTimer) clearInterval(countdownTimer);
     phase='waiting';
     countdownEnd=Date.now()+5000;
@@ -4705,6 +4707,11 @@
         clearInterval(countdownTimer); countdownTimer=null;
         countdownNum.textContent='';
         ring.style.display='none'; ring.style.visibility='hidden'; ring.style.opacity='0';
+        // Switch to the flying visual immediately at 0. The server remains
+        // authoritative for the wager/crash, but network latency must not
+        // leave the user staring at an empty stage after the countdown.
+        localFlightPending=true;
+        beginLocalFlightVisual();
         requestServerFlight();
       }
     };
@@ -4712,10 +4719,24 @@
     countdownTimer=setInterval(tick,100);
   }
 
+  function beginLocalFlightVisual(){
+    phase='flying';
+    countdownEnd=0;
+    serverStartedAt=Date.now();
+    serverMultiplier=1;
+    applyVisual('flying');
+    multiplier.textContent='1.00x';
+    setButtonState();
+    try{ video.style.display='block'; video.currentTime=0; }catch(_){}
+    const playPromise=video.play();
+    if(playPromise&&playPromise.catch) playPromise.catch(()=>{});
+    startMultiplierAnimation();
+  }
+
   async function requestServerFlight(){
-    // Do not show the rocket until the server confirms flying.
     try{
       const d=await getCurrent(); applyServerState(d);
+      if(String(d.round?.status||'')==='flying') localFlightPending=false;
     }catch(_){ setTimeout(requestServerFlight,180); }
   }
 
@@ -4738,6 +4759,12 @@
 
     roundStatus=statusValue;
     if(statusValue==='waiting'){
+      if(localFlightPending){
+        // The local countdown already reached zero. Keep the flying visual
+        // while the next server poll completes the authoritative transition.
+        renderBets(Array.isArray(d.bets)?d.bets:[],uidValue,statusValue);
+        return;
+      }
       phase='waiting';
       // Initialise the countdown once per round. Polling must never reset it.
       if(isNewRound || !countdownEnd){
@@ -4754,6 +4781,7 @@
       startCountdownLoop();
       setButtonState();
     } else if(statusValue==='flying'){
+      localFlightPending=false;
       phase='flying'; countdownEnd=0; serverStartedAt=Number(r.started_at||0)*1000; crashPoint=Number(r.crash_point||0);
       serverMultiplier=Number(d.multiplier||1);
       applyVisual('flying');
@@ -4761,6 +4789,7 @@
       setButtonState();
       startMultiplierAnimation();
     } else if(statusValue==='crashed'){
+      localFlightPending=false;
       phase='crashed'; serverMultiplier=crashPoint||Number(d.multiplier||1);
       applyVisual('crashed'); multiplier.textContent=fmt(serverMultiplier)+'x';
       setButtonState();
@@ -4835,6 +4864,8 @@
 
   function openRocket(){
     document.getElementById('playHubScreen')?.classList.remove('active');
+    document.documentElement.style.overflow='hidden';
+    document.body.style.overflow='hidden';
     document.getElementById('caseScreen')?.classList.remove('active');
     rocket.classList.add('active'); rocket.style.display='flex'; rocket.style.zIndex='40000';
     updateBalance(serverBalanceValue());
@@ -4844,7 +4875,7 @@
     }
     ensureStartedRound().catch(()=>{});
   }
-  function closeRocket(){ rocket.classList.remove('active'); rocket.style.removeProperty('display'); if(pollTimer){clearInterval(pollTimer);pollTimer=null;} }
+  function closeRocket(){ rocket.classList.remove('active'); rocket.style.removeProperty('display'); document.documentElement.style.overflow=''; document.body.style.overflow=''; if(pollTimer){clearInterval(pollTimer);pollTimer=null;} }
 
   // Capture opener before any legacy target/bubble listeners can run.
   document.addEventListener('click',e=>{
@@ -4912,6 +4943,114 @@
   bet.addEventListener('touchend',e=>{e.preventDefault();e.stopPropagation();open();},{passive:false});
 })();
 </script>
+
+<style id="rocket-viewport-final-override">
+  /* Final Rocket viewport: the game itself is fixed, only the live-bets list scrolls. */
+  #rocketScreen{
+    position:fixed!important;
+    top:0!important;
+    left:50%!important;
+    right:auto!important;
+    bottom:0!important;
+    transform:translateX(-50%)!important;
+    width:min(390px,100vw)!important;
+    max-width:390px!important;
+    height:100dvh!important;
+    min-height:100dvh!important;
+    margin:0!important;
+    overflow:hidden!important;
+    z-index:2147480000!important;
+    box-sizing:border-box!important;
+  }
+  #rocketScreen .rocket-stage{
+    flex:0 0 285px!important;
+    min-height:285px!important;
+  }
+  #rocketScreen .history-row{flex:0 0 auto!important;}
+  #rocketScreen .round-bets-title{flex:0 0 auto!important;}
+  #rocketScreen .bets-list{
+    flex:1 1 auto!important;
+    min-height:0!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-bottom:115px!important;
+  }
+  #rocketScreen .bet-btn,
+  #rocketScreen .cashout-btn{
+    position:absolute!important;
+    left:14px!important;
+    right:14px!important;
+    width:auto!important;
+    max-width:none!important;
+    margin:0!important;
+    z-index:2147483000!important;
+    pointer-events:auto!important;
+    touch-action:manipulation!important;
+  }
+  #rocketScreen .bet-btn{bottom:max(14px,env(safe-area-inset-bottom))!important;}
+  #rocketScreen .cashout-btn{bottom:max(76px,calc(62px + env(safe-area-inset-bottom)))!important;}
+  #rocketScreen .rocket-anchor{pointer-events:none!important;}
+  #rocketScreen .rocket-video{pointer-events:none!important;}
+
+  #betModal{
+    position:fixed!important;
+    inset:0!important;
+    width:100vw!important;
+    height:100dvh!important;
+    max-height:none!important;
+    display:none!important;
+    align-items:flex-end!important;
+    justify-content:center!important;
+    overflow:hidden!important;
+    z-index:2147483001!important;
+    pointer-events:none!important;
+  }
+  #betModal.active{display:flex!important;pointer-events:auto!important;}
+  #betModal .modal-sheet{
+    width:min(390px,100vw)!important;
+    max-width:390px!important;
+    max-height:82dvh!important;
+    overflow-y:auto!important;
+    -webkit-overflow-scrolling:touch!important;
+    padding-bottom:max(24px,calc(18px + env(safe-area-inset-bottom)))!important;
+    pointer-events:auto!important;
+  }
+  #betModal button,#betModal input{pointer-events:auto!important;touch-action:manipulation!important;}
+</style>
+<script id="rocket-viewport-final-guard">
+(function(){
+  const rocket=document.getElementById('rocketScreen');
+  const bet=document.getElementById('betBtn');
+  const modal=document.getElementById('betModal');
+  if(!rocket||!bet||!modal) return;
+  const active=()=>rocket.classList.contains('active');
+  const openModal=()=>{
+    if(!active()) return;
+    const ph=window.__getCrashPhase?.();
+    if(ph!=='waiting') return;
+    modal.classList.add('active');
+    modal.style.display='flex';
+    modal.scrollTop=0;
+    const sheet=modal.querySelector('.modal-sheet');
+    if(sheet) sheet.scrollTop=0;
+  };
+  bet.addEventListener('pointerup',function(e){e.preventDefault();e.stopImmediatePropagation();openModal();},true);
+  bet.addEventListener('click',function(e){e.preventDefault();e.stopImmediatePropagation();openModal();},true);
+  document.addEventListener('pointerup',function(e){
+    const t=e.target?.closest?.('#rocketScreen .bet-btn');
+    if(t){e.preventDefault();e.stopImmediatePropagation();openModal();}
+  },true);
+  const observer=new MutationObserver(()=>{
+    if(active()){
+      rocket.style.position='fixed';
+      rocket.style.height='100dvh';
+      rocket.style.maxHeight='100dvh';
+    }
+  });
+  observer.observe(rocket,{attributes:true,attributeFilter:['class','style']});
+})();
+</script>
+
 </html>
 
 <style>
@@ -4946,4 +5085,226 @@ playhub-game-card.rocket-game-card{margin-bottom:10px}.playhub-game-card.rocket-
 })();
 </script>
 
+<style id="rocket-final-video-bet-x-fix">
+  /* Final production fix: the rocket video is an actual static asset served by FastAPI. */
+  #rocketScreen .rocket-video{
+    width:340px!important;
+    height:300px!important;
+    object-fit:contain!important;
+    display:none!important;
+    opacity:1!important;
+    visibility:visible!important;
+    mix-blend-mode:screen!important;
+    pointer-events:none!important;
+    z-index:20!important;
+  }
+  #rocketScreen .rocket-emoji-wrap{z-index:20!important;}
+  #rocketScreen.rocket-flying .rocket-video{display:block!important;}
+  #rocketScreen .rocket-stage{isolation:isolate!important;}
+  #rocketScreen .rocket-multiplier{font-variant-numeric:tabular-nums;}
+  #rocketScreen .rocket-place-final{
+    position:absolute!important;
+    left:14px!important; right:14px!important;
+    bottom:max(14px,env(safe-area-inset-bottom))!important;
+    width:auto!important; min-height:58px!important;
+    border:0!important; border-radius:16px!important;
+    background:linear-gradient(135deg,#d71920,#ff3d47)!important;
+    color:#fff!important; font:900 17px/1 inherit!important;
+    box-shadow:0 10px 28px rgba(215,25,32,.28)!important;
+    z-index:2147482000!important;
+    pointer-events:auto!important; touch-action:manipulation!important;
+  }
+  #rocketScreen .rocket-place-final:disabled{opacity:.62!important;}
+  #rocketBetModalFinal{
+    position:fixed!important; inset:0!important;
+    display:none; align-items:flex-end; justify-content:center;
+    width:100vw!important; height:100dvh!important;
+    background:rgba(0,0,0,.62)!important;
+    backdrop-filter:blur(5px)!important;
+    z-index:2147483000!important;
+    pointer-events:auto!important;
+  }
+  #rocketBetModalFinal.active{display:flex!important;}
+  #rocketBetModalFinal .rbet-sheet{
+    width:min(390px,100vw); box-sizing:border-box;
+    max-height:82dvh; overflow:auto;
+    background:#17191e; border:1px solid rgba(255,255,255,.08);
+    border-radius:22px 22px 0 0; padding:18px 16px max(22px,calc(18px + env(safe-area-inset-bottom)));
+    box-shadow:0 -16px 50px rgba(0,0,0,.45);
+  }
+  #rocketBetModalFinal .rbet-head{display:flex;align-items:center;justify-content:space-between;gap:12px;}
+  #rocketBetModalFinal .rbet-title{font-size:20px;font-weight:900;}
+  #rocketBetModalFinal .rbet-close{width:38px;height:38px;border:0;border-radius:12px;background:#25282f;color:#fff;font-size:20px;cursor:pointer;}
+  #rocketBetModalFinal .rbet-balance{margin-top:10px;color:#aeb3bf;font-size:12px;}
+  #rocketBetModalFinal .rbet-balance b{color:#fff;font-size:15px;}
+  #rocketBetModalFinal .rbet-input{width:100%;margin-top:14px;padding:14px;border:1px solid #343841;border-radius:14px;background:#0f1115;color:#fff;outline:none;font:900 18px inherit;box-sizing:border-box;}
+  #rocketBetModalFinal .rbet-quick{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:9px;}
+  #rocketBetModalFinal .rbet-quick button{border:1px solid #30343b;background:#23262c;color:#fff;border-radius:11px;padding:10px 6px;font:800 12px inherit;cursor:pointer;}
+  #rocketBetModalFinal .rbet-submit{margin-top:14px;width:100%;padding:15px;border:0;border-radius:14px;background:linear-gradient(135deg,#d71920,#ff3d47);color:#fff;font:900 15px inherit;cursor:pointer;}
+  #rocketBetModalFinal .rbet-submit:disabled{opacity:.6;}
+  #rocketBetModalFinal .rbet-note{margin-top:9px;color:#858b97;font-size:10px;text-align:center;line-height:1.4;}
+</style>
+<script id="rocket-final-video-bet-x-fix-js">
+(function(){
+  'use strict';
+  const $=id=>document.getElementById(id);
+  const rocket=$('rocketScreen');
+  const oldBet=$('betBtn');
+  if(!rocket||!oldBet) return;
+
+  const tg=window.Telegram?.WebApp;
+  const uid=()=>String(tg?.initDataUnsafe?.user?.id||'999999999');
+  const API=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+  const H=()=>({'X-Telegram-User-Id':uid()});
+  const HJ=()=>({'X-Telegram-User-Id':uid(),'Content-Type':'application/json'});
+
+  // Replace only the visible betting button. The old node had several historical
+  // listeners attached to it; removing that node eliminates those conflicts.
+  const bet=oldBet.cloneNode(true);
+  bet.className='rocket-place-final';
+  bet.removeAttribute('style');
+  oldBet.replaceWith(bet);
+
+  // Unique modal IDs/classes avoid all legacy #betModal listeners.
+  let modal=$('rocketBetModalFinal');
+  if(!modal){
+    modal=document.createElement('div');
+    modal.id='rocketBetModalFinal';
+    modal.innerHTML=`
+      <div class="rbet-sheet" role="dialog" aria-modal="true" aria-labelledby="rbetTitle">
+        <div class="rbet-head">
+          <div class="rbet-title" id="rbetTitle">Сделать ставку</div>
+          <button class="rbet-close" id="rbetClose" type="button" aria-label="Закрыть">×</button>
+        </div>
+        <div class="rbet-balance">Баланс: <b id="rbetBalance">0.000 TON</b></div>
+        <input id="rbetAmount" class="rbet-input" type="number" inputmode="decimal" min="0.1" step="0.01" value="0.10" placeholder="Сумма в TON">
+        <div class="rbet-quick">
+          <button type="button" data-rbet="0.1">0.1</button>
+          <button type="button" data-rbet="0.5">0.5</button>
+          <button type="button" data-rbet="1">1 TON</button>
+          <button type="button" data-rbet="max">MAX</button>
+        </div>
+        <button class="rbet-submit" id="rbetSubmit" type="button">Поставить</button>
+        <div class="rbet-note">Ставка списывается с баланса и фиксируется на сервере до старта раунда.</div>
+      </div>`;
+    document.body.appendChild(modal);
+  }
+  const amount=$('rbetAmount'), submit=$('rbetSubmit'), close=$('rbetClose'), balance=$('rbetBalance');
+
+  let mineBet=false;
+  let placing=false;
+
+  function phase(){return window.__getCrashPhase?.()||'idle';}
+  function fmt(n){return (Number(n)||0).toFixed(3);}
+  function balanceValue(){return Number(window.__serverBalance??localStorage.getItem('caseBalance')??0)||0;}
+  function setBalance(v){
+    const n=Number(v)||0; window.__serverBalance=n;
+    localStorage.setItem('caseBalance',String(n));
+    balance.textContent=fmt(n)+' TON';
+    const rk=$('rkBalanceVal'); if(rk) rk.textContent=fmt(n);
+    document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(n));
+  }
+
+  async function refreshState(){
+    try{
+      const r=await fetch(API+'/api/crash/current',{headers:H(),cache:'no-store'});
+      if(!r.ok) return;
+      const d=await r.json();
+      const uidValue=d.you_user_id;
+      mineBet=Array.isArray(d.bets)&&d.bets.some(b=>String(b.user_id)===String(uidValue)&&b.cashout_multiplier==null);
+      if(d.round?.status==='waiting' || d.round?.status==='flying'){
+        bet.disabled = phase()!=='waiting' || mineBet || placing;
+        bet.textContent = mineBet ? '✅ Ставка принята' : (phase()==='waiting' ? 'Сделать ставку' : 'Раунд идёт');
+      }else{
+        bet.disabled=true; bet.textContent='Следующий раунд…';
+      }
+      if(d.bets) window.__rocketServerBets=d.bets;
+    }catch(_){
+      bet.disabled=phase()!=='waiting' || placing;
+    }
+  }
+
+  async function openModal(){
+    if(phase()==='idle'){
+      try{window.__startCrashRound?.();}catch(_){}
+      await new Promise(r=>setTimeout(r,40));
+    }
+    if(phase()!=='waiting' || mineBet || placing) return;
+    try{
+      const me=await fetch(API+'/api/me',{headers:H(),cache:'no-store'});
+      if(me.ok){const d=await me.json();setBalance(d.balance);}
+    }catch(_){setBalance(balanceValue());}
+    const bal=balanceValue();
+    if(Number.isFinite(bal)){
+      amount.max=String(bal);
+      const cur=Number(amount.value)||.1;
+      amount.value=Math.min(Math.max(.1,cur),Math.max(.1,bal)).toFixed(2);
+    }
+    modal.classList.add('active');
+    requestAnimationFrame(()=>amount.focus({preventScroll:true}));
+  }
+  function closeModal(){modal.classList.remove('active');}
+
+  async function placeBet(){
+    if(placing || phase()!=='waiting' || mineBet) return;
+    const value=Number(amount.value);
+    if(!Number.isFinite(value)||value<0.1){alert('Минимальная ставка — 0.1 TON');return;}
+    if(value>balanceValue()+1e-9){alert('Недостаточно TON на балансе');return;}
+    placing=true; submit.disabled=true; bet.disabled=true;
+    try{
+      const r=await fetch(API+'/api/crash/bet',{method:'POST',headers:HJ(),body:JSON.stringify({amount:value}),cache:'no-store'});
+      if(!r.ok) throw new Error((await r.text())||'Не удалось сделать ставку');
+      const d=await r.json();
+      setBalance(d.balance);
+      mineBet=true;
+      closeModal();
+      bet.textContent='✅ Ставка принята';
+      bet.disabled=true;
+      // Let the existing Crash controller see the server-side bet via its normal poll.
+      try{window.__startCrashRound?.();}catch(_){}
+    }catch(e){alert(e.message||'Не удалось сделать ставку');}
+    finally{placing=false;submit.disabled=false;refreshState();}
+  }
+
+  bet.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();openModal();},true);
+  bet.addEventListener('pointerup',e=>{e.preventDefault();e.stopImmediatePropagation();openModal();},true);
+  submit.addEventListener('click',placeBet);
+  close.addEventListener('click',closeModal);
+  modal.addEventListener('click',e=>{if(e.target===modal)closeModal();});
+  modal.querySelectorAll('[data-rbet]').forEach(btn=>btn.addEventListener('click',()=>{
+    const kind=btn.dataset.rbet; const bal=balanceValue();
+    amount.value=(kind==='max'?bal:Number(kind)).toFixed(2);
+  }));
+  amount.addEventListener('keydown',e=>{if(e.key==='Enter')placeBet();if(e.key==='Escape')closeModal();});
+
+  // Explicit absolute URLs ensure Render serves the same assets that were bundled in the ZIP.
+  const video=$('rocketVideo');
+  if(video){
+    const webm=new URL('/assets/rocket_transparent.webm',location.origin).href;
+    const mp4=new URL('/assets/rocket_hd.mp4',location.origin).href;
+    video.innerHTML='';
+    for(const [src,type] of [[webm,'video/webm'],[mp4,'video/mp4']]){
+      const s=document.createElement('source'); s.src=src; s.type=type; video.appendChild(s);
+    }
+    video.load();
+    video.addEventListener('error',()=>{
+      // Keep trying the MP4 fallback if WebM/alpha is unsupported by Telegram WebView.
+      if(video.currentSrc===webm || !video.currentSrc){
+        video.src=mp4; video.load();
+      }
+    });
+  }
+
+  // Never allow a client-side fallback to visually run beyond the game's 25x cap.
+  setInterval(()=>{
+    if(phase()!=='flying') return;
+    const m=$('rocketMultiplier'); if(!m) return;
+    const x=parseFloat(String(m.textContent||'').replace('x',''));
+    if(Number.isFinite(x)&&x>25) m.textContent='25.00x';
+  },100);
+
+  setInterval(()=>{if(rocket.classList.contains('active'))refreshState();},300);
+  refreshState();
+})();
+</script>
 
