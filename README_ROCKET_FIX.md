@@ -1,0 +1,1 @@
+Rocket fix: supplied rocket.mp4 is chroma-keyed to transparent WebM, starts only after countdown, and bet controls are fixed to the bottom. PAKETKA uses a shifted-rocket banner; ICE ARENA banner is slightly widened via CSS.
