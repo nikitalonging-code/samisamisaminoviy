@@ -590,8 +590,21 @@
     padding:10px; font-weight:600; font-size:13px; cursor:pointer;
   }
 
+  .rocket-controls{display:flex;flex-direction:column;gap:8px;padding:8px 16px 6px;flex:0 0 auto;}
+  .rocket-controls .bet-btn,.rocket-controls .cashout-btn{margin:0;width:100%;}
+  .rocket-stage{height:250px;margin:4px 12px 0;border:1px solid rgba(255,255,255,.05);border-radius:22px;background:radial-gradient(circle at 50% 42%,rgba(26,30,38,.55),rgba(10,11,15,.15) 58%,transparent 72%);}
+  .countdown-ring{z-index:0;pointer-events:none;}
+  .countdown-num{background:rgba(15,17,24,.78);border:1px solid rgba(62,207,142,.35);border-radius:18px;padding:4px 14px;font-size:28px;line-height:1;box-shadow:0 8px 24px rgba(0,0,0,.28);}
+  .rocket-anchor{z-index:1;top:56%;}
+  .rocket-emoji-wrap{z-index:2;opacity:0;}
+  .rocket-video{display:block;width:108px;height:108px;object-fit:contain;opacity:1;background:transparent;}
+  .rocket-png{display:none!important;}
+  .rocket-lottie{display:none!important;}
+  .rocket-status,.rocket-timer{display:none!important;}
+  .bets-list{flex:1;min-height:0;overflow-y:auto;padding:10px 16px 18px;}
+  .round-bets-title{flex:0 0 auto;}
   /* ===== Rocket animation + persistent history ===== */
-  .rocket-png{display:none; width:92px; height:112px; object-fit:contain; filter:drop-shadow(0 10px 28px rgba(78,151,255,.36));}
+  .rocket-png{display:none; width:92px; height:112px; object-fit:contain;}
   .rocket-prize-panel{position:absolute; right:8px; top:52px; width:126px; padding:9px; border:1px solid rgba(155,139,255,.42); border-radius:16px; background:rgba(21,23,33,.88); backdrop-filter:blur(8px); box-shadow:0 10px 28px rgba(0,0,0,.25); display:none; text-align:center; z-index:5;}
   .rocket-prize-panel.active{display:block; animation:prizeIn .2s ease-out;}
   .rocket-prize-panel img{width:72px;height:72px;object-fit:contain;display:block;margin:0 auto 5px;filter:drop-shadow(0 6px 14px rgba(0,0,0,.35));}
@@ -1303,6 +1316,10 @@
       <div class="rocket-anchor" id="rocketAnchor">
         <div class="rocket-bob" id="rocketBob">
           <div class="rocket-emoji-wrap" id="rocketEmojiWrap">
+            <video class="rocket-video" id="rocketVideo" muted playsinline preload="auto" poster="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png">
+              <source src="assets/rocket_transparent.webm" type="video/webm">
+              <source src="assets/rocket.mp4" type="video/mp4">
+            </video>
             <div class="rocket-lottie" id="rocketLottie"></div>
             <img class="rocket-png" id="rocketPngIcon" src="https://cdn.changes.tg/gifts/models/Stellar%20Rocket/png/Original.png" alt="Stellar Rocket">
             <div class="spark-anim s1">✦</div>
@@ -1316,11 +1333,11 @@
       <div class="rocket-timer" id="rocketTimer" style="display:none;"></div>
     </div>
 
+    <div class="rocket-controls">
+      <button class="bet-btn" id="betBtn">Сделать ставку</button>
+      <button class="cashout-btn" id="cashoutBtn" style="display:none;">Забрать на 1.01x</button>
+    </div>
     <div class="history-row" id="historyRow"></div>
-
-    <button class="bet-btn" id="betBtn">Сделать ставку</button>
-    <button class="cashout-btn" id="cashoutBtn" style="display:none;">Забрать на 1.01x</button>
-
     <div class="round-bets-title">LIVE СТАВКИ <span>Текущий раунд</span></div><div class="bets-list" id="betsList"></div>
   </div>
 
@@ -1913,24 +1930,89 @@
   // ===================== ROCKET GAME =====================
   (function(){
     const V9_API=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,''); const V9_TG=window.Telegram?.WebApp; const V9_HEADERS={'X-Telegram-User-Id':String(V9_TG?.initDataUnsafe?.user?.id||'999999999')};
+    let serverRoundId = null;
+    let videoStartedRound = null;
+    let syncBusy = false;
     async function syncCrashRound(){
+      if(syncBusy) return;
+      syncBusy = true;
       try{
         const r=await fetch(V9_API+'/api/crash/current',{headers:V9_HEADERS,cache:'no-store'});
-        if(!r.ok)return;
+        if(!r.ok) return;
         const d=await r.json();
+        const rr=d.round||{};
+        serverRoundId=rr.id||serverRoundId;
         const serverBets=(d.bets||[]).map(b=>({
           name:b.username?'@'+b.username:(b.first_name||'Игрок'),
           avatar:(b.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:b.avatar_url||'',
-          stake:Number(b.stake||0), mult:Number(b.cashout_multiplier||1), win:b.payout!=null?Number(b.payout):null,
+          stake:Number(b.stake||0), mult:Number(b.cashout_multiplier||d.multiplier||1), win:b.payout!=null?Number(b.payout):null,
           you:String(b.user_id)===String(d.you_user_id), current:b.cashout_multiplier==null,
-          cashed:b.cashout_multiplier!=null && Number(b.payout||0)>0, lost:b.cashout_multiplier==null && d.round?.status==='crashed',
+          cashed:b.cashout_multiplier!=null && Number(b.payout||0)>0, lost:b.cashout_multiplier==null && rr.status==='crashed',
           type:'balance', id:b.id
         }));
         bets=serverBets;
         const mine=serverBets.find(x=>x.you && x.current);
         if(mine && !currentBet){currentBet={type:'balance',amount:mine.stake,reserved:true};currentBetCashedOut=false;}
+
+        if(rr.status==='waiting'){
+          phase='waiting';
+          if(flightRAF) cancelAnimationFrame(flightRAF);
+          countdownRing.style.display='flex';
+          const sec=Math.max(0,Number(d.waiting_seconds||0));
+          countdownNum.textContent=sec>0?String(Math.ceil(sec)):'0';
+          setRingProgress(sec/5);
+          multEl.textContent='';
+          multEl.classList.remove('flying','crashed');
+          cashoutBtn.style.display='none';
+          rocketEmojiWrap.style.opacity='0';
+          if(rocketVideo){ rocketVideo.pause(); rocketVideo.currentTime=0; }
+          if(mine){
+            betBtn.disabled=true; betBtn.classList.add('placed'); betBtn.textContent='✅ Ставка активна';
+            currentBetCashedOut=false;
+          }else{
+            betBtn.disabled=false; betBtn.classList.remove('placed','queued-style'); betBtn.textContent='Сделать ставку';
+            currentBet=null; currentBetCashedOut=false;
+          }
+        }else if(rr.status==='flying'){
+          phase='flying';
+          countdownRing.style.display='none';
+          const mult=Math.max(1,Number(d.multiplier||1));
+          multEl.textContent=fmt(mult)+'x';
+          multEl.classList.add('flying'); multEl.classList.remove('crashed');
+          rocketEmojiWrap.style.opacity='1';
+          if(mine && !currentBet) { currentBet={type:'balance',amount:mine.stake,reserved:true}; currentBetCashedOut=false; }
+          if(mine && currentBet && !currentBetCashedOut){
+            cashoutBtn.style.display='block'; cashoutBtn.disabled=false;
+            cashoutBtn.textContent='💰 Забрать '+fmt(mult)+'x';
+            betBtn.disabled=true; betBtn.textContent='Ставка активна';
+          }else{
+            cashoutBtn.style.display='none';
+            betBtn.disabled=true; betBtn.textContent='Раунд идёт';
+          }
+          if(rocketVideo && videoStartedRound!==String(rr.id)){
+            videoStartedRound=String(rr.id);
+            try{
+              const cp=Math.max(1.01,Number(rr.crash_point||2));
+              let t=0,m=1,last=performance.now();
+              while(m<cp && t<60){ const rate=growthRateFor(m); const dt=0.016; m*=Math.exp(rate*dt); t+=dt; }
+              rocketVideo.playbackRate=Math.max(0.65,Math.min(3.2,7.76/Math.max(1.15,t)));
+            }catch(_){}
+            rocketVideo.currentTime=0;
+            const playPromise=rocketVideo.play(); if(playPromise?.catch) playPromise.catch(()=>{});
+          }
+        }else if(rr.status==='crashed'){
+          phase='crashed';
+          const cp=Number(rr.crash_point||d.multiplier||1);
+          multEl.textContent=fmt(cp)+'x';
+          multEl.classList.remove('flying'); multEl.classList.add('crashed');
+          countdownRing.style.display='none'; cashoutBtn.style.display='none';
+          rocketEmojiWrap.style.opacity='1'; rocketEmojiWrap.classList.add('crashed');
+          if(rocketVideo){ try{rocketVideo.currentTime=Math.max(0,(rocketVideo.duration||7.76)-0.18);}catch(_){} }
+          if(currentBet && !currentBetCashedOut){ const row=bets.find(b=>b.you && b.current); if(row){row.lost=true;row.mult=cp;row.win=0;} currentBet=null; }
+        }
         renderBets();
-      }catch(_){}
+      }catch(_){
+      }finally{ syncBusy=false; }
     }
     const multEl           = document.getElementById('rocketMultiplier');
     const statusEl         = document.getElementById('rocketStatus');
@@ -1944,6 +2026,7 @@
     const rocketPrizeName  = document.getElementById('rocketPrizeName');
     const rocketPrizeValue = document.getElementById('rocketPrizeValue');
     const rocketPrizeKind  = document.getElementById('rocketPrizeKind');
+    const rocketVideo       = document.getElementById('rocketVideo');
 
     const betModal          = document.getElementById('betModal');
     const modalTabBalance   = document.getElementById('modalTabBalance');
@@ -2604,7 +2687,7 @@
       }, 1000);
     }
 
-    window.__startCrashRound = startWaitingPhase;
+    window.__startCrashRound = ()=>syncCrashRound();
     window.__getCrashPhase = () => phase;
     window.__getCrashCountdownActive = () => Boolean(countdownTimer);
 
@@ -2715,14 +2798,12 @@
       renderHistory();
       renderBets();
       showPotentialPrize(1.01);
-      if(!countdownTimer && phase !== 'flying'){
-        startWaitingPhase();
-      }
+      syncCrashRound();
     });
     backBtn.addEventListener('click', ()=>{
       rocketScreen.classList.remove('active');
     });
-    setInterval(()=>{ if(rocketScreen.classList.contains('active')) syncCrashRound(); }, 900);
+    setInterval(()=>{ if(rocketScreen.classList.contains('active')) syncCrashRound(); }, 450);
 
     // ---- bet modal ----
     function renderBetGiftPicker(){
@@ -2765,13 +2846,8 @@
       selectedGift=null;
     }
     betBtn.addEventListener('click', ()=>{
-      if(phase === 'waiting'){
-        if(currentBet) return;
-        openModal();
-      } else if(phase === 'flying'){
-        if(queuedBet) return;
-        openModal();
-      }
+      if(phase !== 'waiting' || currentBet || betBtn.disabled) return;
+      openModal();
     });
     cancelBetBtn.addEventListener('click', closeModal);
     cashoutBtn.addEventListener('click', cashOut);
@@ -2803,8 +2879,8 @@
     });
 
     confirmBetBtn.addEventListener('click', async ()=>{
-      if(phase !== 'waiting' && phase !== 'flying') { closeModal(); return; }
-      const queuing = (phase === 'flying');
+      if(phase !== 'waiting') { closeModal(); return; }
+      const queuing = false;
       if(modalMode === 'balance'){
         const amount = Number.parseFloat(betAmountInput.value);
         if(!Number.isFinite(amount) || amount <= 0) return;
@@ -2863,29 +2939,21 @@
       closeModal();
     });
 
-    // Stellar Rocket original animation: use the source Lottie animation, with the supplied PNG as fallback.
-    const rocketLottieEl = document.getElementById('rocketLottie');
-    function initRocketLottie(){
-      if(!rocketLottieEl || typeof window.lottie === 'undefined'){
-        rocketPngIcon.style.display = 'block';
-        rocketLottieEl.style.display = 'none';
-        return;
-      }
-      window.lottie.loadAnimation({
-        container: rocketLottieEl,
-        renderer: 'svg',
-        loop: true,
-        autoplay: true,
-        path: 'https://cdn.changes.tg/gifts/models/Stellar%20Rocket/lottie/Original.json'
-      });
-      rocketPngIcon.style.display = 'block';
-      rocketLottieEl.style.display = 'none';
+    // Stellar Rocket animation: the supplied transparent video is the primary visual.
+    function initRocketVideo(){
+      if(!rocketVideo) return;
+      rocketVideo.loop=false;
+      rocketVideo.muted=true;
+      rocketVideo.playsInline=true;
+      rocketVideo.pause();
+      rocketVideo.currentTime=0;
     }
-    window.addEventListener('load', initRocketLottie, {once:true});
-  
+    window.addEventListener('load', initRocketVideo, {once:true});
+
     renderHistory();
     renderBets();
     renderInventory();
+
   })();
 
   // ===================== CASES =====================
@@ -3249,7 +3317,7 @@
     try{document.getElementById('rkBalanceVal').textContent=(Number(window.__serverBalance||0)).toFixed(3);}catch(_){ }
     try{
       const ph=window.__getCrashPhase?.();
-      if(ph!=='flying' && ph!=='crashed' && !window.__getCrashCountdownActive?.()) window.__startCrashRound?.();
+      window.__startCrashRound?.();
     }catch(_){ }
     try{window.__startCrashRound?.();}catch(_){ }
   };
@@ -3673,7 +3741,14 @@
     try{document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance||0).toFixed(3);}catch(_){ }
   }
   window.__openRocketHard=openRocket;
-  betBtn?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();betModal?.classList.add('active');if(betModal){betModal.style.display='flex';betModal.style.zIndex='32000';}try{window.__serverBalance!=null&&(document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance).toFixed(3));}catch(_){ }},true);
+  betBtn?.addEventListener('click',e=>{
+    const ph=window.__getCrashPhase?.();
+    if(ph!=='waiting') return;
+    e.preventDefault(); e.stopImmediatePropagation();
+    betModal?.classList.add('active');
+    if(betModal){betModal.style.display='flex';betModal.style.zIndex='32000';}
+    try{window.__serverBalance!=null&&(document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance).toFixed(3));}catch(_){}
+  },true);
   betBack?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();rocket?.classList.remove('active');if(rocket)rocket.style.removeProperty('display');},true);
 
   // Modal close / submit fallbacks.
@@ -4505,4 +4580,15 @@ playhub-game-card.rocket-game-card{margin-bottom:10px}.playhub-game-card.rocket-
 
 <style id="ice-arena-home-banner-cleanup">
   #tab-pvp{display:none!important;}
+</style>
+
+
+<style id="v60-rocket-layout-fix">
+#rocketScreen{overflow:hidden!important;}
+#rocketScreen .rocket-controls{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;display:flex!important;flex-direction:column!important;gap:8px!important;padding:8px 16px 6px!important;z-index:500!important;flex:0 0 auto!important;}
+#rocketScreen .rocket-controls .bet-btn,#rocketScreen .rocket-controls .cashout-btn{position:relative!important;left:auto!important;right:auto!important;bottom:auto!important;top:auto!important;width:100%!important;margin:0!important;}
+#rocketScreen .bets-list{position:relative!important;flex:1 1 auto!important;min-height:120px!important;max-height:none!important;overflow-y:auto!important;padding:10px 16px 18px!important;}
+#rocketScreen .rocket-video{display:block!important;opacity:1!important;visibility:visible!important;pointer-events:none!important;}
+#rocketScreen .rocket-emoji-wrap{z-index:3!important;}
+#rocketScreen .countdown-ring{z-index:4!important;}
 </style>
