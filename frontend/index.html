@@ -1171,22 +1171,7 @@
 /* Move only the supplied PAKETKA artwork down by increasing the visible banner breathing room. */
 .home-banner.paketka-banner{padding-top:2px!important;}
 </style>
-<style id="rocket-production-fix-20260829">
-#rocketScreen{background:#09090a!important;overflow:hidden!important}
-#rocketScreen .rocket-stage{flex:0 0 290px!important;height:290px!important;margin:0 12px!important;background:#09090a!important;border:0!important;border-radius:0!important;box-shadow:none!important}
-#rocketScreen .rocket-stage::before,#rocketScreen .rocket-stage::after{display:none!important}
-#rocketScreen .rocket-multiplier{top:18px!important;font-size:42px!important;line-height:1!important;z-index:30!important;text-shadow:0 4px 24px rgba(0,0,0,.55)!important}
-#rocketScreen .rocket-anchor{top:55%!important;left:50%!important;z-index:10!important}
-#rocketScreen .rocket-video{width:360px!important;height:300px!important;object-fit:contain!important;display:block!important}
-#rocketScreen .rocket-lottie,#rocketScreen .spark-anim,#rocketScreen .rocket-status,#rocketScreen .rocket-timer{display:none!important}
-#rocketScreen .countdown-ring{width:190px!important;height:190px!important;z-index:100!important}
-#rocketScreen .countdown-num{font-size:72px!important;font-weight:1000!important;text-shadow:0 0 30px rgba(62,207,142,.35)!important}
-#rocketScreen .history-row{flex:0 0 auto!important;padding:10px 16px!important;background:#09090a!important;border:0!important}
-#rocketScreen .bets-list{min-height:0!important;padding:6px 16px 190px!important}
-#rocketScreen .bet-btn,#rocketScreen .cashout-btn{position:fixed!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:min(358px,calc(100vw - 32px))!important;margin:0!important;z-index:50000!important}
-#rocketScreen .bet-btn{bottom:calc(14px + env(safe-area-inset-bottom))!important}
-#rocketScreen .cashout-btn{bottom:calc(76px + env(safe-area-inset-bottom))!important}
-</style></head>
+</head>
 <body>
 <div class="phone">
 
@@ -1949,54 +1934,21 @@
     async function syncCrashRound(){
       try{
         const r=await fetch(V9_API+'/api/crash/current',{headers:V9_HEADERS,cache:'no-store'});
-        if(!r.ok)return null;
-        const d=await r.json(), round=d.round||{}, roundId=String(round.id||'');
-        if(roundId&&window.__rocketRoundId&&roundId!==window.__rocketRoundId){
-          currentBet=null;currentBetCashedOut=false;currentBetCashoutMult=0;queuedBet=null;
-        }
-        if(roundId)window.__rocketRoundId=roundId;
-        crashPoint=Number(round.crash_point||crashPoint||1.01);
-        bets=(d.bets||[]).map(b=>({
+        if(!r.ok)return;
+        const d=await r.json();
+        const serverBets=(d.bets||[]).map(b=>({
           name:b.username?'@'+b.username:(b.first_name||'Игрок'),
-          avatar:(b.first_name||'U').slice(0,1).toUpperCase(),avatarUrl:b.avatar_url||'',
-          stake:Number(b.stake||0),mult:Number(b.cashout_multiplier||1),win:b.payout!=null?Number(b.payout):null,
-          you:String(b.user_id)===String(d.you_user_id),current:b.cashout_multiplier==null,
-          cashed:b.cashout_multiplier!=null&&Number(b.payout||0)>0,lost:b.cashout_multiplier==null&&round.status==='crashed',
-          type:'balance',id:b.id
+          avatar:(b.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:b.avatar_url||'',
+          stake:Number(b.stake||0), mult:Number(b.cashout_multiplier||1), win:b.payout!=null?Number(b.payout):null,
+          you:String(b.user_id)===String(d.you_user_id), current:b.cashout_multiplier==null,
+          cashed:b.cashout_multiplier!=null && Number(b.payout||0)>0, lost:b.cashout_multiplier==null && d.round?.status==='crashed',
+          type:'balance', id:b.id
         }));
-        const mine=bets.find(x=>x.you&&x.current);
-        if(mine&&!currentBet){currentBet={type:'balance',amount:mine.stake,reserved:true};currentBetCashedOut=false;}
-        if(round.status==='waiting'){
-          const seconds=Math.max(0,Number(d.waiting_seconds||0));
-          // Never restart a finished countdown with `1`. When the server reaches
-          // zero, wait for the next poll to confirm that the round is flying.
-          if(seconds<=0){
-            if(countdownTimer){clearInterval(countdownTimer);countdownTimer=null;}
-            phase='waiting';
-            countdownNum.textContent='1';
-            setRingProgress(0);
-            countdownRing.style.display='flex';
-            // Render may be slightly ahead of the second-resolution backend clock.
-            // Retry quickly instead of resetting the countdown.
-            setTimeout(()=>{ if(rocketScreen.classList.contains('active')) syncCrashRound(); },120);
-          }else if(phase!=='waiting'||!countdownTimer){
-            startWaitingPhase(seconds,false);
-          }else{
-            countdown=Math.max(1,Math.ceil(seconds));
-            countdownNum.textContent=countdown;
-            setRingProgress(Math.min(1,seconds/5));
-          }
-        }else if(round.status==='flying'){
-          if(phase!=='flying')startFlight(Number(d.multiplier||1));
-          else if(Number.isFinite(Number(d.multiplier))){
-            const sm=Number(d.multiplier);multEl.textContent=fmt(sm)+'x';lastDisplayedMultiplier=sm;
-            if(currentBet&&!currentBetCashedOut&&sm>=1.01){cashoutBtn.disabled=false;cashoutBtn.textContent=`💰 Забрать ${fmt(sm)}x`;}
-          }
-        }else if(round.status==='crashed'){
-          if(phase!=='crashed')crash(Number(round.crash_point||1.01),true);
-        }
-        renderBets();return d;
-      }catch(_){return null;}
+        bets=serverBets;
+        const mine=serverBets.find(x=>x.you && x.current);
+        if(mine && !currentBet){currentBet={type:'balance',amount:mine.stake,reserved:true};currentBetCashedOut=false;}
+        renderBets();
+      }catch(_){}
     }
     const multEl           = document.getElementById('rocketMultiplier');
     const statusEl         = document.getElementById('rocketStatus');
@@ -2617,28 +2569,59 @@
       rocketPrizePanel.classList.remove('active','black','onyx');
     }
 
-    function startWaitingPhase(serverSeconds=5,fetchServer=true){
-      phase='waiting';countdown=Math.max(1,Math.ceil(Number(serverSeconds)||5));
-      currentBetCashedOut=false;currentBetCashoutMult=0;cashoutBtn.style.display='none';cashoutBtn.disabled=true;
-      resetRocketVisual();multEl.textContent='1.00x';multEl.classList.remove('flying','crashed');statusEl.textContent='';
-      countdownRing.style.display='flex';countdownNum.textContent=countdown;setRingProgress(Math.min(1,countdown/5));
-      betBtn.disabled=Boolean(currentBet);betBtn.classList.toggle('placed',Boolean(currentBet));betBtn.classList.remove('queued-style');
-      betBtn.textContent=currentBet?('✅ Ставка: '+fmt(Number(currentBet.amount||0))+' TON'):'Сделать ставку';
-      if(!currentBet)bets=[];renderBets();clearInterval(countdownTimer);
-      const endAt=Date.now()+countdown*1000;
-      countdownTimer=setInterval(()=>{
-        const left=Math.max(0,endAt-Date.now());
-        countdown=Math.max(0,Math.ceil(left/1000));
-        if(left<=0){
-          clearInterval(countdownTimer);countdownTimer=null;
-          // The backend is authoritative. Do not locally restart the countdown.
-          if(fetchServer)syncCrashRound();else startFlight(1);
-        }else{
-          countdownNum.textContent=countdown;
-          setRingProgress(Math.min(1,left/5000));
+    function startWaitingPhase(){
+      phase = 'waiting';
+      countdown = 5;
+      crashPoint = randomCrashPoint();
+      // The crash feed is persistent: each completed round appends to the same tape.
+      currentBetCashedOut = false;
+      currentBetCashoutMult = 0;
+      cashoutBtn.style.display = 'none';
+      cashoutBtn.disabled = false;
+      resetRocketVisual();
+      multEl.textContent = '';
+      multEl.classList.remove('flying','crashed');
+      statusEl.textContent = '';
+      rocketPrizePanel.classList.remove('active','black','onyx');
+      countdownRing.style.display = 'flex';
+      countdownNum.textContent = countdown;
+      setRingProgress(1);
+      // Every new round starts with an empty list of active/current-round bets.
+      // The persistent crash history above the betting area is intentionally untouched.
+      bets = [];
+      betBtn.classList.remove('queued-style');
+      if(queuedBet){
+        // A bet placed mid-flight last round is now promoted to this round's active bet.
+        currentBet = queuedBet;
+        queuedBet = null;
+        currentBetCashedOut = false;
+        betBtn.disabled = true;
+        betBtn.classList.add('placed');
+        betBtn.textContent = currentBet.type === 'gift' ? ('✅ Ставка: 🎁 ' + currentBet.name) : ('✅ Ставка: ' + fmt(currentBet.amount) + ' TON');
+        if(currentBet.type === 'balance'){
+          bets = [{name:'Вы', avatar:'C', stake:currentBet.amount, mult:1.00, win:null, you:true, current:true, type:'balance', cashed:false, lost:false}];
+        } else {
+          bets = [{name:'Вы', avatar:'🎁', stake:currentBet.val, mult:1.00, win:null, you:true, current:true, type:'gift', img:currentBet.img, cashed:false, lost:false, prizeName:currentBet.name, inventoryId:currentBet.inventoryId}];
         }
-      },100);
-      if(fetchServer)syncCrashRound();
+      } else {
+        betBtn.disabled = false;
+        betBtn.classList.remove('placed');
+        betBtn.textContent = 'Сделать ставку';
+        currentBet = null;
+      }
+      renderBets();
+
+      clearInterval(countdownTimer);
+      countdownTimer = setInterval(()=>{
+        countdown -= 1;
+        if(countdown <= 0){
+          clearInterval(countdownTimer);
+          startFlight();
+        } else {
+          countdownNum.textContent = countdown;
+          setRingProgress(countdown / 5);
+        }
+      }, 1000);
     }
 
     window.__startCrashRound = startWaitingPhase;
@@ -2654,48 +2637,94 @@
       return 0.65;
     }
 
-    function startFlight(initialMultiplier=1){
-      phase='flying';clearInterval(countdownTimer);countdownTimer=null;countdownRing.style.display='none';statusEl.textContent='';
-      emojiWrap.style.opacity='1';emojiWrap.classList.add('flying');
-      if(rocketVideo){rocketVideo.style.display='block';try{rocketVideo.currentTime=0;}catch(_){}const p=rocketVideo.play();if(p&&p.catch)p.catch(()=>{});}
-      betBtn.disabled=true;betBtn.classList.remove('queued-style');betBtn.textContent=currentBet?'Ставка активна':'Ставка закрыта';
-      multEl.classList.add('flying');cashoutBtn.style.display=currentBet&&!currentBetCashedOut?'block':'none';cashoutBtn.disabled=!currentBet||currentBetCashedOut;
-      flightStartTime=performance.now();let mult=Math.max(1,Number(initialMultiplier)||1),lastTime=performance.now();
+    function startFlight(){
+      phase = 'flying';
+      countdownRing.style.display = 'none';
+      statusEl.textContent = '';
+      emojiWrap.style.opacity = '1';
+      emojiWrap.classList.add('flying');
+      if(rocketVideo){ try{ rocketVideo.currentTime=0; }catch(_){}; const p=rocketVideo.play(); if(p&&p.catch)p.catch(()=>{}); }
+      if(currentBet){
+        betBtn.disabled = true;
+        betBtn.textContent = 'Ставка активна';
+      } else {
+        betBtn.disabled = false;
+        betBtn.classList.remove('placed');
+        betBtn.textContent = 'Ставка на след. раунд';
+      }
+      multEl.classList.add('flying');
+      flightStartTime = performance.now();
+      cashoutBtn.style.display = currentBet ? 'block' : 'none';
+      cashoutBtn.textContent = 'Забрать на 1.01x';
+
+      let mult = 1.00;
+      let lastTime = flightStartTime;
+
       function tick(now){
-        if(phase!=='flying')return;const dt=Math.max(0,(now-lastTime)/1000);lastTime=now;mult*=Math.exp(growthRateFor(mult)*dt);
-        if(mult>=crashPoint){syncCrashRound().finally(()=>{if(phase==='flying')flightRAF=requestAnimationFrame(tick);});return;}multEl.textContent=fmt(mult)+'x';lastDisplayedMultiplier=mult;
-        if(currentBet&&!currentBetCashedOut&&mult>=1.01){showPotentialPrize(mult);cashoutBtn.disabled=false;cashoutBtn.textContent=`💰 Забрать ${fmt(mult)}x`;}
-        flightRAF=requestAnimationFrame(tick);
-      }flightRAF=requestAnimationFrame(tick);
+        const dt = (now - lastTime) / 1000;
+        lastTime = now;
+        const rate = growthRateFor(mult);
+        mult = mult * Math.exp(rate * dt);
+        if(mult >= crashPoint){
+          crash();
+          return;
+        }
+        multEl.textContent = fmt(mult) + 'x';
+        if(currentBet && !currentBetCashedOut) showPotentialPrize(mult);
+        if(currentBet && !currentBetCashedOut && mult >= 1.01){
+          cashoutBtn.disabled = false;
+          const p = resolvePrizeForBet(mult);
+          cashoutBtn.textContent = p && p.type==='nft' ? `🎁 Забрать ${p.name}` : `💰 Забрать ${fmt(mult)}x`;
+          if(p && p.type==='nft') cashoutBtn.classList.add('gift-mode'); else cashoutBtn.classList.remove('gift-mode');
+        }
+        flightRAF = requestAnimationFrame(tick);
+      }
+      flightRAF = requestAnimationFrame(tick);
     }
 
-    function crash(serverCrashPoint=null,fromServer=false){
-      if(phase==='crashed'&&!fromServer)return;phase='crashed';cancelAnimationFrame(flightRAF);clearInterval(countdownTimer);countdownTimer=null;
-      if(Number.isFinite(Number(serverCrashPoint)))crashPoint=Number(serverCrashPoint);
-      multEl.textContent=fmt(crashPoint)+'x';multEl.classList.remove('flying');multEl.classList.add('crashed');statusEl.textContent='';
-      if(rocketVideo){rocketVideo.pause();rocketVideo.style.display='none';}emojiWrap.classList.remove('flying');emojiWrap.classList.add('crashed');
-      cashoutBtn.style.display='none';cashoutBtn.disabled=true;rocketBoom.style.display='block';betBtn.disabled=true;betBtn.textContent='💥 x'+fmt(crashPoint);
-      history.unshift(crashPoint);history=history.slice(0,60);localStorage.setItem('rocketHistory',JSON.stringify(history));renderHistory();
-      if(currentBet&&!currentBetCashedOut){const row=bets.find(b=>b.you&&b.current);if(row){row.mult=crashPoint;row.win=0;row.lost=true;}renderBets();}
-      fetch(V9_API+'/api/balance',{headers:V9_HEADERS,cache:'no-store'}).then(r=>r.ok?r.json():null).then(d=>{
-        if(!d)return;userBalance=Number(d.balance??userBalance);localStorage.setItem('caseBalance',String(userBalance));
-        document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));
-      }).catch(()=>{});
-      currentBet=null;currentBetCashedOut=false;currentBetCashoutMult=0;setTimeout(()=>{if(phase==='crashed')syncCrashRound();},2200);
+    function crash(){
+      phase = 'crashed';
+      cancelAnimationFrame(flightRAF);
+      multEl.textContent = fmt(crashPoint) + 'x';
+      multEl.classList.remove('flying');
+      multEl.classList.add('crashed');
+      statusEl.textContent = '';
+      if(rocketVideo) rocketVideo.style.display = 'none';
+      if(rocketVideo){ rocketVideo.pause(); }
+      emojiWrap.classList.remove('flying');
+      cashoutBtn.style.display = 'none';
+      rocketBoom.style.display = 'block';
+      emojiWrap.classList.add('crashed');
+      betBtn.textContent = '💥 x' + fmt(crashPoint);
+
+      history.unshift(crashPoint);
+      history = history.slice(0,60);
+      localStorage.setItem('rocketHistory', JSON.stringify(history));
+      renderHistory();
+
+      if(currentBet && !currentBetCashedOut){
+        const row = bets.find(b=>b.current);
+        if(currentBet.type === 'gift'){
+          const lostItemId=currentBet.inventoryId;
+          inventory=inventory.filter(x=>x.id!==lostItemId); saveInventory();
+          nftInventory.set(currentBet.name, false);
+        }
+        if(row){ row.mult=crashPoint; row.win=0; row.lost=true; row.prizeName=''; }
+        renderBets();
+      }
+
+      setTimeout(startWaitingPhase, 2600);
     }
 
     async function cashOut(){
       if(phase!=='flying'||!currentBet||currentBetCashedOut)return;
-      currentBetCashedOut=true;cashoutBtn.disabled=true;
-      try{
-        const rr=await fetch(V9_API+'/api/crash/cashout',{method:'POST',headers:V9_HEADERS,cache:'no-store'});
-        const raw=await rr.text();let dd={};try{dd=raw?JSON.parse(raw):{};}catch(_){}
-        if(!rr.ok)throw new Error(dd.detail||raw||'Слишком поздно');
-        userBalance=Number(dd.balance??userBalance);localStorage.setItem('caseBalance',String(userBalance));
-        document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));
-        const row=bets.find(x=>x.you&&x.current);if(row){row.win=Number(dd.payout||0);row.cashed=true;row.current=false;row.mult=Number(dd.multiplier||1);}
-        currentBetCashoutMult=Number(dd.multiplier||1);cashoutBtn.textContent='✅ Забрано '+fmt(Number(dd.payout||0))+' TON';renderBets();await syncCrashRound();
-      }catch(e){currentBetCashedOut=false;cashoutBtn.disabled=false;alert(e.message||'Слишком поздно');}
+      const mult=Math.max(1.01,parseFloat(multEl.textContent.replace('x',''))||1.01);
+      currentBetCashedOut=true;currentBetCashoutMult=mult;cashoutBtn.disabled=true;
+      if(currentBet.type==='balance'){
+        try{const rr=await fetch(V9_API+'/api/crash/cashout',{method:'POST',headers:V9_HEADERS});if(!rr.ok)throw new Error((await rr.text())||'Слишком поздно');const dd=await rr.json();userBalance=Number(dd.balance||userBalance);localStorage.setItem('caseBalance',String(userBalance));document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));const row=bets.find(x=>x.current);if(row){row.win=Number(dd.payout||0);row.cashed=true;row.mult=Number(dd.multiplier||mult);}cashoutBtn.textContent='✅ Забрано '+fmt(Number(dd.payout||0))+' TON';renderBets();syncCrashRound();return;}catch(e){currentBetCashedOut=false;cashoutBtn.disabled=false;alert(e.message||'Слишком поздно');return;}
+      }
+      const prize=resolvePrizeForBet(mult);if(!prize){currentBetCashedOut=false;cashoutBtn.disabled=false;return;}
+      const row=bets.find(x=>x.current);inventory=inventory.filter(x=>x.id!==currentBet.inventoryId);saveInventory();nftInventory.set(currentBet.name,false);if(row){row.cashed=true;row.mult=mult;row.prizeName=prize.name||currentBet.name;row.type='gift';row.gift=true;row.img=prize.img||currentBet.img;}cashoutBtn.textContent='✅ Забрано: '+(prize.name||currentBet.name);const invItem=addInventoryGift(prize);setTimeout(()=>showNftRewardToast(invItem,'rocket'),350);renderBets();
     }
 
     // ---- navigation ----
@@ -2709,7 +2738,7 @@
       renderBets();
       showPotentialPrize(1.01);
       if(!countdownTimer && phase !== 'flying'){
-        syncCrashRound();
+        startWaitingPhase();
       }
     });
     backBtn.addEventListener('click', ()=>{
@@ -2758,8 +2787,13 @@
       selectedGift=null;
     }
     betBtn.addEventListener('click', ()=>{
-      if(phase!=='waiting'||currentBet)return;
-      openModal();
+      if(phase === 'waiting'){
+        if(currentBet) return;
+        openModal();
+      } else if(phase === 'flying'){
+        if(queuedBet) return;
+        openModal();
+      }
     });
     cancelBetBtn.addEventListener('click', closeModal);
     cashoutBtn.addEventListener('click', cashOut);
@@ -2791,20 +2825,64 @@
     });
 
     confirmBetBtn.addEventListener('click', async ()=>{
-      if(phase!=='waiting'||currentBet){closeModal();return;}
-      if(modalMode!=='balance'){alert('Для режима «Ракетка» доступна ставка TON с фиксацией на сервере.');return;}
-      const amount=Number.parseFloat(betAmountInput.value);if(!Number.isFinite(amount)||amount<0.1)return;
-      confirmBetBtn.disabled=true;
-      try{
-        const rr=await fetch(V9_API+'/api/crash/bet',{method:'POST',headers:{...V9_HEADERS,'Content-Type':'application/json'},body:JSON.stringify({amount}),cache:'no-store'});
-        const raw=await rr.text();let dd={};try{dd=raw?JSON.parse(raw):{};}catch(_){}
-        if(!rr.ok)throw new Error(dd.detail||raw||'Не удалось сделать ставку');
-        userBalance=Number(dd.balance??userBalance);localStorage.setItem('caseBalance',String(userBalance));
-        document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));
-        currentBet={type:'balance',amount,reserved:true};currentBetCashedOut=false;
-        bets=(dd.bets||[]).map(b=>({name:b.username?'@'+b.username:(b.first_name||'Игрок'),avatar:(b.first_name||'U').slice(0,1).toUpperCase(),avatarUrl:b.avatar_url||'',stake:Number(b.stake||0),mult:Number(b.cashout_multiplier||1),win:b.payout!=null?Number(b.payout):null,you:String(b.user_id)===String(dd.you_user_id),current:b.cashout_multiplier==null,cashed:b.cashout_multiplier!=null&&Number(b.payout||0)>0,lost:false,type:'balance',id:b.id}));
-        betBtn.disabled=true;betBtn.classList.add('placed');betBtn.textContent='✅ Ставка: '+fmt(amount)+' TON';renderBets();closeModal();
-      }catch(e){alert(e.message||'Не удалось сделать ставку');}finally{confirmBetBtn.disabled=false;}
+      if(phase !== 'waiting' && phase !== 'flying') { closeModal(); return; }
+      const queuing = (phase === 'flying');
+      if(modalMode === 'balance'){
+        const amount = Number.parseFloat(betAmountInput.value);
+        if(!Number.isFinite(amount) || amount <= 0) return;
+        userBalance = Number(localStorage.getItem('caseBalance')||userBalance);
+        if(!Number.isFinite(userBalance) || amount > userBalance + 1e-9){
+          betAmountInput.value=fmt(Math.max(0,userBalance));
+          return;
+        }
+        const previousBalance=userBalance;
+        userBalance=Math.max(0,userBalance-amount);
+        localStorage.setItem('caseBalance', String(userBalance));
+        document.getElementById('rkBalanceVal').textContent = fmt(userBalance);
+        document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));
+        const request=fetch(V9_API+'/api/crash/bet',{method:'POST',headers:{...V9_HEADERS,'Content-Type':'application/json'},body:JSON.stringify({amount}),cache:'no-store'})
+          .then(async rr=>{if(!rr.ok)throw new Error((await rr.text())||'Не удалось сделать ставку');return rr.json();})
+          .then(dd=>{userBalance=Number(dd.balance??userBalance);localStorage.setItem('caseBalance',String(userBalance));document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));syncCrashRound();})
+          .catch(e=>{userBalance=previousBalance;localStorage.setItem('caseBalance',String(userBalance));document.getElementById('rkBalanceVal').textContent=fmt(userBalance);document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));alert(e.message||'Не удалось сделать ставку');});
+        document.getElementById('rkBalanceVal').textContent = fmt(userBalance);
+        document.querySelectorAll('.balance-val').forEach(el=>el.textContent=fmt(userBalance));
+        const betObj = { type:'balance', amount, reserved:true };
+        window.__logActivity?.('crash_bet',amount,{name:'Crash'});
+        if(queuing){
+          queuedBet = betObj;
+          bets = bets.concat([{name:(V9_TG?.initDataUnsafe?.user?.username?'@'+V9_TG.initDataUnsafe.user.username:(V9_TG?.initDataUnsafe?.user?.first_name||'Вы')), avatar:(V9_TG?.initDataUnsafe?.user?.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:V9_TG?.initDataUnsafe?.user?.photo_url||'', stake:amount, mult:1.00, win:null, you:true, queued:true, type:'balance'}]);
+          betBtn.textContent = '🕐 На след. раунд: ' + fmt(amount) + ' TON';
+        } else {
+          currentBet = betObj;
+          currentBetCashedOut = false;
+          bets = [{name:(V9_TG?.initDataUnsafe?.user?.username?'@'+V9_TG.initDataUnsafe.user.username:(V9_TG?.initDataUnsafe?.user?.first_name||'Вы')), avatar:(V9_TG?.initDataUnsafe?.user?.first_name||'U').slice(0,1).toUpperCase(), avatarUrl:V9_TG?.initDataUnsafe?.user?.photo_url||'', stake:amount, mult:1.00, win:null, you:true, current:true, type:'balance', cashed:false, lost:false}];
+          betBtn.textContent = '✅ Ставка: ' + fmt(amount) + ' TON';
+        }
+      } else {
+        if(!selectedGift || !selectedGift.id) return;
+        const item=inventory.find(x=>x.id===selectedGift.id);
+        if(!item) return;
+        nftInventory.set(item.name,false);
+        const betObj = { type:'gift', inventoryId:item.id, name:item.name, val:Number(item.floor)||Number(selectedGift.floor)||0, img:item.img||selectedGift.img||'', backdrop:item.backdrop||selectedGift.backdrop||'', kind:item.kind||selectedGift.kind||'', reserved:true };
+        if(queuing){
+          queuedBet = betObj;
+          bets = bets.concat([{name:'Вы', avatar:'🎁', stake:betObj.val, mult:1.00, win:null, you:true, queued:true, type:'gift', img:betObj.img, prizeName:betObj.name, inventoryId:item.id}]);
+          betBtn.textContent = '🕐 На след. раунд: 🎁 ' + item.name;
+        } else {
+          currentBet = betObj;
+          currentBetCashedOut = false;
+          bets = [{name:'Вы', avatar:'🎁', stake:currentBet.val, mult:1.00, win:null, you:true, current:true, type:'gift', img:currentBet.img, cashed:false, lost:false, prizeName:currentBet.name, inventoryId:item.id}];
+          betBtn.textContent = '✅ Ставка: 🎁 ' + item.name;
+        }
+      }
+      renderBets();
+      if(queuing){
+        betBtn.disabled = true;
+        betBtn.classList.add('queued-style');
+      } else {
+        betBtn.classList.add('placed');
+      }
+      closeModal();
     });
 
     // Stellar Rocket original animation: use the source Lottie animation, with the supplied PNG as fallback.
@@ -3364,8 +3442,10 @@
 
   // --- Rocket: button must live inside the app viewport and open the modal immediately. ---
   const betBtn=$('betBtn'), betModal=$('betModal');
-  // Bet opening is handled by the authoritative Rocket controller below.
-  // Do not add a capture handler here: it would allow betting during flight.
+  betBtn?.addEventListener('click',function(e){
+    e.preventDefault(); e.stopImmediatePropagation();
+    if(betModal){betModal.classList.add('active'); betModal.style.zIndex='11000';}
+  },true);
 
   // --- Cases: a single clean opener. ---
   const caseScreen=$('caseScreen'), caseOpenBtn=$('caseOpenBtn'), reelWrap=$('caseReelWrap'), reel=$('caseReel'), caseResult=$('caseResult');
@@ -3616,7 +3696,7 @@
     try{document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance||0).toFixed(3);}catch(_){ }
   }
   window.__openRocketHard=openRocket;
-  // Betting is allowed only while the server round is waiting.
+  betBtn?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();betModal?.classList.add('active');if(betModal){betModal.style.display='flex';betModal.style.zIndex='32000';}try{window.__serverBalance!=null&&(document.getElementById('rkBalanceVal').textContent=Number(window.__serverBalance).toFixed(3));}catch(_){ }},true);
   betBack?.addEventListener('click',e=>{e.preventDefault();e.stopImmediatePropagation();rocket?.classList.remove('active');if(rocket)rocket.style.removeProperty('display');},true);
 
   // Modal close / submit fallbacks.
@@ -4396,264 +4476,6 @@
   .navitem{font-size:8px!important;}
 }
 </style>
-<!-- ROCKET FINAL FIX 2026-08-29: countdown / flight / controls -->
-<style id="rocket-final-runtime-fix">
-  #rocketScreen.active{
-    display:flex!important;
-    visibility:visible!important;
-    opacity:1!important;
-    z-index:99990!important;
-    pointer-events:auto!important;
-    background:#09090a!important;
-  }
-  #rocketScreen .rocket-stage{
-    position:relative!important;
-    flex:0 0 290px!important;
-    height:290px!important;
-    margin:0 12px!important;
-    background:#09090a!important;
-    border:0!important;
-    border-radius:0!important;
-    box-shadow:none!important;
-    overflow:hidden!important;
-  }
-  #rocketScreen .countdown-ring{
-    position:absolute!important;
-    left:50%!important;
-    top:50%!important;
-    transform:translate(-50%,-50%)!important;
-    display:flex!important;
-    width:190px!important;
-    height:190px!important;
-    z-index:100!important;
-  }
-  #rocketScreen .countdown-num{font-size:72px!important;font-weight:1000!important;line-height:1!important;}
-  #rocketScreen .rocket-anchor{top:50%!important;left:50%!important;z-index:20!important;}
-  #rocketScreen .rocket-video{
-    width:330px!important;height:290px!important;object-fit:contain!important;
-    pointer-events:none!important;
-  }
-  #rocketScreen .rocket-emoji-wrap{width:110px!important;height:110px!important;}
-  #rocketScreen .rocket-multiplier{
-    position:absolute!important;left:50%!important;top:18%!important;
-    transform:translateX(-50%)!important;z-index:80!important;
-    font-size:46px!important;font-weight:1000!important;
-  }
-  #rocketScreen:not(.rocket-flying) .rocket-multiplier{display:none!important;}
-
-  /* The controls are intentionally viewport-fixed so the long LIVE list cannot push them off-screen. */
-  #rocketScreen .bet-btn,
-  #rocketScreen .cashout-btn{
-    position:fixed!important;
-    left:50%!important;
-    right:auto!important;
-    transform:translateX(-50%)!important;
-    width:min(358px,calc(100vw - 32px))!important;
-    min-height:54px!important;
-    margin:0!important;
-    border-radius:16px!important;
-    z-index:2147483000!important;
-    box-sizing:border-box!important;
-    pointer-events:auto!important;
-  }
-  #rocketScreen .bet-btn{bottom:16px!important;}
-  #rocketScreen .cashout-btn{bottom:82px!important;}
-  #rocketScreen .bets-list{padding-bottom:145px!important;}
-
-  /* Hide the main navigation while Crash is open; it must not cover the controls. */
-  body:has(#rocketScreen.active) .bottomnav{display:none!important;}
-  #rocketScreen .round-bets-title{padding-bottom:6px!important;}
-</style>
-<script id="rocket-final-runtime-fix-script">
-(function(){
-  const $=id=>document.getElementById(id);
-  const rocket=$('rocketScreen');
-  const bet=$('betBtn');
-  const cash=$('cashoutBtn');
-  const ring=$('countdownRing');
-  const video=$('rocketVideo');
-  if(!rocket||!bet||!cash||!ring)return;
-
-  function setControls(){
-    const phase=window.__getCrashPhase?.()||'';
-    const waiting=phase==='waiting';
-    const flying=phase==='flying';
-    bet.style.display='block';
-    bet.style.visibility='visible';
-    bet.disabled=!waiting || bet.classList.contains('placed');
-    if(flying){
-      cash.style.display='block';
-      cash.style.visibility='visible';
-    }else{
-      cash.style.display='none';
-    }
-    rocket.classList.toggle('rocket-flying',flying);
-  }
-
-  // Keep the UI responsive even when another legacy timer/poll is running.
-  setInterval(setControls,200);
-  document.addEventListener('visibilitychange',()=>{if(!document.hidden&&rocket.classList.contains('active'))window.__syncCrashRoundNow?.();});
-
-  // If the app was opened directly, start the server-backed round controller.
-  function boot(){
-    if(!rocket.classList.contains('active'))return;
-    try{window.__startCrashRound?.();}catch(e){console.error('Rocket boot',e);}
-    setControls();
-  }
-  const mo=new MutationObserver(()=>{if(rocket.classList.contains('active'))setControls();});
-  mo.observe(rocket,{attributes:true,attributeFilter:['class','style']});
-  window.__rocketFinalBoot=boot;
-})();
-</script>
-
-
-<!-- V42 ROCKET COUNTDOWN FINAL FIX -->
-<style id="rocket-v42-countdown-css">
-  #rocketScreen .rocket-emoji-wrap{
-    transition:opacity .18s ease, visibility .18s ease!important;
-  }
-  /* Rocket is physically invisible before the countdown finishes. */
-  #rocketScreen.rocket-countdown-active .rocket-emoji-wrap{
-    opacity:0!important;
-    visibility:hidden!important;
-  }
-  #rocketScreen.rocket-countdown-active .rocket-video,
-  #rocketScreen.rocket-countdown-active .rocket-lottie{
-    visibility:hidden!important;
-  }
-  #rocketScreen.rocket-flying .rocket-emoji-wrap{
-    opacity:1!important;
-    visibility:visible!important;
-  }
-  #rocketScreen.rocket-flying .rocket-video{
-    visibility:visible!important;
-  }
-  #rocketScreen .countdown-ring{pointer-events:none!important;}
-</style>
-<script id="rocket-v42-countdown-script">
-(function(){
-  const $=id=>document.getElementById(id);
-  const screen=$('rocketScreen'), ring=$('countdownRing'), num=$('countdownNum'), video=$('rocketVideo');
-  if(!screen||!ring||!num)return;
-
-  let timer=null, deadline=0, running=false;
-
-  function hideRocket(){
-    screen.classList.add('rocket-countdown-active');
-    screen.classList.remove('rocket-flying');
-    if(video){ try{video.pause(); video.currentTime=0;}catch(_){} }
-  }
-  function showRocket(){
-    screen.classList.remove('rocket-countdown-active');
-    screen.classList.add('rocket-flying');
-    if(video){
-      video.style.visibility='visible';
-      try{video.currentTime=0;}catch(_){}
-      const p=video.play(); if(p&&p.catch)p.catch(()=>{});
-    }
-  }
-  function paint(left){
-    const sec=Math.max(1,Math.ceil(left/1000));
-    num.textContent=String(sec);
-    const progress=Math.max(0,Math.min(1,left/5000));
-    const circumference=2*Math.PI*72;
-    const path=ring.querySelector('.ring-progress');
-    if(path)path.style.strokeDashoffset=String(circumference*(1-progress));
-  }
-  async function getRound(){
-    const API=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
-    const tg=window.Telegram?.WebApp;
-    const headers={'X-Telegram-User-Id':String(tg?.initDataUnsafe?.user?.id||'')};
-    try{
-      const r=await fetch(API+'/api/crash/current',{headers,cache:'no-store'});
-      if(!r.ok)return null;
-      return await r.json();
-    }catch(_){return null;}
-  }
-
-  async function startAuthoritativeCountdown(){
-    if(!screen.classList.contains('active')||running)return;
-    running=true;
-    hideRocket();
-    ring.style.display='flex';
-
-    const d=await getRound();
-    let seconds=Number(d?.waiting_seconds);
-    if(!Number.isFinite(seconds)||seconds<=0){
-      /* If the server has already moved to flying, don't show a fake countdown. */
-      if(d?.round?.status==='flying'){
-        ring.style.display='none'; showRocket(); running=false; return;
-      }
-      seconds=5;
-    }
-    seconds=Math.min(5,Math.max(1,Math.ceil(seconds)));
-    deadline=Date.now()+seconds*1000;
-    paint(seconds*1000);
-
-    clearInterval(timer);
-    timer=setInterval(async()=>{
-      if(!screen.classList.contains('active')){clearInterval(timer);timer=null;running=false;return;}
-      const left=deadline-Date.now();
-      if(left>0){paint(left);return;}
-      clearInterval(timer);timer=null;
-      num.textContent='1';
-      ring.style.display='none';
-
-      /* Ask the backend to advance waiting -> flying, then reveal the rocket. */
-      const current=await getRound();
-      if(current?.round?.status==='flying'){
-        showRocket();
-        if(typeof window.__syncCrashRoundNow==='function')window.__syncCrashRoundNow(current);
-      }else{
-        /* Render/DB can be a fraction late because timestamps are second based. */
-        setTimeout(async()=>{
-          const retry=await getRound();
-          if(retry?.round?.status==='flying')showRocket();
-          if(typeof window.__syncCrashRoundNow==='function'&&retry)window.__syncCrashRoundNow(retry);
-          running=false;
-        },250);
-      }
-      running=false;
-    },100);
-  }
-
-  function enforce(){
-    if(!screen.classList.contains('active'))return;
-    const phase=window.__getCrashPhase?.()||'';
-    if(phase==='waiting' || (!screen.classList.contains('rocket-flying') && ring.style.display!=='none')){
-      screen.classList.add('rocket-countdown-active');
-      if(!running)startAuthoritativeCountdown();
-    }else if(phase==='flying'){
-      ring.style.display='none';
-      screen.classList.remove('rocket-countdown-active');
-      screen.classList.add('rocket-flying');
-      if(video && video.paused){const p=video.play();if(p&&p.catch)p.catch(()=>{});}
-    }
-  }
-
-  const observer=new MutationObserver(()=>{
-    if(screen.classList.contains('active')){
-      setTimeout(enforce,0);
-    }
-  });
-  observer.observe(screen,{attributes:true,attributeFilter:['class','style']});
-  setInterval(enforce,250);
-
-  /* Open/return to Rocket: always start the visual countdown if a round is waiting. */
-  document.addEventListener('click',e=>{
-    const t=e.target?.closest?.('#openRocketBtn');
-    if(t)setTimeout(startAuthoritativeCountdown,50);
-  },true);
-  document.addEventListener('visibilitychange',()=>{
-    if(!document.hidden&&screen.classList.contains('active')){
-      running=false; clearInterval(timer); timer=null; startAuthoritativeCountdown();
-    }
-  });
-
-  if(screen.classList.contains('active'))startAuthoritativeCountdown();
-})();
-</script>
-
 </body>
 </html>
 
@@ -4690,3 +4512,369 @@ playhub-game-card.rocket-game-card{margin-bottom:10px}.playhub-game-card.rocket-
 </script>
 
 
+
+
+<style id="rocket-final-v55-css">
+/* FINAL ROCKET CONTROLLER: one visible control layer, no conflicting legacy offsets. */
+#rocketScreen.active{display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;z-index:99999!important;}
+#rocketScreen .rocket-stage{position:relative!important;flex:0 0 auto!important;overflow:hidden!important;background:#09090a!important;border:0!important;border-radius:0!important;}
+#rocketScreen .countdown-ring{z-index:20!important;}
+#rocketScreen .rocket-anchor{z-index:10!important;}
+#rocketScreen .rocket-emoji-wrap{z-index:11!important;}
+#rocketScreen .rocket-video{z-index:12!important;display:block!important;object-fit:contain!important;pointer-events:none!important;}
+#rocketScreen .rocket-multiplier{z-index:30!important;}
+#rocketScreen .rocket-anchor.v55-hidden{visibility:hidden!important;opacity:0!important;pointer-events:none!important;}
+#rocketScreen .rocket-anchor.v55-visible{visibility:visible!important;opacity:1!important;pointer-events:none!important;}
+#rocketScreen .rocket-video.v55-hidden{visibility:hidden!important;opacity:0!important;}
+#rocketScreen .rocket-video.v55-visible{visibility:visible!important;opacity:1!important;}
+#rocketScreen .rocket-stage .rocket-prize-panel{display:none!important;}
+#rocketScreen .bet-btn,#rocketScreen .cashout-btn{
+  position:absolute!important;
+  left:16px!important;
+  right:16px!important;
+  bottom:14px!important;
+  width:auto!important;
+  max-width:none!important;
+  margin:0!important;
+  z-index:50000!important;
+  box-sizing:border-box!important;
+  min-height:58px!important;
+}
+#rocketScreen .bet-btn{background:linear-gradient(135deg,#d71920,#ff3d47)!important;color:#fff!important;}
+#rocketScreen .cashout-btn{background:linear-gradient(135deg,#33b86f,#63e6a0)!important;color:#07150d!important;}
+#rocketScreen .bets-list{padding-bottom:92px!important;}
+#rocketScreen .round-bets-title{position:relative!important;z-index:2!important;}
+#rocketScreen .rocket-status{display:none!important;}
+#rocketScreen .rocket-timer{display:none!important;}
+@media (max-width:500px){
+  #rocketScreen .bet-btn,#rocketScreen .cashout-btn{left:16px!important;right:16px!important;}
+}
+</style>
+
+<script id="rocket-final-v55-controller">
+(function(){
+  const $=id=>document.getElementById(id);
+  const screen=$('rocketScreen');
+  const stage=$('rocketStage');
+  const ring=$('countdownRing');
+  const num=$('countdownNum');
+  const progress=$('ringProgress');
+  const anchor=$('rocketAnchor');
+  const wrap=$('rocketEmojiWrap');
+  const video=$('rocketVideo');
+  const boom=$('rocketBoom');
+  const multiplier=$('rocketMultiplier');
+  const betModal=$('betModal');
+  const modalInput=$('betAmountInput');
+  const originalBet=$('betBtn');
+  const originalCashout=$('cashoutBtn');
+  if(!screen||!ring||!num||!progress||!anchor||!video||!multiplier||!originalBet||!originalCashout) return;
+
+  const API=(window.__APP_CONFIG__?.apiBase||'').replace(/\/$/,'');
+  const tg=window.Telegram?.WebApp;
+  const UID=String(tg?.initDataUnsafe?.user?.id||'');
+  const H=()=>({'X-Telegram-User-Id':UID});
+  const HJSON=()=>({'X-Telegram-User-Id':UID,'Content-Type':'application/json'});
+
+  // Detach all legacy click handlers from the two visible game buttons.
+  const betBtn=originalBet.cloneNode(true); originalBet.replaceWith(betBtn);
+  const cashoutBtn=originalCashout.cloneNode(true); originalCashout.replaceWith(cashoutBtn);
+
+  let phase='idle'; // idle | waiting | flying | crashed
+  let roundId='';
+  let countdownEndMs=0;
+  let countdownRAF=0;
+  let pollTimer=0;
+  let crashHoldTimer=0;
+  let busy=false;
+  let mine=null;
+  const CIRC=2*Math.PI*76;
+
+  progress.style.strokeDasharray=String(CIRC);
+  progress.style.strokeDashoffset='0';
+
+  function setRing(v){
+    const p=Math.max(0,Math.min(1,Number(v)||0));
+    progress.style.strokeDashoffset=String(CIRC*(1-p));
+  }
+
+  function hideRocket(){
+    anchor.classList.remove('v55-visible');
+    anchor.classList.add('v55-hidden');
+    wrap.style.opacity='0';
+    video.classList.remove('v55-visible');
+    video.classList.add('v55-hidden');
+    video.style.visibility='hidden';
+    video.style.opacity='0';
+    try{video.pause();video.currentTime=0;}catch(_){ }
+    boom.style.display='none';
+  }
+
+  function showCountdown(sec){
+    phase='waiting';
+    multiplier.style.display='none';
+    multiplier.textContent='';
+    ring.style.display='flex';
+    num.textContent=String(Math.max(1,Math.min(5,Math.ceil(sec))));
+    setRing(Math.max(0,Math.min(1,Number(sec)/5)));
+    hideRocket();
+    cashoutBtn.style.display='none';
+    cashoutBtn.disabled=true;
+    betBtn.style.display='block';
+    betBtn.disabled=!!mine;
+    betBtn.classList.toggle('placed',!!mine);
+    betBtn.textContent=mine?'✅ Ставка принята':'Сделать ставку';
+  }
+
+  async function showRocket(){
+    phase='flying';
+    ring.style.display='none';
+    num.textContent='';
+    setRing(0);
+    anchor.classList.remove('v55-hidden');
+    anchor.classList.add('v55-visible');
+    wrap.style.opacity='1';
+    video.classList.remove('v55-hidden');
+    video.classList.add('v55-visible');
+    video.style.display='block';
+    video.style.visibility='visible';
+    video.style.opacity='1';
+    multiplier.style.display='block';
+    if(!multiplier.textContent) multiplier.textContent='1.00x';
+    betBtn.style.display='none';
+    cashoutBtn.style.display=mine?'block':'none';
+    cashoutBtn.disabled=!mine;
+    cashoutBtn.textContent=mine?'💰 Кэшаут':'Кэшаут';
+    try{
+      video.muted=true;
+      video.playsInline=true;
+      if(video.readyState<2){try{video.load();}catch(_){}}
+      const p=video.play();
+      if(p&&p.catch) p.catch(()=>{});
+    }catch(_){ }
+  }
+
+  function showCrash(mult){
+    phase='crashed';
+    ring.style.display='none';
+    multiplier.style.display='block';
+    multiplier.classList.remove('flying');
+    multiplier.classList.add('crashed');
+    multiplier.textContent=(Number(mult)||1).toFixed(2)+'x';
+    cashoutBtn.style.display='none';
+    cashoutBtn.disabled=true;
+    betBtn.style.display='none';
+    video.classList.remove('v55-visible');
+    video.classList.add('v55-hidden');
+    video.style.visibility='hidden';
+    video.style.opacity='0';
+    try{video.pause();}catch(_){ }
+    anchor.classList.remove('v55-visible');
+    anchor.classList.add('v55-hidden');
+    boom.style.display='block';
+  }
+
+  function updateBets(d){
+    try{window.__syncCrashRoundNow?.(d);}catch(_){ }
+    const bs=Array.isArray(d.bets)?d.bets:[];
+    mine=bs.find(b=>String(b.user_id)===String(d.you_user_id) && b.cashout_multiplier==null) || null;
+    if(window.__serverBalance!=null){
+      const v=Number(window.__serverBalance);
+      if(Number.isFinite(v)) localStorage.setItem('caseBalance',String(v));
+    }
+  }
+
+  function updateCountdownFrame(){
+    if(phase!=='waiting' || !countdownEndMs) return;
+    const left=Math.max(0,countdownEndMs-Date.now());
+    const sec=Math.ceil(left/1000);
+    if(left<=0){
+      ring.style.display='none';
+      num.textContent='';
+      setRing(0);
+      if(countdownRAF) cancelAnimationFrame(countdownRAF);
+      countdownRAF=0;
+      // Immediately reveal the rocket at zero; the next server poll confirms flying.
+      if(phase==='waiting') showRocket();
+      return;
+    }
+    const show=Math.min(5,Math.max(1,sec));
+    num.textContent=String(show);
+    setRing(Math.min(1,left/5000));
+    countdownRAF=requestAnimationFrame(updateCountdownFrame);
+  }
+
+  function startCountdownFromRound(r){
+    clearTimeout(crashHoldTimer);
+    if(countdownRAF) cancelAnimationFrame(countdownRAF);
+    const created=Number(r.created_at||0)*1000;
+    countdownEndMs=(created>0?created+5000:Date.now()+5000);
+    showCountdown(Math.max(1,(countdownEndMs-Date.now())/1000));
+    countdownRAF=requestAnimationFrame(updateCountdownFrame);
+  }
+
+  async function refreshBalance(){
+    if(!API||!UID) return;
+    try{
+      const r=await fetch(API+'/api/me',{headers:H(),cache:'no-store'});
+      if(!r.ok)return;
+      const d=await r.json();
+      const b=Number(d.balance||0);
+      if(Number.isFinite(b)){
+        window.__serverBalance=b;
+        localStorage.setItem('caseBalance',String(b));
+        const el=$('rkBalanceVal'); if(el) el.textContent=b.toFixed(3);
+        document.querySelectorAll('.balance-val').forEach(x=>x.textContent=b.toFixed(3));
+      }
+    }catch(_){ }
+  }
+
+  async function poll(){
+    if(!screen.classList.contains('active')||busy) return;
+    if(!API||!UID) return;
+    try{
+      const r=await fetch(API+'/api/crash/current',{headers:H(),cache:'no-store'});
+      if(!r.ok)return;
+      const d=await r.json();
+      const rd=d.round||{};
+      updateBets(d);
+
+      if(rd.status==='waiting'){
+        // The backend stores created_at with second precision. When the local timer
+        // has already reached zero, do NOT restart the countdown just because the
+        // next request still sees status=waiting for a few hundred milliseconds.
+        const serverEnd=Number(rd.created_at||0)*1000+5000;
+        if(serverEnd>0 && Date.now() < serverEnd){
+          if(phase!=='waiting' || String(rd.id||'')!==roundId){
+            roundId=String(rd.id||'');
+            startCountdownFromRound(rd);
+          }
+          countdownEndMs=serverEnd;
+          betBtn.style.display='block';
+          betBtn.disabled=!!mine;
+          betBtn.textContent=mine?'✅ Ставка принята':'Сделать ставку';
+          cashoutBtn.style.display='none';
+          multiplier.style.display='none';
+        }else{
+          // Countdown has ended locally; reveal the rocket and wait for the server
+          // to switch the authoritative round to flying.
+          if(phase!=='flying') await showRocket();
+        }
+      }else if(rd.status==='flying'){
+        if(String(rd.id||'')!==roundId){
+          roundId=String(rd.id||'');
+          if(countdownRAF) cancelAnimationFrame(countdownRAF);
+        }
+        if(phase!=='flying') await showRocket();
+        const m=Number(d.multiplier||1);
+        multiplier.classList.add('flying');
+        multiplier.classList.remove('crashed');
+        multiplier.style.display='block';
+        multiplier.textContent=m.toFixed(2)+'x';
+        betBtn.style.display='none';
+        cashoutBtn.style.display=mine?'block':'none';
+        cashoutBtn.disabled=!mine || m<1.01;
+        cashoutBtn.textContent=mine?(m>=1.01?'💰 Кэшаут '+m.toFixed(2)+'x':'💰 Кэшаут'):'Кэшаут';
+      }else if(rd.status==='crashed'){
+        if(phase!=='crashed') showCrash(Number(rd.crash_point||d.multiplier||1));
+        if(!crashHoldTimer){
+          crashHoldTimer=setTimeout(()=>{crashHoldTimer=0;poll();},1200);
+        }
+      }
+    }catch(_){ }
+  }
+
+  function startPolling(){
+    clearInterval(pollTimer);
+    pollTimer=setInterval(poll,250);
+    poll();
+  }
+
+  function openBet(){
+    if(phase!=='waiting' || mine) return;
+    if(betModal){
+      const bal=Number(window.__serverBalance ?? localStorage.getItem('caseBalance') ?? 0);
+      if(modalInput&&Number.isFinite(bal)){
+        modalInput.max=bal.toFixed(6);
+        if(!(Number(modalInput.value)>0)) modalInput.value=Math.min(.10,bal).toFixed(2);
+      }
+      betModal.classList.add('active');
+      betModal.style.display='flex';
+      betModal.style.zIndex='100000';
+    }
+  }
+
+  async function cashout(){
+    if(busy||phase!=='flying'||!mine) return;
+    busy=true;
+    cashoutBtn.disabled=true;
+    try{
+      const r=await fetch(API+'/api/crash/cashout',{method:'POST',headers:HJSON(),cache:'no-store'});
+      const text=await r.text();
+      let d={}; try{d=text?JSON.parse(text):{};}catch(_){ }
+      if(!r.ok) throw new Error(d.detail||text||'Слишком поздно');
+      const b=Number(d.balance);
+      if(Number.isFinite(b)){
+        window.__serverBalance=b;
+        localStorage.setItem('caseBalance',String(b));
+        const el=$('rkBalanceVal'); if(el)el.textContent=b.toFixed(3);
+        document.querySelectorAll('.balance-val').forEach(x=>x.textContent=b.toFixed(3));
+      }
+      mine=null;
+      cashoutBtn.textContent='✅ Забрано '+Number(d.payout||0).toFixed(2)+' TON';
+      cashoutBtn.disabled=true;
+      await poll();
+      await refreshBalance();
+    }catch(e){
+      cashoutBtn.disabled=false;
+      alert(e.message||'Слишком поздно');
+    }finally{busy=false;}
+  }
+
+  betBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();openBet();});
+  cashoutBtn.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();cashout();});
+
+  // Prevent the legacy submit handler from accepting a bet after the round has started.
+  document.addEventListener('click',e=>{
+    const target=e.target?.closest?.('#confirmBetBtn');
+    if(!target) return;
+    if(phase!=='waiting' || mine){
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if(phase!=='waiting') alert('Раунд уже начался — ставка доступна только до старта.');
+    }
+  },true);
+
+  // Strong visual guarantee: the rocket cannot be visible during countdown.
+  hideRocket();
+  ring.style.display='flex';
+  multiplier.style.display='none';
+  cashoutBtn.style.display='none';
+  betBtn.style.display='block';
+
+  // Replace the old opener with our server-synchronised controller.
+  let startingController=false;
+  window.__startCrashRound=async function(){
+    if(startingController || (phase!=='idle' && screen.classList.contains('active'))) return;
+    startingController=true;
+    phase='booting';
+    roundId='';
+    mine=null;
+    if(countdownRAF) cancelAnimationFrame(countdownRAF);
+    await refreshBalance();
+    startPolling();
+    startingController=false;
+  };
+  window.__getCrashPhase=()=>phase;
+  window.__getCrashCountdownActive=()=>phase==='waiting' && Date.now()<countdownEndMs;
+
+  // Re-run the controller whenever the rocket screen is opened through any existing code path.
+  const observer=new MutationObserver(()=>{
+    if(screen.classList.contains('active') && phase==='idle') window.__startCrashRound?.();
+  });
+  observer.observe(screen,{attributes:true,attributeFilter:['class']});
+
+  // Start immediately when this final controller is loaded and the screen is already active.
+  if(screen.classList.contains('active')) window.__startCrashRound?.();
+})();
+</script>
