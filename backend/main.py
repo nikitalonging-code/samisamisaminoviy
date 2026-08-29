@@ -1304,24 +1304,31 @@ class V9CrashBet(BaseModel):
 @app.post('/api/crash/bet')
 def v9_crash_bet(payload: V9CrashBet, x_telegram_user_id: str | None = Header(default=None)):
     u = current_user(x_telegram_user_id)
-    amount = round(float(payload.amount), 6)
-    if amount < 0.1:
+    try:
+        amount = round(float(payload.amount), 6)
+    except (TypeError, ValueError):
+        raise HTTPException(400, 'Некорректная сумма ставки')
+    if not math.isfinite(amount) or amount < 0.1:
         raise HTTPException(400, 'Минимальная ставка — 0.1 TON')
     with db() as con:
         r = v9_ensure_round(con)
         if r['status'] != 'waiting':
-            raise HTTPException(409, 'Ставка доступна до старта раунда')
-        if con.execute('SELECT 1 FROM crash_bets WHERE round_id=%s AND user_id=%s', (r['id'], u['id'])).fetchone():
-            raise HTTPException(409, 'В этом раунде ставка уже сделана')
+            raise HTTPException(409, 'Ставка доступна только до старта раунда')
         row = con.execute('SELECT * FROM users WHERE id=%s FOR UPDATE', (u['id'],)).fetchone()
         if float(row['balance'] or 0) + 1e-9 < amount:
             raise HTTPException(400, 'Недостаточно TON')
+        existing = con.execute('SELECT id FROM crash_bets WHERE round_id=%s AND user_id=%s LIMIT 1', (r['id'], u['id'])).fetchone()
+        if existing:
+            raise HTTPException(409, 'В этом раунде ставка уже сделана')
         now = int(time.time())
         con.execute('UPDATE users SET balance=balance-%s WHERE id=%s', (amount, u['id']))
         con.execute('INSERT INTO crash_bets(round_id,user_id,stake,created_at) VALUES(%s,%s,%s,%s)', (r['id'], u['id'], amount, now))
         con.execute("INSERT INTO activity_log(user_id,type,amount,name,created_at) VALUES(%s,'crash_bet',%s,'Crash',%s)", (u['id'], amount, now))
-        con.execute('INSERT INTO user_stats(user_id,total_volume,updated_at) VALUES(%s,%s,%s) ON CONFLICT(user_id) DO UPDATE SET total_volume=user_stats.total_volume+EXCLUDED.total_volume,updated_at=EXCLUDED.updated_at', (u['id'], amount, now))
-        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', amount, f'поставил {amount:.2f} TON в Crash', now))
+        con.execute("""INSERT INTO user_stats(user_id,total_volume,updated_at)
+                       VALUES(%s,%s,%s)
+                       ON CONFLICT(user_id) DO UPDATE SET total_volume=user_stats.total_volume+EXCLUDED.total_volume,updated_at=EXCLUDED.updated_at""", (u['id'], amount, now))
+        con.execute("""INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at)
+                       VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)""", (u['id'], u['username'] or u['first_name'] or '', amount, f'поставил {amount:.2f} TON в Crash', now))
         balance = float(row['balance'] or 0) - amount
         return {'ok': True, 'balance': balance, **v9_crash_payload(con, r, u['id'])}
 
@@ -1330,21 +1337,26 @@ def v9_crash_cashout(x_telegram_user_id: str | None = Header(default=None)):
     u = current_user(x_telegram_user_id)
     with db() as con:
         r = v9_ensure_round(con)
-        bet = con.execute('SELECT * FROM crash_bets WHERE round_id=%s AND user_id=%s AND cashout_multiplier IS NULL ORDER BY id DESC LIMIT 1 FOR UPDATE', (r['id'], u['id'])).fetchone()
+        bet = con.execute('''SELECT * FROM crash_bets
+                             WHERE round_id=%s AND user_id=%s AND cashout_multiplier IS NULL
+                             ORDER BY id DESC LIMIT 1 FOR UPDATE''', (r['id'], u['id'])).fetchone()
         if not bet:
             raise HTTPException(404, 'Активной ставки нет')
         if r['status'] != 'flying':
             raise HTTPException(409, 'Раунд уже завершён')
         now = int(time.time())
-        mult = round(min(float(r['crash_point']), v9_crash_multiplier(now - int(r['started_at'] or now))), 2)
+        elapsed = max(0, now - int(r['started_at'] or now))
+        mult = round(min(float(r['crash_point']), v9_crash_multiplier(elapsed)), 2)
         if mult >= float(r['crash_point']):
             con.execute("UPDATE crash_rounds SET status='crashed',crashed_at=%s WHERE id=%s", (now, r['id']))
             raise HTTPException(409, 'Слишком поздно — краш')
         payout = round(float(bet['stake']) * mult, 6)
         con.execute('UPDATE crash_bets SET cashout_multiplier=%s,payout=%s WHERE id=%s', (mult, payout, bet['id']))
         con.execute('UPDATE users SET balance=balance+%s WHERE id=%s', (payout, u['id']))
-        con.execute("INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at) VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)", (u['id'], u['username'] or u['first_name'] or '', payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
-        con.execute("INSERT INTO activity_log(user_id,type,amount,name,value,kind,action_text,created_at) VALUES(%s,'crash_win',0,'Crash',%s,'ton',%s,%s)", (u['id'], payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
+        con.execute("""INSERT INTO live_events(user_id,username,name,image_url,value,kind,action_text,created_at)
+                       VALUES(%s,%s,'Crash','',%s,'ton',%s,%s)""", (u['id'], u['username'] or u['first_name'] or '', payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
+        con.execute("""INSERT INTO activity_log(user_id,type,amount,name,value,kind,action_text,created_at)
+                       VALUES(%s,'crash_win',0,'Crash',%s,'ton',%s,%s)""", (u['id'], payout, f'забрал {payout:.2f} TON в Crash на x{mult:.2f}', now))
         balance = float(con.execute('SELECT balance FROM users WHERE id=%s', (u['id'],)).fetchone()['balance'])
         return {'ok': True, 'balance': balance, 'payout': payout, 'multiplier': mult, **v9_crash_payload(con, r, u['id'])}
 
